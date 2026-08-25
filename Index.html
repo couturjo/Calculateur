@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pool des Champions — Calculateur de masse salariale</title>
+<style>
+  :root{
+    --ice:#eef4f8;
+    --ice2:#dbe8f0;
+    --line:#c8d6e0;
+    --navy:#0b2545;
+    --navy2:#13315c;
+    --red:#c8393a;
+    --gold:#d9a441;
+    --green:#1f8a53;
+    --grey:#5b6b76;
+    --white:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 39px, rgba(200,57,58,0.05) 39px 40px),
+      var(--ice);
+    color:var(--navy);
+  }
+  header{
+    background:linear-gradient(135deg, var(--navy) 0%, var(--navy2) 60%, #1c4a80 100%);
+    color:white;
+    padding:22px 28px;
+    position:relative;
+    overflow:hidden;
+    border-bottom:5px solid var(--red);
+  }
+  header::after{
+    content:"";
+    position:absolute; right:-40px; top:-40px; width:180px; height:180px;
+    border:6px solid rgba(255,255,255,0.08);
+    border-radius:50%;
+  }
+  header h1{
+    margin:0; font-size:1.5rem; letter-spacing:0.5px;
+  }
+  header .sub{
+    margin-top:4px; font-size:0.85rem; color:#c9d9ec; font-weight:400;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:20px;}
+  .panel{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:18px 20px;
+    margin-bottom:18px;
+    box-shadow:0 1px 3px rgba(11,37,69,0.08);
+  }
+  .panel h2{
+    margin:0 0 12px 0; font-size:1.05rem; color:var(--navy2);
+    border-left:4px solid var(--red); padding-left:10px;
+  }
+  .controls-row{
+    display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end;
+  }
+  .field{display:flex; flex-direction:column; gap:4px;}
+  .field label{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--grey); font-weight:600;}
+  select, input[type=number], input[type=text]{
+    padding:8px 10px; border:1px solid var(--line); border-radius:6px; font-size:0.9rem; background:white;
+  }
+  select:focus, input:focus{outline:2px solid var(--navy2); outline-offset:1px;}
+  .season-toggle{display:flex; border:1px solid var(--line); border-radius:6px; overflow:hidden;}
+  .season-toggle button{
+    border:none; background:white; padding:8px 14px; font-size:0.85rem; cursor:pointer; color:var(--navy);
+  }
+  .season-toggle button.active{background:var(--navy2); color:white;}
+  .cap-summary{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:12px; margin-top:16px;
+  }
+  .stat{
+    background:var(--ice); border:1px solid var(--line); border-radius:8px; padding:12px 14px;
+  }
+  .stat .label{font-size:0.7rem; text-transform:uppercase; color:var(--grey); letter-spacing:0.5px; font-weight:600;}
+  .stat .value{font-size:1.35rem; font-weight:700; margin-top:2px;}
+  .stat.total .value{color:var(--navy);}
+  .stat.cap .value{color:var(--navy2);}
+  .stat.margin .value.pos{color:var(--green);}
+  .stat.margin .value.neg{color:var(--red);}
+  .stat.count .value{color:var(--gold);}
+  .bar-wrap{margin-top:14px;}
+  .bar-track{height:16px; border-radius:8px; background:var(--ice2); overflow:hidden; border:1px solid var(--line);}
+  .bar-fill{height:100%; background:linear-gradient(90deg, var(--navy2), var(--red)); transition:width .25s ease;}
+  .bar-fill.over{background:repeating-linear-gradient(45deg, var(--red), var(--red) 8px, #a92b2c 8px, #a92b2c 16px);}
+  .bar-caption{display:flex; justify-content:space-between; font-size:0.72rem; color:var(--grey); margin-top:4px;}
+
+  .add-player{
+    display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; margin-top:10px;
+  }
+  .add-player .field{flex:1; min-width:220px;}
+  datalist{}
+  .search-wrap{position:relative;}
+  .suggest-box{
+    position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:150;
+    background:white; border:1px solid var(--line); border-radius:8px;
+    box-shadow:0 6px 18px rgba(11,37,69,0.18);
+    max-height:260px; overflow-y:auto; display:none;
+  }
+  .suggest-box.show{display:block;}
+  .suggest-item{
+    padding:9px 12px; font-size:0.88rem; cursor:pointer; display:flex; justify-content:space-between; gap:8px;
+    border-bottom:1px solid #eef1f4;
+  }
+  .suggest-item:last-child{border-bottom:none;}
+  .suggest-item:hover, .suggest-item.active{background:var(--ice);}
+  .suggest-item .s-name{font-weight:600; color:var(--navy);}
+  .suggest-item .s-meta{font-size:0.75rem; color:var(--grey); white-space:nowrap;}
+  .suggest-empty{padding:10px 12px; font-size:0.82rem; color:var(--grey);}
+  button.primary{
+    background:var(--navy2); color:white; border:none; border-radius:6px; padding:9px 16px;
+    font-size:0.88rem; cursor:pointer; font-weight:600;
+  }
+  button.primary:hover{background:var(--navy);}
+  button.ghost{
+    background:transparent; border:1px solid var(--line); border-radius:6px; padding:9px 14px;
+    font-size:0.85rem; cursor:pointer; color:var(--navy2);
+  }
+  button.ghost:hover{background:var(--ice);}
+  button.deal-btn{
+    background:linear-gradient(135deg, var(--green), #16693f);
+    color:white; border:none; border-radius:8px; padding:11px 22px;
+    font-size:0.95rem; font-weight:800; cursor:pointer;
+    box-shadow:0 3px 10px rgba(31,138,83,0.35);
+    letter-spacing:0.3px;
+  }
+  button.deal-btn:hover{background:linear-gradient(135deg, #16693f, #0f4d2d); transform:translateY(-1px);}
+  button.deal-btn:active{transform:translateY(0);}
+
+  /* --- Picks module --- */
+  .picks-columns{
+    display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:0;
+  }
+  .picks-col h3{
+    font-size:0.95rem; color:var(--navy2); margin:0 0 10px 0; text-align:center;
+    background:var(--ice); border-radius:8px; padding:8px; border:1px solid var(--line);
+  }
+  .pick-row{
+    display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;
+    background:white; border:1px solid var(--line); border-radius:8px; padding:8px 12px; margin-bottom:6px;
+    font-size:0.85rem;
+  }
+  .pick-row.acquired{border-left:4px solid var(--gold); background:#fffdf5;}
+  .pick-row.traded-away{opacity:0.55;}
+  .pick-round{font-weight:800; color:var(--navy); font-size:0.82rem;}
+  .pick-status{flex:0 0 auto; text-align:right; font-size:0.78rem; color:var(--grey);}
+  .pick-status .to-dg{color:var(--red); font-weight:700;}
+  .pick-status .from-dg{color:var(--gold); font-weight:700;}
+  @media (max-width:700px){
+    .picks-columns{grid-template-columns:1fr;}
+  }
+
+  /* --- Trade sub-sections (RFA + picks) --- */
+  .trade-subsection-head{
+    font-size:0.72rem; text-transform:uppercase; letter-spacing:0.4px; color:var(--navy2);
+    font-weight:800; padding:10px 2px 4px 2px; margin-top:6px; border-top:1px dashed var(--line);
+  }
+  .trade-subsection-head:first-of-type{border-top:none; margin-top:2px;}
+  .trade-row.mini{padding:5px 8px; font-size:0.78rem;}
+
+  table{width:100%; border-collapse:collapse; margin-top:10px;}
+  thead th{
+    text-align:left; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.4px; color:var(--grey);
+    border-bottom:2px solid var(--line); padding:8px 6px; font-weight:700;
+  }
+  tbody td{padding:8px 6px; border-bottom:1px solid #eef1f4; font-size:0.9rem;}
+  tbody tr:hover{background:var(--ice);}
+
+  /* --- Card board (Trello-style) --- */
+  .board{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+    gap:14px;
+    margin-top:12px;
+  }
+  .pos-columns{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:16px;
+    margin-top:14px;
+    align-items:start;
+  }
+  .pos-column{
+    background:var(--ice);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px;
+    min-height:80px;
+  }
+  .pos-column-header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:2px 4px 10px 4px; margin-bottom:8px; border-bottom:2px solid var(--line);
+  }
+  .pos-column-header h3{
+    margin:0; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--navy2);
+  }
+  .pos-column-header .pos-count{
+    font-size:0.72rem; background:white; border:1px solid var(--line); border-radius:10px;
+    padding:1px 8px; color:var(--grey); font-weight:700;
+  }
+  .pos-column-header .pos-sum{
+    font-size:0.72rem; color:var(--grey); font-weight:700;
+  }
+  .pos-column .board{
+    grid-template-columns:1fr;
+    gap:10px;
+    margin-top:0;
+  }
+  .pos-column .board-empty{
+    font-size:0.78rem; color:var(--grey); text-align:center; padding:16px 4px;
+  }
+  @media (max-width:820px){
+    .pos-columns{grid-template-columns:1fr;}
+  }
+
+  /* --- Zoom tool --- */
+  .panel-header-row{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;
+    margin-bottom:12px;
+  }
+  .panel-header-row h2{margin-bottom:0 !important;}
+  .zoom-tool{
+    display:flex; align-items:center; gap:6px;
+    background:var(--ice); border:1px solid var(--line); border-radius:20px;
+    padding:4px 6px;
+  }
+  .zoom-tool .zoom-icon{font-size:0.9rem; padding:0 2px;}
+  .zoom-tool button{
+    width:26px; height:26px; border-radius:50%; border:none; background:white;
+    color:var(--navy2); font-size:1rem; font-weight:800; cursor:pointer;
+    box-shadow:0 1px 2px rgba(11,37,69,0.15);
+    display:flex; align-items:center; justify-content:center; line-height:1;
+  }
+  .zoom-tool button:hover{background:var(--navy2); color:white;}
+  .zoom-tool .zoom-label{font-size:0.72rem; color:var(--grey); font-weight:700; min-width:52px; text-align:center;}
+
+  /* zoom levels: applied via body class, control card grid density + size */
+  body.zoom-compact .pos-column .board{
+    grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
+  }
+  body.zoom-compact .card{padding:8px 9px; gap:5px;}
+  body.zoom-compact .card-name{font-size:0.78rem;}
+  body.zoom-compact .card-aav-row input{font-size:0.85rem; padding:3px 5px;}
+  body.zoom-compact .card-bottom-row select.retain-select{font-size:0.62rem; max-width:44px;}
+  body.zoom-compact .pos-tag{font-size:0.6rem; padding:1px 5px;}
+  body.zoom-compact .free-tag{font-size:0.68rem;}
+
+  body.zoom-normal .pos-column .board{
+    grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  body.zoom-large .pos-column .board{
+    grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+  }
+  body.zoom-large .card{padding:16px 17px; gap:10px;}
+  body.zoom-large .card-name{font-size:1.05rem;}
+  body.zoom-large .card-aav-row input{font-size:1.15rem; padding:7px 9px;}
+  .card{
+    background:white;
+    border:1px solid var(--line);
+    border-left:5px solid var(--navy2);
+    border-radius:10px;
+    padding:12px 13px;
+    box-shadow:0 1px 2px rgba(11,37,69,0.06);
+    display:flex; flex-direction:column; gap:8px;
+    transition:box-shadow .15s ease, transform .15s ease;
+    position:relative;
+  }
+  .card:hover{box-shadow:0 4px 14px rgba(11,37,69,0.14); transform:translateY(-1px);}
+  .card.corrected{border-left-color:var(--gold);}
+  .card.no-data{border-left-color:var(--red);}
+  .card.retained{background:#f6faff;}
+  .card-name{
+    font-weight:700; font-size:0.92rem; color:var(--navy); line-height:1.25;
+    padding-right:20px;
+  }
+  .card-remove{
+    position:absolute; top:8px; right:8px;
+    border:none; background:transparent; color:var(--grey); font-size:1rem;
+    cursor:pointer; line-height:1; padding:2px 5px; border-radius:4px;
+  }
+  .card-remove:hover{background:#fdeceb; color:var(--red);}
+  .rfa-remove{
+    position:absolute; top:8px; right:8px;
+    border:none; background:transparent; color:var(--grey); font-size:1rem;
+    cursor:pointer; line-height:1; padding:2px 5px; border-radius:4px;
+  }
+  .rfa-remove:hover{background:#fdeceb; color:var(--red);}
+  .card-badges{display:flex; flex-wrap:wrap; align-items:center; gap:4px;}
+  .card-aav-row{display:flex; align-items:center; gap:6px; margin-top:2px;}
+  .card-aav-row input{
+    width:100%; border:1px solid var(--line); border-radius:6px; padding:5px 7px;
+    font-size:1.02rem; font-weight:800; color:var(--navy); background:var(--ice);
+  }
+  .card-aav-row input:focus{outline:2px solid var(--gold); outline-offset:1px; background:white;}
+  .card-aav-row input.no-data{border-color:var(--red); background:#fff5f5;}
+  .card-aav-row .unit{font-size:0.72rem; color:var(--grey); white-space:nowrap;}
+  .card-bottom-row{
+    display:flex; align-items:center; justify-content:space-between; gap:6px; margin-top:auto;
+  }
+  .card-bottom-row .free-tag{flex:1; min-width:0;}
+  .card-bottom-row select.retain-select{
+    width:auto; max-width:56px; flex-shrink:0;
+    font-size:0.7rem; padding:3px 3px; border-radius:5px; border:1px solid var(--line);
+    background:white; color:var(--navy2); font-weight:700;
+  }
+  .card-badges .card-revert{
+    border:none; background:var(--ice2); color:var(--navy2); border-radius:5px;
+    padding:1px 6px; font-size:0.68rem; cursor:pointer; font-weight:700;
+  }
+  .card-badges .card-revert:hover{background:var(--navy2); color:white;}
+  .board-empty{grid-column:1/-1;}
+  .pos-tag{
+    display:inline-block; font-size:0.68rem; font-weight:700; padding:2px 7px; border-radius:10px;
+    background:var(--ice2); color:var(--navy2); margin-right:6px;
+  }
+  .free-tag{font-size:0.75rem; color:var(--grey);}
+  .free-tag.rfa{color:var(--gold); font-weight:600;}
+  .free-tag.ufa{color:var(--red); font-weight:600;}
+  .aav-cell{font-weight:700; color:var(--navy);}
+  .retain-select{font-size:0.78rem; padding:3px 5px; border-radius:5px; border:1px solid var(--line);}
+  .row-actions button{
+    border:none; background:#fdeceb; color:var(--red); border-radius:5px; padding:5px 9px;
+    cursor:pointer; font-size:0.8rem; font-weight:600;
+  }
+  .row-actions button:hover{background:var(--red); color:white;}
+  .row-actions .revertBtn{background:var(--ice2); color:var(--navy2);}
+  .row-actions .revertBtn:hover{background:var(--navy2); color:white;}
+  .aav-edit-input{
+    width:80px; border:1px solid var(--line); border-radius:5px; padding:4px 6px;
+    font-size:0.88rem; font-weight:700; color:var(--navy); background:white;
+  }
+  .aav-edit-input:focus{outline:2px solid var(--gold); outline-offset:1px;}
+  .aav-edit-input.no-data{border-color:var(--red); background:#fff5f5;}
+  .empty-note{color:var(--grey); font-size:0.85rem; padding:14px 4px;}
+  .prospects-box{
+    margin-top:6px; font-size:0.85rem; color:var(--grey); background:var(--ice); border-radius:8px; padding:10px 12px;
+  }
+  .prospects-box b{color:var(--navy2);}
+  .chip{
+    display:inline-block; background:white; border:1px solid var(--line); border-radius:12px;
+    padding:2px 9px; margin:3px 4px 0 0; font-size:0.78rem;
+  }
+  footer{
+    text-align:center; color:var(--grey); font-size:0.78rem; padding:20px; opacity:0.8;
+  }
+  .disclaimer{
+    font-size:0.78rem; background:#fff7e6; border:1px solid #f0d99a; border-radius:8px; padding:10px 14px; color:#7a5a12;
+    margin-top:14px;
+  }
+  .sticky-wrap{
+    position:sticky; top:0; z-index:200;
+    box-shadow:0 3px 10px rgba(11,37,69,0.25);
+  }
+  .main-nav{
+    display:flex; gap:6px; background:var(--navy); padding:8px 16px 0 16px;
+    overflow-x:auto; -webkit-overflow-scrolling:touch;
+  }
+  .main-nav .nav-btn{
+    border:none; background:rgba(255,255,255,0.08); color:#c9d9ec;
+    padding:8px 16px; border-radius:8px 8px 0 0; font-size:0.82rem; font-weight:700;
+    cursor:pointer; flex:0 0 auto; white-space:nowrap;
+  }
+  .main-nav .nav-btn.active{background:var(--ice); color:var(--navy);}
+  .sticky-bar{
+    top:0; z-index:200;
+    background:linear-gradient(135deg, var(--navy) 0%, var(--navy2) 70%);
+    color:white;
+    padding:8px 20px;
+    display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+    border-bottom:3px solid var(--red);
+    font-size:0.85rem;
+  }
+  .sticky-bar .sb-dg{
+    font-weight:800; font-size:0.95rem; white-space:nowrap; padding-right:10px; border-right:1px solid rgba(255,255,255,0.25);
+  }
+  .sticky-bar .sb-item{display:flex; align-items:baseline; gap:5px; white-space:nowrap;}
+  .sticky-bar .sb-item .sb-label{font-size:0.68rem; text-transform:uppercase; letter-spacing:0.4px; color:#c9d9ec;}
+  .sticky-bar .sb-item .sb-value{font-weight:800; font-size:0.98rem;}
+  .sticky-bar .sb-item.margin .sb-value.pos{color:#7fe0a8;}
+  .sticky-bar .sb-item.margin .sb-value.neg{color:#ff9b93;}
+  .sticky-bar .sb-bar-track{flex:1; min-width:100px; height:8px; background:rgba(255,255,255,0.18); border-radius:5px; overflow:hidden;}
+  .sticky-bar .sb-bar-fill{height:100%; background:var(--gold); transition:width .2s ease;}
+  .sticky-bar .sb-bar-fill.over{background:var(--red);}
+  @media (max-width:760px){
+    .sticky-bar{gap:10px 14px; font-size:0.78rem; padding:7px 12px;}
+    .sticky-bar .sb-bar-track{display:none;}
+    .main-nav{padding:6px 10px 0 10px;}
+    .main-nav .nav-btn{padding:7px 10px; font-size:0.76rem;}
+  }
+  .tab-page{display:none;}
+  .tab-page.active{display:block;}
+
+  /* --- Versions module --- */
+  .version-row{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    background:var(--ice); border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+    margin-bottom:8px;
+  }
+  .version-row .v-info{flex:1; min-width:180px;}
+  .version-row .v-name{font-weight:700; color:var(--navy); font-size:0.9rem;}
+  .version-row .v-meta{font-size:0.75rem; color:var(--grey); margin-top:2px;}
+  .version-row .v-actions{display:flex; gap:6px; flex-wrap:wrap;}
+  .version-row .v-actions button{
+    border:none; border-radius:6px; padding:6px 10px; font-size:0.78rem; cursor:pointer; font-weight:600;
+  }
+  .v-actions .v-restore{background:var(--navy2); color:white;}
+  .v-actions .v-restore:hover{background:var(--navy);}
+  .v-actions .v-export{background:var(--ice2); color:var(--navy2);}
+  .v-actions .v-export:hover{background:#c5d6e5;}
+  .v-actions .v-delete{background:#fdeceb; color:var(--red);}
+  .v-actions .v-delete:hover{background:var(--red); color:white;}
+  .import-drop{
+    border:2px dashed var(--line); border-radius:10px; padding:18px; text-align:center;
+    color:var(--grey); font-size:0.85rem; margin-top:10px; cursor:pointer;
+  }
+  .import-drop:hover{border-color:var(--navy2); color:var(--navy2);}
+  .fab-btn{
+    position:fixed; right:18px; bottom:18px; z-index:300;
+    width:56px; height:56px; border-radius:50%; border:none;
+    background:linear-gradient(135deg, var(--red), #a92b2c);
+    color:white; font-size:1.7rem; line-height:1;
+    box-shadow:0 5px 16px rgba(200,57,58,0.45);
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:transform .15s ease;
+  }
+  .fab-btn:hover{transform:scale(1.06);}
+  .fab-btn.open{background:linear-gradient(135deg, var(--navy2), var(--navy)); transform:rotate(45deg);}
+  .fab-panel{
+    position:fixed; right:18px; bottom:84px; z-index:300;
+    width:min(320px, calc(100vw - 36px));
+    background:white; border:1px solid var(--line); border-radius:12px;
+    box-shadow:0 10px 30px rgba(11,37,69,0.28);
+    padding:14px; display:none;
+  }
+  .fab-panel.show{display:block;}
+  .fab-panel h4{margin:0 0 8px 0; font-size:0.85rem; color:var(--navy2); display:flex; justify-content:space-between; align-items:center;}
+  .fab-panel .fab-dg-name{font-size:0.72rem; color:var(--grey); font-weight:600;}
+  .fab-panel input{width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:6px; font-size:0.9rem;}
+  .fab-panel .suggest-box{position:static; margin-top:6px; box-shadow:none; border-color:var(--line); max-height:220px;}
+  .toast{
+    position:fixed; bottom:18px; left:50%; transform:translateX(-50%);
+    background:var(--navy); color:white; padding:10px 18px; border-radius:20px;
+    font-size:0.85rem; box-shadow:0 4px 12px rgba(0,0,0,0.25); opacity:0; pointer-events:none; transition:opacity .2s;
+  }
+  .toast.show{opacity:1;}
+
+  /* --- Floating quick-add bubble --- */
+  .fab{
+    position:fixed; bottom:24px; right:20px; z-index:300;
+    width:58px; height:58px; border-radius:50%; border:none;
+    background:linear-gradient(135deg, var(--red), #a92b2c);
+    color:white; font-size:2rem; line-height:1; font-weight:400;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 5px 16px rgba(0,0,0,0.3);
+    cursor:pointer;
+  }
+  .fab:hover{transform:scale(1.05);}
+  .fab:active{transform:scale(0.96);}
+  .quick-add-overlay{
+    position:fixed; inset:0; background:rgba(11,37,69,0.5);
+    z-index:400; display:none; align-items:flex-end; justify-content:center;
+  }
+  .quick-add-overlay.show{display:flex;}
+  .quick-add-modal{
+    background:white; width:100%; max-width:480px;
+    border-radius:16px 16px 0 0; padding:18px 18px 22px 18px;
+    box-shadow:0 -6px 24px rgba(0,0,0,0.3);
+    max-height:75vh; overflow-y:auto;
+  }
+  .qa-header{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
+  .qa-title{font-weight:800; font-size:1.05rem; color:var(--navy);}
+  .qa-sub{font-size:0.8rem; color:var(--grey); margin-top:2px;}
+  .qa-close{
+    border:none; background:var(--ice); color:var(--navy); border-radius:50%;
+    width:30px; height:30px; font-size:0.95rem; cursor:pointer; flex-shrink:0;
+  }
+  .qa-close:hover{background:var(--ice2);}
+  @media (min-width:640px){
+    .quick-add-overlay{align-items:center;}
+    .quick-add-modal{border-radius:14px; max-height:80vh;}
+  }
+
+  /* --- Trade module --- */
+  .trade-columns{
+    display:grid; grid-template-columns:1fr auto 1fr; gap:0; margin-top:14px;
+    align-items:start;
+  }
+  .trade-side{
+    background:var(--ice); border:1px solid var(--line); border-radius:10px; padding:12px;
+  }
+  .trade-vs{
+    display:flex; align-items:center; justify-content:center; padding:0 10px;
+    font-size:1.4rem; color:var(--grey); align-self:center;
+  }
+  .trade-side h3{
+    font-size:0.85rem; color:var(--navy2); margin:0 0 8px 0;
+    border-bottom:2px solid var(--line); padding-bottom:6px;
+  }
+  .trade-group-head{
+    font-size:0.7rem; text-transform:uppercase; letter-spacing:0.4px; color:var(--grey);
+    font-weight:800; padding:8px 2px 3px 2px;
+  }
+  .trade-group-head:first-child{padding-top:0;}
+  .trade-group-head.collapsible{
+    cursor:pointer; user-select:none;
+    display:flex; align-items:center; gap:5px;
+    padding:7px 6px; margin-top:4px; border-radius:6px;
+    background:var(--ice2);
+  }
+  .trade-group-head.collapsible:hover{background:#c5d6e5;}
+  .trade-group-head .tgh-arrow{font-size:0.65rem; color:var(--navy2); width:10px; display:inline-block;}
+  .trade-group-body{display:flex; flex-direction:column; gap:6px; margin-top:4px;}
+  .trade-subsection-head{
+    font-size:0.68rem; text-transform:uppercase; letter-spacing:0.4px; color:var(--grey);
+    font-weight:700; padding:6px 2px 2px 2px;
+  }
+  .trade-list{
+    max-height:400px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;
+    padding-right:4px;
+  }
+  .trade-row{
+    display:flex; align-items:center; gap:8px;
+    background:var(--ice); border:1px solid var(--line); border-radius:7px; padding:6px 8px;
+    font-size:0.84rem;
+  }
+  .trade-row.checked{border-color:var(--red); background:#fff2f1;}
+  .trade-row input[type=checkbox]{width:16px; height:16px; flex-shrink:0; accent-color:var(--red);}
+  .trade-row .tr-name{flex:1; font-weight:600; color:var(--navy); min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .trade-row .tr-aav{font-weight:700; color:var(--navy2); white-space:nowrap; font-size:0.8rem;}
+  .trade-row select.tr-retain{
+    font-size:0.7rem; border:1px solid var(--line); border-radius:5px; padding:2px 3px; max-width:78px;
+  }
+  .trade-summary{
+    margin-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:14px;
+  }
+  .trade-dg-box{
+    background:var(--ice); border:1px solid var(--line); border-radius:10px; padding:12px 14px;
+  }
+  .trade-dg-box h4{margin:0 0 8px 0; font-size:0.9rem; color:var(--navy);}
+  .trade-metric{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-size:0.82rem; padding:3px 0; border-bottom:1px dashed var(--line);
+  }
+  .trade-metric:last-child{border-bottom:none;}
+  .trade-metric .tm-label{color:var(--grey);}
+  .trade-metric .tm-value{font-weight:700; color:var(--navy);}
+  .trade-metric .tm-arrow{color:var(--grey); font-weight:400; margin:0 4px;}
+  .trade-metric .tm-value.neg{color:var(--red);}
+  .trade-metric .tm-value.pos{color:var(--green);}
+  @media (max-width:700px){
+    .trade-columns{grid-template-columns:1fr;}
+    .trade-summary{grid-template-columns:1fr;}
+    .trade-vs{padding:6px 0;}
+  }
+
+  /* --- Kanban board --- */
+  .kanban-board{
+    display:flex; gap:12px; overflow-x:auto; padding:4px 2px 14px 2px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .kanban-list{
+    background:var(--ice); border:1px solid var(--line); border-radius:10px;
+    min-width:210px; max-width:230px; flex:0 0 auto;
+    display:flex; flex-direction:column; max-height:75vh;
+  }
+  .kanban-list.drop-target{border-color:var(--green); box-shadow:0 0 0 2px rgba(31,138,83,0.3);}
+  .kanban-list-header{
+    padding:10px 12px 8px 12px; border-bottom:2px solid var(--line);
+  }
+  .kanban-list-header .kl-name{font-weight:800; font-size:0.88rem; color:var(--navy);}
+  .kanban-list-header .kl-meta{font-size:0.72rem; color:var(--grey); margin-top:2px;}
+  .kanban-cards{
+    overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:7px; padding:8px;
+  }
+  .kanban-card{
+    background:white; border:1px solid var(--line); border-radius:8px; padding:7px 9px;
+    font-size:0.78rem; cursor:pointer; display:flex; flex-direction:column; gap:2px;
+  }
+  .kanban-card:hover{border-color:var(--navy2);}
+  .kanban-card.selected{
+    border-color:var(--red); background:#fff2f1; box-shadow:0 0 0 2px rgba(200,57,58,0.25);
+  }
+  .kanban-card .kc-name{font-weight:700; color:var(--navy);}
+  .kanban-card .kc-meta{font-size:0.68rem; color:var(--grey); display:flex; justify-content:space-between;}
+  .kanban-empty-note{
+    font-size:0.72rem; color:var(--grey); text-align:center; padding:14px 4px;
+  }
+  @media (max-width:640px){
+    .controls-row{flex-direction:column; align-items:stretch;}
+    thead th:nth-child(3), tbody td:nth-child(3){display:none;}
+  }
+</style>
+</head>
+<body class="zoom-normal">
+
+<header>
+  <h1>🏒 Pool des Champions — Calculateur de masse salariale</h1>
+  <div class="sub">Simulation de transactions en temps réel · plafond ajustable · base de données des 8 alignements</div>
+</header>
+
+<div class="sticky-wrap">
+<div class="main-nav" id="mainNav">
+  <button class="nav-btn active" data-tab="effectifs">📋 Effectifs</button>
+  <button class="nav-btn" data-tab="rfa">🌱 RFA</button>
+  <button class="nav-btn" data-tab="repechage">🎯 Repêchage</button>
+  <button class="nav-btn" data-tab="transactions">🔁 Transactions</button>
+  <button class="nav-btn" data-tab="kanban">🗂️ Mur</button>
+  <button class="nav-btn" data-tab="versions">💾 Versions</button>
+</div>
+
+<div class="sticky-bar" id="stickyBar">
+  <span class="sb-dg" id="sbDg">—</span>
+  <div class="sb-item count"><span class="sb-label">Effectif</span><span class="sb-value" id="sbCount">0</span></div>
+  <div class="sb-item"><span class="sb-label">Masse</span><span class="sb-value" id="sbTotal">0.000</span></div>
+  <div class="sb-item"><span class="sb-label">Plafond</span><span class="sb-value" id="sbCap">0.000</span></div>
+  <div class="sb-item margin"><span class="sb-label">Marge</span><span class="sb-value" id="sbMargin">0.000</span></div>
+  <div class="sb-bar-track"><div class="sb-bar-fill" id="sbBarFill" style="width:0%"></div></div>
+</div>
+</div>
+
+<div class="wrap">
+
+  <div class="tab-page active" id="tabEffectifs">
+
+  <div class="panel">
+    <h2>Configuration</h2>
+    <div class="controls-row">
+      <div class="field">
+        <label for="dgSelect">Directeur général</label>
+        <select id="dgSelect"></select>
+      </div>
+      <div class="field">
+        <label>Saison de référence AAV</label>
+        <div class="season-toggle">
+          <button id="btnS26" class="active">2026-27</button>
+          <button id="btnS27">2027-28</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="capInput">Plafond salarial ($M)</label>
+        <input type="number" id="capInput" step="0.001" value="160">
+      </div>
+      <div class="field">
+        <label>&nbsp;</label>
+        <button class="ghost" id="resetBtn">↺ Réinitialiser l'alignement</button>
+      </div>
+    </div>
+
+    <div class="cap-summary">
+      <div class="stat total"><div class="label">Masse totale</div><div class="value" id="statTotal">0.000</div></div>
+      <div class="stat cap"><div class="label">Plafond</div><div class="value" id="statCap">0.000</div></div>
+      <div class="stat margin"><div class="label">Marge</div><div class="value" id="statMargin">0.000</div></div>
+      <div class="stat count"><div class="label">Joueurs (masse)</div><div class="value" id="statCount">0</div></div>
+    </div>
+
+    <div class="bar-wrap">
+      <div class="bar-track"><div class="bar-fill" id="barFill" style="width:0%"></div></div>
+      <div class="bar-caption"><span>0 $M</span><span id="barPct">0%</span><span id="barCapLabel">147.900 $M</span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header-row">
+      <h2 style="border:none; padding:0; margin:0;">Alignement actif</h2>
+      <div class="zoom-tool">
+        <span class="zoom-icon">🔍</span>
+        <button id="zoomOutBtn" title="Voir plus de cartes (plus petites)">−</button>
+        <span class="zoom-label" id="zoomLabel">Normal</span>
+        <button id="zoomInBtn" title="Voir moins de cartes (plus grandes)">+</button>
+      </div>
+    </div>
+    <div class="pos-columns">
+      <div class="pos-column">
+        <div class="pos-column-header">
+          <h3>🏒 Attaquants</h3>
+          <span class="pos-count" id="countF">0</span>
+        </div>
+        <div class="pos-sum" id="sumF">0.000 $M</div>
+        <div class="board" id="boardF"></div>
+      </div>
+      <div class="pos-column">
+        <div class="pos-column-header">
+          <h3>🛡️ Défenseurs</h3>
+          <span class="pos-count" id="countD">0</span>
+        </div>
+        <div class="pos-sum" id="sumD">0.000 $M</div>
+        <div class="board" id="boardD"></div>
+      </div>
+      <div class="pos-column">
+        <div class="pos-column-header">
+          <h3>🥅 Gardiens</h3>
+          <span class="pos-count" id="countG">0</span>
+        </div>
+        <div class="pos-sum" id="sumG">0.000 $M</div>
+        <div class="board" id="boardG"></div>
+      </div>
+    </div>
+    <div id="emptyNote" class="empty-note" style="display:none;">Aucun joueur — ajoutez-en ci-dessous.</div>
+  </div>
+
+  <div class="panel">
+    <h2>Ajouter un joueur</h2>
+    <div class="add-player">
+      <div class="field search-wrap">
+        <label for="playerSearch" id="playerSearchLabel">Rechercher dans la LNH</label>
+        <input type="text" id="playerSearch" placeholder="Tapez un nom…" autocomplete="off" autocorrect="off" spellcheck="false">
+        <div class="suggest-box" id="suggestBox"></div>
+      </div>
+      <button class="primary" id="addBtn">+ Ajouter au chandail</button>
+    </div>
+    <div class="add-player" style="margin-top:8px;">
+      <div class="field">
+        <label for="customName">Ou joueur/montant personnalisé (non répertorié)</label>
+        <input type="text" id="customName" placeholder="Nom">
+      </div>
+      <div class="field" style="max-width:140px;">
+        <label for="customAav">AAV ($M)</label>
+        <input type="number" id="customAav" step="0.001" placeholder="0.000">
+      </div>
+      <div class="field" style="max-width:130px;">
+        <label for="customPos">Position</label>
+        <select id="customPos">
+          <option value="F">Attaquant</option>
+          <option value="D">Défenseur</option>
+          <option value="G">Gardien</option>
+        </select>
+      </div>
+      <button class="ghost" id="addCustomBtn">+ Ajouter (perso)</button>
+    </div>
+    <div class="prospects-box" id="prospectsBox"></div>
+  </div>
+
+  <div class="disclaimer" id="disclaimerBox"></div>
+
+  </div><!-- /tabEffectifs -->
+
+  <div class="tab-page" id="tabRfa">
+    <div class="panel">
+      <h2>🌱 Espoirs RFA (hors masse salariale)</h2>
+      <div class="controls-row">
+        <div class="field">
+          <label for="rfaDgSelect">Directeur général</label>
+          <select id="rfaDgSelect"></select>
+        </div>
+      </div>
+      <div class="disclaimer" style="margin-top:10px;">
+        Ces joueurs ne comptent pas contre le plafond salarial de leur DG tant qu'ils ne sont pas promus à l'alignement principal (onglet Effectifs).
+      </div>
+      <div class="board" id="rfaBoard" style="margin-top:12px;"></div>
+      <div id="rfaEmptyNote" class="empty-note" style="display:none;">Aucun espoir RFA pour ce DG.</div>
+    </div>
+
+    <div class="panel">
+      <h2>Ajouter un espoir RFA</h2>
+      <div class="add-player">
+        <div class="field search-wrap">
+          <label for="rfaSearchInput">Rechercher dans la LNH</label>
+          <input type="text" id="rfaSearchInput" placeholder="Tapez un nom…" autocomplete="off" autocorrect="off" spellcheck="false">
+          <div class="suggest-box" id="rfaSuggestBox"></div>
+        </div>
+        <button class="primary" id="rfaAddBtn">+ Ajouter comme espoir</button>
+      </div>
+      <div class="add-player" style="margin-top:8px;">
+        <div class="field">
+          <label for="rfaCustomName">Ou espoir personnalisé (non répertorié)</label>
+          <input type="text" id="rfaCustomName" placeholder="Nom">
+        </div>
+        <div class="field" style="max-width:130px;">
+          <label for="rfaCustomFree">Statut</label>
+          <input type="text" id="rfaCustomFree" placeholder="Ex: RFA 2027">
+        </div>
+        <button class="ghost" id="rfaAddCustomBtn">+ Ajouter (perso)</button>
+      </div>
+    </div>
+  </div><!-- /tabRfa -->
+
+  <div class="tab-page" id="tabRepechage">
+    <div class="panel">
+      <h2>🎯 Choix de repêchage UFA</h2>
+      <div class="controls-row">
+        <div class="field">
+          <label for="picksDgSelect">Directeur général</label>
+          <select id="picksDgSelect"></select>
+        </div>
+        <div class="field" style="max-width:120px;">
+          <label for="pickYearAInput">Année A</label>
+          <input type="text" id="pickYearAInput" value="2026-2027">
+        </div>
+        <div class="field" style="max-width:120px;">
+          <label for="pickYearBInput">Année B</label>
+          <input type="text" id="pickYearBInput" value="2027-2028">
+        </div>
+      </div>
+      <div class="disclaimer" style="margin-top:10px;">
+        12 rondes par année. Chaque DG possède ses 12 choix à l'origine — les échanges déplacent la propriété d'un choix précis, comme pour les joueurs.
+      </div>
+    </div>
+
+    <div class="picks-columns">
+      <div class="picks-col">
+        <h3 id="picksYearALabel">Repêchage 2026-2027</h3>
+        <div id="picksListA"></div>
+      </div>
+      <div class="picks-col">
+        <h3 id="picksYearBLabel">Repêchage 2027-2028</h3>
+        <div id="picksListB"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>🌱 Choix RFA</h2>
+      <div class="disclaimer" style="margin-top:6px;">
+        3 rondes par DG, par année. Années fixes : 2026-2027 et 2027-2028. Utilise le même DG que ci-dessus.
+      </div>
+    </div>
+    <div class="picks-columns">
+      <div class="picks-col">
+        <h3>Choix RFA 2026-2027</h3>
+        <div id="rfaPicksListA"></div>
+      </div>
+      <div class="picks-col">
+        <h3>Choix RFA 2027-2028</h3>
+        <div id="rfaPicksListB"></div>
+      </div>
+    </div>
+  </div><!-- /tabRepechage -->
+
+  <div class="tab-page" id="tabTransactions">
+
+  <div class="panel" id="tradePanel">
+    <h2>🔁 Proposer une transaction</h2>
+    <div class="controls-row">
+      <div class="field">
+        <label for="tradeDgA">DG A</label>
+        <select id="tradeDgA"></select>
+      </div>
+      <div class="field" style="align-self:center; padding-top:14px;">
+        <span style="font-size:1.3rem; color:var(--grey);">⇄</span>
+      </div>
+      <div class="field">
+        <label for="tradeDgB">DG B</label>
+        <select id="tradeDgB"></select>
+      </div>
+    </div>
+
+    <div class="trade-columns">
+      <div class="trade-side">
+        <h3 id="tradeAHeader">DG A envoie :</h3>
+        <div class="trade-list" id="tradeListA"></div>
+      </div>
+      <div class="trade-vs">⇄</div>
+      <div class="trade-side">
+        <h3 id="tradeBHeader">DG B envoie :</h3>
+        <div class="trade-list" id="tradeListB"></div>
+      </div>
+    </div>
+
+    <div class="trade-summary" id="tradeSummary"></div>
+
+    <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="deal-btn" id="dealBtn">🤝 DEAL!</button>
+      <button class="primary" id="copyTradeBtn">📋 Copier le texto de transaction (proposition)</button>
+      <button class="ghost" id="resetTradeBtn">↺ Réinitialiser la transaction</button>
+    </div>
+  </div>
+
+  </div><!-- /tabTransactions -->
+
+  <div class="tab-page" id="tabKanban">
+    <div class="panel">
+      <h2>🗂️ Mur</h2>
+      <div class="disclaimer" style="margin-top:6px;">
+        Chaque liste = un DG. Touchez une carte pour la sélectionner, puis touchez une autre liste pour y déplacer le joueur — un déplacement direct et rapide, sans passer par le module Transaction (donc sans texto ni suivi de retenue). Idéal pour corriger une erreur ou réorganiser vite.
+      </div>
+    </div>
+    <div class="kanban-board" id="kanbanBoard"></div>
+  </div><!-- /tabKanban -->
+
+  <div class="tab-page" id="tabVersions">
+
+  <div class="panel">
+    <h2>💾 Sauvegarder une version</h2>
+    <div class="controls-row">
+      <div class="field" style="flex:1; min-width:220px;">
+        <label for="versionNameInput">Nom de la version</label>
+        <input type="text" id="versionNameInput" placeholder="Ex: Après repêchage RFA 2026">
+      </div>
+      <button class="primary" id="saveVersionBtn">💾 Sauvegarder l'état actuel</button>
+    </div>
+    <div class="disclaimer" style="margin-top:12px;">
+      ⚠️ Les versions sont conservées <b>dans cet onglet de navigateur uniquement</b>, tant qu'il reste ouvert (aucun serveur derrière cet outil). Pour garder une version de façon permanente ou la <b>partager avec un autre DG</b>, cliquez « Exporter » — ça télécharge un fichier <code>.json</code> que vous pouvez envoyer par Messenger/courriel. L'autre DG n'a qu'à l'importer ci-dessous dans sa propre copie de l'outil.
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Versions sauvegardées</h2>
+    <div id="versionsList"></div>
+    <div id="versionsEmpty" class="empty-note" style="display:none;">Aucune version sauvegardée pour l'instant.</div>
+  </div>
+
+  <div class="panel">
+    <h2>📥 Importer une version</h2>
+    <div class="import-drop" id="importDrop">Cliquez ici pour choisir un fichier .json de version (le vôtre ou celui d'un autre DG)</div>
+    <input type="file" id="importFileInput" accept="application/json,.json" style="display:none;">
+  </div>
+
+  </div><!-- /tabVersions -->
+
+  <footer>Pool des Champions · Coin du Claude · outil généré à partir de fichier_des_champions.xlsx</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<button class="fab" id="fabBtn" title="Ajout rapide">+</button>
+
+<div class="quick-add-overlay" id="quickAddOverlay">
+  <div class="quick-add-modal">
+    <div class="qa-header">
+      <div>
+        <div class="qa-title">Ajout rapide</div>
+        <div class="qa-sub">Alignement actif : <b id="qaDgLabel">—</b></div>
+      </div>
+      <button class="qa-close" id="qaCloseBtn" title="Fermer">✕</button>
+    </div>
+    <div class="field search-wrap" style="margin-top:12px;">
+      <label for="qaSearchInput">Rechercher dans la LNH</label>
+      <input type="text" id="qaSearchInput" placeholder="Tapez un nom…" autocomplete="off" autocorrect="off" spellcheck="false">
+      <div class="suggest-box" id="qaSuggestBox"></div>
+    </div>
+    <button class="primary" id="qaAddBtn" style="margin-top:10px; width:100%;">+ Ajouter au chandail</button>
+  </div>
+</div>
+
+<script>
+const RAW_DATA = {"players": {"Nathan Mackinnon": {"aav2627": 12.6, "aav2728": 12.6, "free": 2031, "team": "Pinson", "nhlTeam": "Colorado Avalanche", "pos": "F", "source": "excel"}, "Mikko Rantanen": {"aav2627": 12.0, "aav2728": 12.0, "free": 2033, "team": "Pinson", "pos": "F", "source": "excel", "nhlTeam": null}, "Kirill Kaprizov": {"aav2627": 17.0, "aav2728": 17.0, "free": 2034, "team": "Pinson", "pos": "F", "source": "excel", "nhlTeam": null}, "Kevin Fiala": {"aav2627": null, "aav2728": 7.875, "free": 2029, "team": "Pinson", "pos": "F", "source": "excel", "nhlTeam": null}, "Clayton Keller": {"aav2627": 7.15, "aav2728": 7.15, "free": 2028, "team": "Pinson", "pos": "F", "source": "excel", "nhlTeam": null}, "Robert Thomas": {"aav2627": 8.125, "aav2728": 8.125, "free": 2031, "team": "Pinson", "pos": "F", "source": "excel", "nhlTeam": null}, "Alexis Lafrenière": {"aav2627": 7.45, "aav2728": 7.45, "free": 2032, "team": "Pinson", "pos": "F", "source": "excel", "nhlTeam": null}, "Morgan Geekie": {"aav2627": null, "aav2728": 5.5, "free": 2031, "team": "Pinson", "pos": "F", "source": "excel", "nhlTeam": null}, "Nazem Kadri": {"aav2627": 5.6, "aav2728": 7.0, "free": 2029, "team": "Pinson", "nhlTeam": "Colorado Avalanche", "pos": "F", "source": "excel"}, "Rutger Mcgroarty": {"aav2627": null, "aav2728": 1.45, "free": 2027, "team": "Pinson", "pos": "F", "source": "excel", "nhlTeam": null}, "Kaapo Kakko": {"aav2627": null, "aav2728": 4.525, "free": 2028, "team": "Pinson", "pos": "F", "source": "excel", "nhlTeam": null}, "Wyatt Johnston": {"aav2627": 8.4, "aav2728": 8.4, "free": 2030, "team": "Pinson", "pos": "F", "source": "excel", "nhlTeam": null}, "Kent Johnson": {"aav2627": null, "aav2728": "RFA", "free": 2027, "team": "Pinson", "pos": "F", "source": "excel", "nhlTeam": null}, "Fabian Lysell": {"aav2627": 0.85, "aav2728": "RFA", "free": 2027, "team": "Pinson", "nhlTeam": "Colorado Avalanche", "pos": "F", "source": "excel"}, "Roman Josi": {"aav2627": 9.059, "aav2728": 9.059, "free": 2028, "team": "Pinson", "pos": "D", "source": "excel", "nhlTeam": null}, "Erik Karlsson": {"aav2627": 11.5, "aav2728": "UFA", "free": 2027, "team": "Pinson", "pos": "D", "source": "excel", "nhlTeam": null}, "Mikhail Sergachev": {"aav2627": 8.5, "aav2728": 8.5, "free": 2031, "team": "Pinson", "pos": "D", "source": "excel", "nhlTeam": null}, "Alexander Nikishin": {"aav2627": 7.5, "aav2728": null, "free": 2026, "team": "Pinson", "pos": "D", "source": "excel", "nhlTeam": null}, "Bowen Byram": {"aav2627": 6.25, "aav2728": 12.5, "free": 2033, "team": "Pinson", "pos": "D", "source": "excel", "nhlTeam": null}, "Michael Kesselring": {"aav2627": null, "aav2728": 4.5, "free": 2029, "team": "Pinson", "pos": "D", "source": "excel", "nhlTeam": null}, "Scott Morrow": {"aav2627": null, "aav2728": "RFA", "free": 2027, "team": "Pinson", "pos": "D", "source": "excel", "nhlTeam": null}, "Philip Broberg": {"aav2627": null, "aav2728": 8.0, "free": 2032, "team": "Pinson", "pos": "D", "source": "excel", "nhlTeam": null}, "Adam Boqvist": {"aav2627": "RFA", "aav2728": null, "free": 2026, "team": "Pinson", "pos": "D", "source": "excel", "nhlTeam": null}, "Pyotr Kochetkov": {"aav2627": null, "aav2728": "UFA", "free": 2027, "team": "Pinson", "pos": "G", "source": "excel", "nhlTeam": null}, "Juuse Saros": {"aav2627": null, "aav2728": 7.74, "free": 2033, "team": "Pinson", "pos": "G", "source": "excel", "nhlTeam": null}, "Joseph Woll": {"aav2627": null, "aav2728": 3.6667, "free": 2028, "team": "Pinson", "pos": "G", "source": "excel", "nhlTeam": null}, "Adam Fantilli": {"aav2627": "RFA", "aav2728": null, "free": 2028, "team": "Pinson", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Zeev Buium": {"aav2627": 1.65, "aav2728": "RFA", "free": 2029, "team": "Pinson", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Michael Misa": {"aav2627": 4.2363, "aav2728": 4.2363, "free": 2030, "team": "Pinson", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Devon Levi": {"aav2627": 0.8125, "aav2728": "RFA", "free": 2028, "team": "Pinson", "prospect": true, "nhlTeam": "Edmonton Oilers", "pos": "G", "source": "excel"}, "Tanner Molendyk": {"aav2627": 0.9092, "aav2728": 0.9092, "free": 2028, "team": "Pinson", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Luca Cagnoni": {"aav2627": 0.975, "aav2728": "RFA", "free": 2028, "team": "Pinson", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Seamus Casey": {"aav2627": 1.35, "aav2728": "RFA", "free": 2027, "team": "Pinson", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Chase Reid": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2031, "team": "Pinson", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Tommy Bleyl": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2031, "team": "Pinson", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Ryan Lin": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2031, "team": "Pinson", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Nikita Kucherov": {"aav2627": 9.5, "aav2728": "UFA", "free": 2027, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "Brayden Point": {"aav2627": null, "aav2728": 9.5, "free": 2030, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "Jack Hughes": {"aav2627": 8.0, "aav2728": 8.0, "free": 2030, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "Tim Stutzle": {"aav2627": 8.35, "aav2728": 8.35, "free": 2031, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "Jesper Bratt": {"aav2627": 7.875, "aav2728": 7.875, "free": 2031, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "Artemi Panarin": {"aav2627": 11.0, "aav2728": 11.0, "free": 2028, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "J.J. Peterka": {"aav2627": null, "aav2728": 7.7, "free": 2030, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "Cole Perfetti": {"aav2627": null, "aav2728": 6.0, "free": 2031, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "Kirill Marchenko": {"aav2627": 3.85, "aav2728": "RFA", "free": 2027, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "Alex Tuch": {"aav2627": null, "aav2728": 10.5, "free": 2034, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "Mackie Samoskevich": {"aav2627": null, "aav2728": 3.85, "free": 2029, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "Ville Koivunen": {"aav2627": null, "aav2728": 4.0, "free": 2034, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "Gabriel Vilardi": {"aav2627": null, "aav2728": 7.5, "free": 2031, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "Bobby Brink": {"aav2627": null, "aav2728": "RFA", "free": 2027, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "Mavrik Bourque": {"aav2627": null, "aav2728": 5.5, "free": 2032, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "Will Smith": {"aav2627": 4.15, "aav2728": "RFA", "free": 2027, "team": "Couturov", "pos": "F", "source": "excel", "nhlTeam": null}, "Adam Fox": {"aav2627": 9.5, "aav2728": 9.5, "free": 2029, "team": "Couturov", "pos": "D", "source": "excel", "nhlTeam": null}, "Lane Hutson": {"aav2627": 8.85, "aav2728": 8.85, "free": 2034, "team": "Couturov", "pos": "D", "source": "excel", "nhlTeam": null}, "Vince Dunn": {"aav2627": 7.35, "aav2728": "UFA", "free": 2027, "team": "Couturov", "pos": "D", "source": "excel", "nhlTeam": null}, "Jake Sanderson": {"aav2627": 8.05, "aav2728": 8.05, "free": 2032, "team": "Couturov", "pos": "D", "source": "excel", "nhlTeam": null}, "John Klingberg": {"aav2627": "UFA", "aav2728": null, "free": 2026, "team": "Couturov", "pos": "D", "source": "excel", "nhlTeam": null}, "Jake Walman": {"aav2627": 7.0, "aav2728": 7.0, "free": 2033, "team": "Couturov", "nhlTeam": "Edmonton Oilers", "pos": "D", "source": "excel"}, "Andrei Vasilevski": {"aav2627": 9.5, "aav2728": 9.5, "free": 2028, "team": "Couturov", "pos": "G", "source": "excel", "nhlTeam": null}, "Filip Gustavsson": {"aav2627": null, "aav2728": 6.8, "free": 2031, "team": "Couturov", "pos": "G", "source": "excel", "nhlTeam": null}, "Karel Vejmelka": {"aav2627": null, "aav2728": 4.75, "free": 2030, "team": "Couturov", "pos": "G", "source": "excel", "nhlTeam": null}, "Jesper Wallstedt": {"aav2627": 2.2, "aav2728": "RFA", "free": 2028, "team": "Couturov", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Axel Sandin-Pellikka": {"aav2627": 1.4408, "aav2728": 1.4408, "free": 2028, "team": "Couturov", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Berkly Catton": {"aav2627": 1.9538, "aav2728": 1.9538, "free": 2029, "team": "Couturov", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Ilya Protas": {"aav2627": 1.0183, "aav2728": 1.0183, "free": 2029, "team": "Couturov", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Konsta Helenius": {"aav2627": 1.5537, "aav2728": 1.5537, "free": 2029, "team": "Couturov", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Cayden Lindstrom": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2029, "team": "Couturov", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Jonathan Lekkerimaki": {"aav2627": 1.3933, "aav2728": "RFA", "free": 2027, "team": "Couturov", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Victor Eklund": {"aav2627": 1.4742, "aav2728": 1.4742, "free": 2030, "team": "Couturov", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Andrew Cristall": {"aav2627": 0.9342, "aav2728": 0.9342, "free": 2028, "team": "Couturov", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Elton Hermansson": {"aav2627": 1.4083, "aav2728": 1.4083, "free": 2031, "team": "Couturov", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Aleksander Barkov": {"aav2627": 10.0, "aav2728": 10.0, "free": 2030, "team": "James", "pos": "F", "source": "excel", "nhlTeam": null}, "Sebastien Aho": {"aav2627": 9.75, "aav2728": 9.75, "free": 2032, "team": "James", "pos": "F", "source": "excel", "nhlTeam": null}, "Nick Suzuki": {"aav2627": 7.875, "aav2728": 7.875, "free": 2030, "team": "James", "pos": "F", "source": "excel", "nhlTeam": null}, "Cole Caufield": {"aav2627": 7.85, "aav2728": 7.85, "free": 2031, "team": "James", "pos": "F", "source": "excel", "nhlTeam": null}, "William Eklund": {"aav2627": null, "aav2728": 5.6, "free": 2029, "team": "James", "pos": "F", "source": "excel", "nhlTeam": null}, "Dylan Guenther": {"aav2627": 7.1429, "aav2728": 7.1429, "free": 2033, "team": "James", "pos": "F", "source": "excel", "nhlTeam": null}, "Logan Stankoven": {"aav2627": null, "aav2728": 6.0, "free": 2034, "team": "James", "pos": "F", "source": "excel", "nhlTeam": null}, "Dylan Holloway": {"aav2627": 7.75, "aav2728": 7.75, "free": 2031, "team": "James", "pos": "F", "source": "excel", "nhlTeam": null}, "Dylan Larkin": {"aav2627": null, "aav2728": 8.7, "free": 2031, "team": "James", "pos": "F", "source": "excel", "nhlTeam": null}, "Marco Rossi": {"aav2627": null, "aav2728": 5.0, "free": 2028, "team": "James", "pos": "F", "source": "excel", "nhlTeam": null}, "Nico Hischier": {"aav2627": null, "aav2728": 11.7, "free": 2032, "team": "James", "pos": "F", "source": "excel", "nhlTeam": null}, "Valeri Nichushkin": {"aav2627": null, "aav2728": 6.125, "free": 2030, "team": "James", "pos": "F", "source": "excel", "nhlTeam": null}, "Patrick Kane": {"aav2627": null, "aav2728": 8.0, "free": 2028, "team": "James", "pos": "F", "source": "excel", "nhlTeam": null}, "Alexander Ovechkin": {"aav2627": null, "aav2728": "UFA", "free": 2027, "team": "James", "pos": "F", "source": "excel", "nhlTeam": null}, "Cutter Gauthier": {"aav2627": "RFA", "aav2728": null, "free": 2026, "team": "James", "pos": "F", "source": "excel", "nhlTeam": null}, "Miro Heiskanen": {"aav2627": 8.45, "aav2728": 8.45, "free": 2029, "team": "James", "pos": "D", "source": "excel", "nhlTeam": null}, "Moritz Seider": {"aav2627": 8.55, "aav2728": 8.55, "free": 2031, "team": "James", "pos": "D", "source": "excel", "nhlTeam": null}, "Jacob Chychrun": {"aav2627": 9.0, "aav2728": 9.0, "free": 2033, "team": "James", "pos": "D", "source": "excel", "nhlTeam": null}, "Brandon Montour": {"aav2627": null, "aav2728": 7.1429, "free": 2031, "team": "James", "pos": "D", "source": "excel", "nhlTeam": null}, "Thomas Harley": {"aav2627": 10.5875, "aav2728": 10.5875, "free": 2034, "team": "James", "pos": "D", "source": "excel", "nhlTeam": null}, "Jackson Lacombe": {"aav2627": 9.0, "aav2728": 9.0, "free": 2034, "team": "James", "pos": "D", "source": "excel", "nhlTeam": null}, "Darren Raddysh": {"aav2627": 8.5, "aav2728": 8.5, "free": 2034, "team": "James", "nhlTeam": "Toronto Maple Leafs", "pos": "D", "source": "excel"}, "Denton Mateychuk": {"aav2627": 1.6367, "aav2728": "RFA", "free": 2027, "team": "James", "pos": "D", "source": "excel", "nhlTeam": null}, "Ilya Sorokin": {"aav2627": null, "aav2728": 8.25, "free": 2032, "team": "James", "pos": "G", "source": "excel", "nhlTeam": null}, "Jet Greaves": {"aav2627": null, "aav2728": 5.0, "free": 2029, "team": "James", "pos": "G", "source": "excel", "nhlTeam": null}, "Ivan Demidov": {"aav2627": 2.6342, "aav2728": 9.15, "free": 2029, "team": "James", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Matvei Michkov": {"aav2627": 4.25, "aav2728": "RFA", "free": 2028, "team": "James", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Porter Martone": {"aav2627": 2.5321, "aav2728": 2.5321, "free": 2030, "team": "James", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Ivar Stenberg": {"aav2627": 4.325, "aav2728": 4.325, "free": 2031, "team": "James", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Gabriel Perreault": {"aav2627": 1.2333, "aav2728": "RFA", "free": 2028, "team": "James", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Sam Dickinson": {"aav2627": 1.7371, "aav2728": 1.7371, "free": 2029, "team": "James", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Artyom Levshunov": {"aav2627": 4.225, "aav2728": "RFA", "free": 2029, "team": "James", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Bradly Nadeau": {"aav2627": 0.9183, "aav2728": "RFA", "free": 2028, "team": "James", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Wyatt Cullen": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2032, "team": "James", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Liam Greentree": {"aav2627": 0.9417, "aav2728": 0.9417, "free": 2029, "team": "James", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Connor McDavid": {"aav2627": 12.5, "aav2728": 12.5, "free": 2028, "team": "Kevin", "nhlTeam": "Edmonton Oilers", "pos": "F", "source": "excel"}, "Kyle Connor": {"aav2627": 12.0, "aav2728": 12.0, "free": 2034, "team": "Kevin", "pos": "F", "source": "excel", "nhlTeam": null}, "Brady Tkachuk": {"aav2627": 8.2057, "aav2728": 8.2057, "free": 2028, "team": "Kevin", "pos": "F", "source": "excel", "nhlTeam": null}, "Lucas Raymond": {"aav2627": 8.075, "aav2728": 8.075, "free": 2032, "team": "Kevin", "pos": "F", "source": "excel", "nhlTeam": null}, "Mark Scheifele": {"aav2627": 8.5, "aav2728": 8.5, "free": 2031, "team": "Kevin", "pos": "F", "source": "excel", "nhlTeam": null}, "Jack Eichel": {"aav2627": 13.5, "aav2728": 13.5, "free": 2034, "team": "Kevin", "pos": "F", "source": "excel", "nhlTeam": null}, "Nikolaj Ehlers": {"aav2627": null, "aav2728": 8.5, "free": 2031, "team": "Kevin", "pos": "F", "source": "excel", "nhlTeam": null}, "Dylan Strome": {"aav2627": null, "aav2728": 5.0, "free": 2028, "team": "Kevin", "pos": "F", "source": "excel", "nhlTeam": null}, "Matthew Knies": {"aav2627": 7.75, "aav2728": 7.75, "free": 2031, "team": "Kevin", "nhlTeam": "Toronto Maple Leafs", "pos": "F", "source": "excel"}, "Jackson Blake": {"aav2627": null, "aav2728": 5.117, "free": 2034, "team": "Kevin", "pos": "F", "source": "excel", "nhlTeam": null}, "Barrett Hayton": {"aav2627": null, "aav2728": "UFA", "free": 2027, "team": "Kevin", "pos": "F", "source": "excel", "nhlTeam": null}, "Kiefer Sherwood": {"aav2627": null, "aav2728": 5.75, "free": 2031, "team": "Kevin", "pos": "F", "source": "excel", "nhlTeam": null}, "Rickard Rakell": {"aav2627": null, "aav2728": 5.0, "free": 2028, "team": "Kevin", "pos": "F", "source": "excel", "nhlTeam": null}, "Matthew Beniers": {"aav2627": null, "aav2728": 7.1429, "free": 2031, "team": "Kevin", "pos": "F", "source": "excel", "nhlTeam": null}, "Evan Bouchard": {"aav2627": 10.5, "aav2728": 10.5, "free": 2029, "team": "Kevin", "nhlTeam": "Edmonton Oilers", "pos": "D", "source": "excel"}, "Owen Power": {"aav2627": 8.35, "aav2728": 8.35, "free": 2031, "team": "Kevin", "pos": "D", "source": "excel", "nhlTeam": null}, "Tony DeAngelo": {"aav2627": null, "aav2728": 4.5, "free": 2028, "team": "Kevin", "pos": "D", "source": "excel", "nhlTeam": null}, "Cam Fowler": {"aav2627": null, "aav2728": 6.1, "free": 2029, "team": "Kevin", "pos": "D", "source": "excel", "nhlTeam": null}, "Jamie Drysdale": {"aav2627": 6.5, "aav2728": 6.5, "free": 2030, "team": "Kevin", "pos": "D", "source": "excel", "nhlTeam": null}, "Jordan Spence": {"aav2627": null, "aav2728": 5.0, "free": 2030, "team": "Kevin", "pos": "D", "source": "excel", "nhlTeam": null}, "Seth Jones": {"aav2627": 9.5, "aav2728": 9.5, "free": 2030, "team": "Kevin", "pos": "D", "source": "excel", "nhlTeam": null}, "Ryker Evans": {"aav2627": null, "aav2728": "RFA", "free": 2027, "team": "Kevin", "pos": "D", "source": "excel", "nhlTeam": null}, "Igor Shesterkin": {"aav2627": 11.5, "aav2728": 11.5, "free": 2033, "team": "Kevin", "pos": "G", "source": "excel", "nhlTeam": null}, "Adin Hill": {"aav2627": null, "aav2728": 6.25, "free": 2031, "team": "Kevin", "pos": "G", "source": "excel", "nhlTeam": null}, "Leevi Merilainen": {"aav2627": null, "aav2728": "RFA", "free": 2027, "team": "Kevin", "pos": "G", "source": "excel", "nhlTeam": null}, "Shane Wright": {"aav2627": 3.9492, "aav2728": "RFA", "free": 2027, "team": "Kevin", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Kevin Korchinski": {"aav2627": "RFA", "aav2728": null, "free": 2027, "team": "Kevin", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Trevor Connelly": {"aav2627": 1.2242, "aav2728": 1.2242, "free": 2029, "team": "Kevin", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Nikita Klepov": {"aav2627": 1.575, "aav2728": 1.575, "free": 2031, "team": "Kevin", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "JP Hurlbert": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2031, "team": "Kevin", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Brady Martin": {"aav2627": 2.1408, "aav2728": 2.1408, "free": 2030, "team": "Kevin", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Sacha Boisvert": {"aav2627": 1.3862, "aav2728": 1.3862, "free": 2029, "team": "Kevin", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Justin Carbonneau": {"aav2627": 1.3908, "aav2728": 1.3908, "free": 2030, "team": "Kevin", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Alexander Zharovsky": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2030, "team": "Kevin", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Austin Matthews": {"aav2627": 13.25, "aav2728": 13.25, "free": 2028, "team": "Raton", "pos": "F", "source": "excel", "nhlTeam": null}, "David Pastrnak": {"aav2627": 11.25, "aav2728": 11.25, "free": 2031, "team": "Raton", "pos": "F", "source": "excel", "nhlTeam": null}, "Matthew Tkachuk": {"aav2627": 9.5, "aav2728": 9.5, "free": 2030, "team": "Raton", "pos": "F", "source": "excel", "nhlTeam": null}, "Matthew Boldy": {"aav2627": 7.0, "aav2728": 7.0, "free": 2030, "team": "Raton", "pos": "F", "source": "excel", "nhlTeam": null}, "Jason Robertson": {"aav2627": 12.0, "aav2728": "UFA", "free": 2027, "team": "Raton", "pos": "F", "source": "excel", "nhlTeam": null}, "Sidney Crosby": {"aav2627": 8.7, "aav2728": "UFA", "free": 2027, "team": "Raton", "pos": "F", "source": "excel", "nhlTeam": null}, "Arseny Gritsyuk": {"aav2627": null, "aav2728": 3.25, "free": 2029, "team": "Raton", "pos": "F", "source": "excel", "nhlTeam": null}, "Anton Lundell": {"aav2627": null, "aav2728": 5.0, "free": 2030, "team": "Raton", "pos": "F", "source": "excel", "nhlTeam": null}, "Bobby Mcmann": {"aav2627": null, "aav2728": 5.75, "free": 2032, "team": "Raton", "pos": "F", "source": "excel", "nhlTeam": null}, "Leo Carlsson": {"aav2627": 18.0, "aav2728": 18.0, "free": 2031, "team": "Raton", "pos": "F", "source": "excel", "nhlTeam": null}, "Connor McMichael": {"aav2627": null, "aav2728": 6.75, "free": 2032, "team": "Raton", "pos": "F", "source": "excel", "nhlTeam": null}, "Brian Rust": {"aav2627": null, "aav2728": 5.125, "free": 2028, "team": "Raton", "pos": "F", "source": "excel", "nhlTeam": null}, "Matias Macelli": {"aav2627": null, "aav2728": "RFA", "free": 2027, "team": "Raton", "pos": "F", "source": "excel", "nhlTeam": null}, "Quinn Hughes": {"aav2627": 7.85, "aav2728": "UFA", "free": 2027, "team": "Raton", "pos": "D", "source": "excel", "nhlTeam": null}, "Shea Theodore": {"aav2627": 7.425, "aav2728": 7.425, "free": 2032, "team": "Raton", "pos": "D", "source": "excel", "nhlTeam": null}, "Luke Hughes": {"aav2627": 9.0, "aav2728": 9.0, "free": 2032, "team": "Raton", "pos": "D", "source": "excel", "nhlTeam": null}, "Simon Edvinsson": {"aav2627": "RFA", "aav2728": null, "free": 2026, "team": "Raton", "pos": "D", "source": "excel", "nhlTeam": null}, "Victor Hedman": {"aav2627": 8.0, "aav2728": 8.0, "free": 2029, "team": "Raton", "pos": "D", "source": "excel", "nhlTeam": null}, "Noah Hanifin": {"aav2627": null, "aav2728": 7.35, "free": 2032, "team": "Raton", "pos": "D", "source": "excel", "nhlTeam": null}, "Connor Hellebuyck": {"aav2627": 8.5, "aav2728": 8.5, "free": 2031, "team": "Raton", "pos": "G", "source": "excel", "nhlTeam": null}, "Darcy Kuemper": {"aav2627": null, "aav2728": "UFA", "free": 2027, "team": "Raton", "pos": "G", "source": "excel", "nhlTeam": null}, "Gavin McKenna": {"aav2627": 4.575, "aav2728": 4.575, "free": 2031, "team": "Raton", "prospect": true, "nhlTeam": "Toronto Maple Leafs", "pos": "F", "source": "excel"}, "Caleb Desnoyers": {"aav2627": 4.225, "aav2728": 4.225, "free": 2030, "team": "Raton", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Beckett Sennecke": {"aav2627": 4.0537, "aav2728": 4.0537, "free": 2029, "team": "Raton", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Dalibor Dvorsky": {"aav2627": 1.6925, "aav2728": 1.6925, "free": 2028, "team": "Raton", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Daxon Rudolph": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2031, "team": "Raton", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Roman Kantserov": {"aav2627": 4.575, "aav2728": 4.575, "free": 2028, "team": "Raton", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Xavier Villeneuve": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2031, "team": "Raton", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Roger Mcqueen": {"aav2627": 1.8583, "aav2728": 1.8583, "free": 2030, "team": "Raton", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Dmitri Simashev": {"aav2627": 1.9725, "aav2728": 1.9725, "free": 2028, "team": "Raton", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Matthew Savoie": {"aav2627": 1.8867, "aav2728": "RFA", "free": 2027, "team": "Raton", "prospect": true, "nhlTeam": "Edmonton Oilers", "pos": "F", "source": "excel"}, "Leon Draisaitl": {"aav2627": 14.0, "aav2728": 14.0, "free": 2033, "team": "Paym", "nhlTeam": "Edmonton Oilers", "pos": "F", "source": "excel"}, "Jake Guentzel": {"aav2627": 9.0, "aav2728": 9.0, "free": 2031, "team": "Paym", "pos": "F", "source": "excel", "nhlTeam": null}, "Mitch Marner": {"aav2627": 12.0, "aav2728": 12.0, "free": 2033, "team": "Paym", "pos": "F", "source": "excel", "nhlTeam": null}, "Tage Thompson": {"aav2627": 7.1429, "aav2728": 7.1429, "free": 2030, "team": "Paym", "pos": "F", "source": "excel", "nhlTeam": null}, "Seth Jarvis": {"aav2627": 7.4201, "aav2728": 7.4201, "free": 2032, "team": "Paym", "pos": "F", "source": "excel", "nhlTeam": null}, "Connor Bedard": {"aav2627": 15.0, "aav2728": 15.0, "free": 2031, "team": "Paym", "pos": "F", "source": "excel", "nhlTeam": null}, "Quinton Byfield": {"aav2627": null, "aav2728": 6.25, "free": 2029, "team": "Paym", "pos": "F", "source": "excel", "nhlTeam": null}, "Pavel Dorofeyev": {"aav2627": null, "aav2728": 11.0, "free": 2033, "team": "Paym", "pos": "F", "source": "excel", "nhlTeam": null}, "Matt Duchene": {"aav2627": null, "aav2728": 4.5, "free": 2029, "team": "Paym", "pos": "F", "source": "excel", "nhlTeam": null}, "John Tavares": {"aav2627": 4.3893, "aav2728": 4.3893, "free": 2029, "team": "Paym", "nhlTeam": "Toronto Maple Leafs", "pos": "F", "source": "excel"}, "Jared Mccann": {"aav2627": null, "aav2728": "UFA", "free": 2027, "team": "Paym", "pos": "F", "source": "excel", "nhlTeam": null}, "Zack Bolduc": {"aav2627": null, "aav2728": null, "free": 2026, "team": "Paym", "pos": "F", "source": "excel", "nhlTeam": null}, "Josh Doan": {"aav2627": null, "aav2728": 6.95, "free": 2033, "team": "Paym", "pos": "F", "source": "excel", "nhlTeam": null}, "Rasmus Dahlin": {"aav2627": 11.0, "aav2728": 11.0, "free": 2032, "team": "Paym", "pos": "D", "source": "excel", "nhlTeam": null}, "Zach Werenski": {"aav2627": 9.5833, "aav2728": 9.5833, "free": 2028, "team": "Paym", "pos": "D", "source": "excel", "nhlTeam": null}, "Charlie McAvoy": {"aav2627": 9.5, "aav2728": 9.5, "free": 2030, "team": "Paym", "pos": "D", "source": "excel", "nhlTeam": null}, "Shayne Gostisbehere": {"aav2627": 3.2, "aav2728": "UFA", "free": 2027, "team": "Paym", "pos": "D", "source": "excel", "nhlTeam": null}, "Matthew Schaefer": {"aav2627": 4.475, "aav2728": 4.475, "free": 2028, "team": "Paym", "pos": "D", "source": "excel", "nhlTeam": null}, "Joshua Morrissey": {"aav2627": 6.25, "aav2728": 6.25, "free": 2028, "team": "Paym", "pos": "D", "source": "excel", "nhlTeam": null}, "Logan Mailloux": {"aav2627": null, "aav2728": "RFA", "free": 2027, "team": "Paym", "pos": "D", "source": "excel", "nhlTeam": null}, "Mackenzie Blackwood": {"aav2627": 5.25, "aav2728": 5.25, "free": 2030, "team": "Paym", "nhlTeam": "Colorado Avalanche", "pos": "G", "source": "excel"}, "Anthony Stolarz": {"aav2627": 3.75, "aav2728": 3.75, "free": 2030, "team": "Paym", "nhlTeam": "Toronto Maple Leafs", "pos": "G", "source": "excel"}, "Stuart Skinner": {"aav2627": null, "aav2728": 3.75, "free": 2028, "team": "Paym", "pos": "G", "source": "excel", "nhlTeam": null}, "Dustin Wolf": {"aav2627": null, "aav2728": 7.5, "free": 2033, "team": "Paym", "pos": "G", "source": "excel", "nhlTeam": null}, "Oliver Moore": {"aav2627": 1.35, "aav2728": "RFA", "free": 2028, "team": "Paym", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Benjamin Kindel": {"aav2627": 1.4863, "aav2728": 1.4863, "free": 2030, "team": "Paym", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Cameron Reid": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2030, "team": "Paym", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Jacob Fowler": {"aav2627": 1.1725, "aav2728": 1.1725, "free": 2031, "team": "Paym", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Brad Lambert": {"aav2627": 1.1367, "aav2728": "RFA", "free": 2027, "team": "Paym", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Viggo Bjorck": {"aav2627": 2.075, "aav2728": 2.075, "free": 2031, "team": "Paym", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Cole Reschny": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2030, "team": "Paym", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Tynan Lawrence": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2031, "team": "Paym", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Quentin Musty": {"aav2627": 0.9925, "aav2728": 0.9925, "free": 2028, "team": "Paym", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "William Nylander": {"aav2627": 11.5, "aav2728": 11.5, "free": 2032, "team": "Tony", "nhlTeam": "Toronto Maple Leafs", "pos": "F", "source": "excel"}, "J.T. Miller": {"aav2627": 8.0, "aav2728": 8.0, "free": 2030, "team": "Tony", "pos": "F", "source": "excel", "nhlTeam": null}, "Elias Pettersson": {"aav2627": 11.6, "aav2728": 11.6, "free": 2032, "team": "Tony", "pos": "F", "source": "excel", "nhlTeam": null}, "Logan Cooley": {"aav2627": 10.0, "aav2728": 10.0, "free": 2034, "team": "Tony", "pos": "F", "source": "excel", "nhlTeam": null}, "Juraj Slafkovsky": {"aav2627": 7.6, "aav2728": 7.6, "free": 2033, "team": "Tony", "pos": "F", "source": "excel", "nhlTeam": null}, "Jack Quinn": {"aav2627": 3.375, "aav2728": "RFA", "free": 2027, "team": "Tony", "pos": "F", "source": "excel", "nhlTeam": null}, "Gage Goncalves": {"aav2627": null, "aav2728": "UFA", "free": 2027, "team": "Tony", "pos": "F", "source": "excel", "nhlTeam": null}, "Mason Mctavish": {"aav2627": null, "aav2728": 7.0, "free": 2031, "team": "Tony", "pos": "F", "source": "excel", "nhlTeam": null}, "Andrei Kuzmenko": {"aav2627": null, "aav2728": "UFA", "free": 2027, "team": "Tony", "pos": "F", "source": "excel", "nhlTeam": null}, "Jordan Kyrou": {"aav2627": null, "aav2728": 8.125, "free": 2031, "team": "Tony", "pos": "F", "source": "excel", "nhlTeam": null}, "Vincent Trocheck": {"aav2627": null, "aav2728": 5.625, "free": 2029, "team": "Tony", "pos": "F", "source": "excel", "nhlTeam": null}, "Ryan Donato": {"aav2627": null, "aav2728": 4.0, "free": 2029, "team": "Tony", "pos": "F", "source": "excel", "nhlTeam": null}, "Jonathan Drouin": {"aav2627": "UFA", "aav2728": null, "free": 2026, "team": "Tony", "pos": "F", "source": "excel", "nhlTeam": null}, "Mikael Granlund": {"aav2627": null, "aav2728": 7.0, "free": 2028, "team": "Tony", "pos": "F", "source": "excel", "nhlTeam": null}, "Florian Xhekaj": {"aav2627": null, "aav2728": "RFA", "free": 2027, "team": "Tony", "pos": "F", "source": "excel", "nhlTeam": null}, "Isaac Howard": {"aav2627": 0.9725, "aav2728": 1.6167, "free": 2028, "team": "Tony", "nhlTeam": "Edmonton Oilers", "pos": "F", "source": "excel"}, "Kirby Dach": {"aav2627": null, "aav2728": "UFA", "free": 2027, "team": "Tony", "pos": "F", "source": "excel", "nhlTeam": null}, "Adrian Kempe": {"aav2627": 10.625, "aav2728": 10.625, "free": 2034, "team": "Tony", "pos": "D", "source": "excel", "nhlTeam": null}, "Jimmy Snuggerud": {"aav2627": 1.55, "aav2728": "RFA", "free": 2027, "team": "Tony", "pos": "D", "source": "excel", "nhlTeam": null}, "Cale Makar": {"aav2627": 9.0, "aav2728": "UFA", "free": 2027, "team": "Tony", "nhlTeam": "Colorado Avalanche", "pos": "D", "source": "excel"}, "Noah Dobson": {"aav2627": 9.5, "aav2728": 9.5, "free": 2033, "team": "Tony", "pos": "D", "source": "excel", "nhlTeam": null}, "Thomas Chabot": {"aav2627": null, "aav2728": 8.0, "free": 2028, "team": "Tony", "pos": "D", "source": "excel", "nhlTeam": null}, "Colton Parayko": {"aav2627": null, "aav2728": 6.5, "free": 2030, "team": "Tony", "pos": "D", "source": "excel", "nhlTeam": null}, "Sam Rinzel": {"aav2627": null, "aav2728": "RFA", "free": 2027, "team": "Tony", "pos": "D", "source": "excel", "nhlTeam": null}, "David Jiricek": {"aav2627": null, "aav2728": 1.5, "free": 2028, "team": "Tony", "pos": "D", "source": "excel", "nhlTeam": null}, "Pavel Mintyukov": {"aav2627": null, "aav2728": 7.2, "free": 2031, "team": "Tony", "pos": "D", "source": "excel", "nhlTeam": null}, "Simon Nemec": {"aav2627": 7.25, "aav2728": 7.25, "free": null, "team": "Tony", "pos": "D", "source": "excel", "nhlTeam": null}, "Jake Oettinger": {"aav2627": 8.25, "aav2728": 8.25, "free": 2033, "team": "Tony", "pos": "G", "source": "excel", "nhlTeam": null}, "Jacob Markstrom": {"aav2627": null, "aav2728": 6.0, "free": 2028, "team": "Tony", "pos": "G", "source": "excel", "nhlTeam": null}, "Cole Hutson": {"aav2627": 2.2404, "aav2728": 2.2404, "free": 2029, "team": "Tony", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Zayne Parekh": {"aav2627": 1.9538, "aav2728": 1.9538, "free": 2029, "team": "Tony", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Michael Hage": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2029, "team": "Tony", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Tij Iginla": {"aav2627": 1.9417, "aav2728": 1.9417, "free": 2029, "team": "Tony", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Ryan Leonard": {"aav2627": 2.2083, "aav2728": "RFA", "free": 2028, "team": "Tony", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Olen Zellweger": {"aav2627": 3.1, "aav2728": 3.1, "free": 2027, "team": "Tony", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Caleb Malhotra": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2031, "team": "Tony", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Alberts Smits": {"aav2627": 4.225, "aav2728": 4.225, "free": 2031, "team": "Tony", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Jackson Smith": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2030, "team": "Tony", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Carson Carels": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2031, "team": "Tony", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Trevor Zegras": {"aav2627": 9.125, "aav2728": 9.125, "free": 2030, "team": "Sportek", "pos": "F", "source": "excel", "nhlTeam": null}, "Travis Konecny": {"aav2627": 8.75, "aav2728": 8.75, "free": 2033, "team": "Sportek", "pos": "F", "source": "excel", "nhlTeam": null}, "Alex Debrincat": {"aav2627": 7.875, "aav2728": "UFA", "free": 2027, "team": "Sportek", "pos": "F", "source": "excel", "nhlTeam": null}, "Roope Hintz": {"aav2627": 8.45, "aav2728": 8.45, "free": 2031, "team": "Sportek", "pos": "F", "source": "excel", "nhlTeam": null}, "Martin Necas": {"aav2627": 11.5, "aav2728": 11.5, "free": 2034, "team": "Sportek", "nhlTeam": "Colorado Avalanche", "pos": "F", "source": "excel"}, "Brandon Hagel": {"aav2627": 6.5, "aav2728": 6.5, "free": 2032, "team": "Sportek", "pos": "F", "source": "excel", "nhlTeam": null}, "Sam Reinhart": {"aav2627": 8.625, "aav2728": 8.625, "free": 2032, "team": "Sportek", "pos": "F", "source": "excel", "nhlTeam": null}, "Filip Forsberg": {"aav2627": null, "aav2728": 8.5, "free": 2030, "team": "Sportek", "pos": "F", "source": "excel", "nhlTeam": null}, "Aliaksei Protas": {"aav2627": null, "aav2728": 3.375, "free": 2029, "team": "Sportek", "pos": "F", "source": "excel", "nhlTeam": null}, "Nick Schmaltz": {"aav2627": null, "aav2728": 8.0, "free": 2034, "team": "Sportek", "pos": "F", "source": "excel", "nhlTeam": null}, "Mathew Barzal": {"aav2627": null, "aav2728": 9.15, "free": 2031, "team": "Sportek", "pos": "F", "source": "excel", "nhlTeam": null}, "Drake Batherson": {"aav2627": null, "aav2728": "UFA", "free": 2027, "team": "Sportek", "pos": "F", "source": "excel", "nhlTeam": null}, "Danila Yurov": {"aav2627": null, "aav2728": 2.95, "free": 2028, "team": "Sportek", "pos": "F", "source": "excel", "nhlTeam": null}, "Macklin Celebrini": {"aav2627": 4.475, "aav2728": 18.0, "free": 2032, "team": "Sportek", "pos": "F", "source": "excel", "nhlTeam": null}, "Brock Faber": {"aav2627": 8.5, "aav2728": 8.5, "free": 2033, "team": "Sportek", "pos": "D", "source": "excel", "nhlTeam": null}, "John Carlson": {"aav2627": 8.5, "aav2728": 8.5, "free": 2028, "team": "Sportek", "pos": "D", "source": "excel", "nhlTeam": null}, "Brandt Clarke": {"aav2627": 7.4, "aav2728": 7.4, "free": 2031, "team": "Sportek", "pos": "D", "source": "excel", "nhlTeam": null}, "Morgan Rielly": {"aav2627": 7.5, "aav2728": 7.5, "free": 2030, "team": "Sportek", "nhlTeam": "Toronto Maple Leafs", "pos": "D", "source": "excel"}, "Rasmus Andersson": {"aav2627": null, "aav2728": 8.5, "free": 2033, "team": "Sportek", "pos": "D", "source": "excel", "nhlTeam": null}, "Mason Lohrei": {"aav2627": null, "aav2728": "RFA", "free": 2027, "team": "Sportek", "pos": "D", "source": "excel", "nhlTeam": null}, "Mackenzie Weegar": {"aav2627": null, "aav2728": 6.25, "free": 2031, "team": "Sportek", "pos": "D", "source": "excel", "nhlTeam": null}, "Lucas Dostal": {"aav2627": null, "aav2728": 6.5, "free": 2030, "team": "Sportek", "pos": "G", "source": "excel", "nhlTeam": null}, "Logan Thompson": {"aav2627": 5.85, "aav2728": 5.85, "free": 2031, "team": "Sportek", "pos": "G", "source": "excel", "nhlTeam": null}, "Samuel Ersson": {"aav2627": null, "aav2728": 2.2, "free": 2028, "team": "Sportek", "pos": "G", "source": "excel", "nhlTeam": null}, "Zach Benson": {"aav2627": 7.5, "aav2728": 7.5, "free": 2028, "team": "Sportek", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Carter Yakemchuk": {"aav2627": 1.9417, "aav2728": 1.9417, "free": 2029, "team": "Sportek", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "James Hagens": {"aav2627": 1.6571, "aav2728": 1.6571, "free": 2030, "team": "Sportek", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Jake O'Brien": {"aav2627": 1.9742, "aav2728": 1.9742, "free": 2030, "team": "Sportek", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Anton Frondell": {"aav2627": 4.1363, "aav2728": 4.1363, "free": 2030, "team": "Sportek", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Frank Nazar": {"aav2627": 6.6, "aav2728": 6.6, "free": 2027, "team": "Sportek", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Cole Eiserman": {"aav2627": 1.55, "aav2728": 1.55, "free": 2029, "team": "Sportek", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Yaroslav Askarov": {"aav2627": 2.0, "aav2728": "RFA", "free": 2028, "team": "Sportek", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Keaton Verhoeff": {"aav2627": "UNSIGNED", "aav2728": null, "free": 2031, "team": "Sportek", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Tristan Luneau": {"aav2627": 0.9183, "aav2728": null, "free": 2027, "team": "Sportek", "prospect": true, "pos": "F", "source": "excel", "nhlTeam": null}, "Colton Sissons": {"aav2627": 4.25, "aav2728": 4.25, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Teddy Blueger": {"aav2627": 2.5, "aav2728": 2.5, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Max Domi": {"aav2627": 3.75, "aav2728": 3.75, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Nick Paul": {"aav2627": 3.15, "aav2728": 3.15, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Dakota Joshua": {"aav2627": 3.25, "aav2728": 3.25, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Jack Roslovic": {"aav2627": 4.0, "aav2728": 4.0, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Steven Lorentz": {"aav2627": 1.35, "aav2728": 1.35, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Auston Matthews": {"aav2627": 13.25, "aav2728": 13.25, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Brandon Duhaime": {"aav2627": 2.6, "aav2728": 2.6, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Zack MacEwen": {"aav2627": 0.875, "aav2728": 0.875, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Easton Cowan": {"aav2627": 0.9, "aav2728": 0.9, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Oliver Ekman-Larsson": {"aav2627": 3.5, "aav2728": 3.5, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "Christopher Tanev": {"aav2627": 4.5, "aav2728": 4.5, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "Jake McCabe": {"aav2627": 4.5131, "aav2728": 4.5131, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "Troy Stecher": {"aav2627": 1.35, "aav2728": 1.35, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "Emil Andrae": {"aav2627": 1.55, "aav2728": 1.55, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "Sergei Bobrovsky": {"aav2627": 7.0, "aav2728": 7.0, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "G"}, "Michael Pezzetta": {"aav2627": 0.8125, "aav2728": null, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Vinni Lettieri": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Bo Groulx": {"aav2627": 0.8125, "aav2728": null, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Henrik Rybinski": {"aav2627": 0.875, "aav2728": 0.875, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Ryan Tverberg": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Landon Sim": {"aav2627": 0.955, "aav2728": 0.955, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Jacob Quillan": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Miroslav Holinka": {"aav2627": 0.9183, "aav2728": 0.9183, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Borya Valis": {"aav2627": 0.9725, "aav2728": 0.9725, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Luke Haymes": {"aav2627": 0.9375, "aav2728": null, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Tinus Luc Koblar": {"aav2627": 1.0283, "aav2728": 1.0283, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Brandon Buhr": {"aav2627": 0.975, "aav2728": null, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "F"}, "Dakota Mermis": {"aav2627": 0.8125, "aav2728": null, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "Philippe Myers": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "Cade Webber": {"aav2627": 0.825, "aav2728": null, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "William Villeneuve": {"aav2627": 0.875, "aav2728": 0.875, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "Cole McWard": {"aav2627": 0.875, "aav2728": 0.875, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "Noah Chadwick": {"aav2627": 0.9006, "aav2728": 0.9006, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "Marshall Rifai": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "Ben Danford": {"aav2627": 0.9361, "aav2728": 0.9361, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "Blake Smith": {"aav2627": 0.9625, "aav2728": 0.9625, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "Vinny Borgesi": {"aav2627": 0.9875, "aav2728": 0.9875, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "Hayes Hundley": {"aav2627": 1.01, "aav2728": 1.01, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "D"}, "Artur Akhtyamov": {"aav2627": 0.9, "aav2728": 0.9, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "G"}, "Samuel Hlavaj": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Toronto Maple Leafs", "source": "puckpedia", "pos": "G"}, "Jaden Schwartz": {"aav2627": 3.25, "aav2728": 3.25, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Brock Nelson": {"aav2627": 7.5, "aav2728": 7.5, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Gabriel Landeskog": {"aav2627": 7.0, "aav2728": 7.0, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Artturi Lehkonen": {"aav2627": 4.5, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Nicolas Roy": {"aav2627": 3.0, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Logan O'Connor": {"aav2627": 2.5, "aav2728": 2.5, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Parker Kelly": {"aav2627": 1.7, "aav2728": 1.7, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Zachary L'Heureux": {"aav2627": 0.875, "aav2728": 0.875, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Fyodor Svechkov": {"aav2627": 1.25, "aav2728": 1.25, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Gavin Brindley": {"aav2627": 0.875, "aav2728": 0.875, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Brent Burns": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "D"}, "Josh Manson": {"aav2627": 3.95, "aav2728": 3.95, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "D"}, "Brett Kulak": {"aav2627": 4.5, "aav2728": 4.5, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "D"}, "Devon Toews": {"aav2627": 7.25, "aav2728": 7.25, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "D"}, "Noah Juulsen": {"aav2627": 1.1, "aav2728": 1.1, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "D"}, "Sam Malinski": {"aav2627": 4.75, "aav2728": 4.75, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "D"}, "Scott Wedgewood": {"aav2627": 2.5, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "G"}, "Vinnie Hinostroza": {"aav2627": 0.875, "aav2728": 0.875, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Adam Beckman": {"aav2627": 0.875, "aav2728": 0.875, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Taylor Makar": {"aav2627": 0.875, "aav2728": 0.875, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Georgii Merkulov": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Tristen Nielsen": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Nikita Prishchepov": {"aav2627": 0.8817, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Cooper Gay": {"aav2627": 0.9475, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "T.J. Hughes": {"aav2627": 0.9525, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "F"}, "Matthew DiMarsico": {"aav2627": 0.98, "aav2728": 0.98, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "D"}, "Christian Wolanin": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "D"}, "Keaton Middleton": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "D"}, "Domenick Fensore": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "D"}, "Sean Behrens": {"aav2627": 0.9233, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "D"}, "Alex Gagne": {"aav2627": 0.91, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "D"}, "Wyatt Aamodt": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "D"}, "Saige Weinstein": {"aav2627": 0.8833, "aav2728": 0.8833, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "D"}, "Gustav Stjernberg": {"aav2627": 0.98, "aav2728": 0.98, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "D"}, "Trent Miner": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "G"}, "Ilya Nabokov": {"aav2627": 0.975, "aav2728": null, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "G"}, "Nikita Novosyolov": {"aav2627": 0.98, "aav2728": 0.98, "free": null, "team": null, "nhlTeam": "Colorado Avalanche", "source": "puckpedia", "pos": "G"}, "Zach Hyman": {"aav2627": 5.5, "aav2728": 5.5, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Ryan Nugent-Hopkins": {"aav2627": 5.125, "aav2728": 5.125, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Jason Dickinson": {"aav2627": 4.0, "aav2728": 4.0, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Mattias Janmark": {"aav2627": 1.45, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Kasperi Kapanen": {"aav2627": 2.6, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Mathieu Joseph": {"aav2627": 1.0, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Trent Frederic": {"aav2627": 3.85, "aav2728": 3.85, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Vasily Podkolzin": {"aav2627": 2.95, "aav2728": 2.95, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Colton Dach": {"aav2627": 1.2, "aav2728": 1.2, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Mattias Ekholm": {"aav2627": 4.0, "aav2728": 4.0, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "D"}, "Connor Murphy": {"aav2627": 4.1, "aav2728": 4.1, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "D"}, "Ryan Shea": {"aav2627": 4.0, "aav2728": 4.0, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "D"}, "Ty Emberson": {"aav2627": 1.3, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "D"}, "Spencer Stastney": {"aav2627": 1.525, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "D"}, "Shakir Mukhamadullin": {"aav2627": 1.75, "aav2728": 1.75, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "D"}, "Frederik Andersen": {"aav2627": 1.0, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "G"}, "Tristan Jarry": {"aav2627": 5.375, "aav2728": 5.375, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "G"}, "Max Jones": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Aku Raty": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Viljami Marjala": {"aav2627": 0.9475, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Brady Stonehouse": {"aav2627": 0.8967, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "James Stefan": {"aav2627": 0.945, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Connor Clattenburg": {"aav2627": 0.9283, "aav2728": 0.9283, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "William Nicholl": {"aav2627": 0.985, "aav2728": 0.985, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Eduards Tralmaks": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Josh Samanski": {"aav2627": 0.975, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Quinn Hutson": {"aav2627": 0.875, "aav2728": 0.875, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Owen Michaels": {"aav2627": 0.9, "aav2728": 0.9, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "F"}, "Josh Brown": {"aav2627": 1.0, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "D"}, "Riley Stillman": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "D"}, "Alec Regula": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "D"}, "Beau Akey": {"aav2627": 0.8942, "aav2728": 0.8942, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "D"}, "Damien Carfagna": {"aav2627": 0.9375, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "D"}, "Atro Leppanen": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "D"}, "Tomas Cibulka": {"aav2627": 0.955, "aav2728": 0.955, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "D"}, "Matt Tomkins": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "G"}, "Samuel Jonsson": {"aav2627": 0.955, "aav2728": 0.955, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "G"}, "Nathaniel Day": {"aav2627": 0.9567, "aav2728": 0.9567, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "G"}, "Connor Ungar": {"aav2627": 0.85, "aav2728": null, "free": null, "team": null, "nhlTeam": "Edmonton Oilers", "source": "puckpedia", "pos": "D"}}, "rosters": {"Pinson": ["Nathan Mackinnon", "Mikko Rantanen", "Kirill Kaprizov", "Kevin Fiala", "Clayton Keller", "Robert Thomas", "Alexis Lafrenière", "Morgan Geekie", "Nazem Kadri", "Rutger Mcgroarty", "Kaapo Kakko", "Wyatt Johnston", "Kent Johnson", "Fabian Lysell", "Roman Josi", "Erik Karlsson", "Mikhail Sergachev", "Alexander Nikishin", "Bowen Byram", "Michael Kesselring", "Scott Morrow", "Philip Broberg", "Adam Boqvist", "Pyotr Kochetkov", "Juuse Saros", "Joseph Woll"], "Couturov": ["Nikita Kucherov", "Brayden Point", "Jack Hughes", "Tim Stutzle", "Jesper Bratt", "Artemi Panarin", "J.J. Peterka", "Cole Perfetti", "Kirill Marchenko", "Alex Tuch", "Mackie Samoskevich", "Ville Koivunen", "Gabriel Vilardi", "Bobby Brink", "Mavrik Bourque", "Will Smith", "Adam Fox", "Lane Hutson", "Vince Dunn", "Jake Sanderson", "John Klingberg", "Jake Walman", "Andrei Vasilevski", "Filip Gustavsson", "Karel Vejmelka"], "James": ["Aleksander Barkov", "Sebastien Aho", "Nick Suzuki", "Cole Caufield", "William Eklund", "Dylan Guenther", "Logan Stankoven", "Dylan Holloway", "Dylan Larkin", "Marco Rossi", "Nico Hischier", "Valeri Nichushkin", "Patrick Kane", "Alexander Ovechkin", "Cutter Gauthier", "Miro Heiskanen", "Moritz Seider", "Jacob Chychrun", "Brandon Montour", "Thomas Harley", "Jackson Lacombe", "Darren Raddysh", "Denton Mateychuk", "Ilya Sorokin", "Jet Greaves"], "Kevin": ["Connor McDavid", "Kyle Connor", "Brady Tkachuk", "Lucas Raymond", "Mark Scheifele", "Jack Eichel", "Nikolaj Ehlers", "Dylan Strome", "Matthew Knies", "Jackson Blake", "Barrett Hayton", "Kiefer Sherwood", "Rickard Rakell", "Matthew Beniers", "Evan Bouchard", "Owen Power", "Tony DeAngelo", "Cam Fowler", "Jamie Drysdale", "Jordan Spence", "Seth Jones", "Ryker Evans", "Igor Shesterkin", "Adin Hill", "Leevi Merilainen"], "Raton": ["Austin Matthews", "David Pastrnak", "Matthew Tkachuk", "Matthew Boldy", "Jason Robertson", "Sidney Crosby", "Arseny Gritsyuk", "Anton Lundell", "Bobby Mcmann", "Leo Carlsson", "Connor McMichael", "Brian Rust", "Matias Macelli", "Quinn Hughes", "Shea Theodore", "Luke Hughes", "Simon Edvinsson", "Victor Hedman", "Noah Hanifin", "Connor Hellebuyck", "Darcy Kuemper"], "Paym": ["Leon Draisaitl", "Jake Guentzel", "Mitch Marner", "Tage Thompson", "Seth Jarvis", "Connor Bedard", "Quinton Byfield", "Pavel Dorofeyev", "Matt Duchene", "John Tavares", "Jared Mccann", "Zack Bolduc", "Josh Doan", "Rasmus Dahlin", "Zach Werenski", "Charlie McAvoy", "Shayne Gostisbehere", "Matthew Schaefer", "Joshua Morrissey", "Logan Mailloux", "Mackenzie Blackwood", "Anthony Stolarz", "Stuart Skinner", "Dustin Wolf"], "Tony": ["William Nylander", "J.T. Miller", "Elias Pettersson", "Logan Cooley", "Juraj Slafkovsky", "Jack Quinn", "Gage Goncalves", "Mason Mctavish", "Andrei Kuzmenko", "Jordan Kyrou", "Vincent Trocheck", "Ryan Donato", "Jonathan Drouin", "Mikael Granlund", "Florian Xhekaj", "Isaac Howard", "Kirby Dach", "Adrian Kempe", "Jimmy Snuggerud", "Cale Makar", "Noah Dobson", "Thomas Chabot", "Colton Parayko", "Sam Rinzel", "David Jiricek", "Pavel Mintyukov", "Simon Nemec", "Jake Oettinger", "Jacob Markstrom"], "Sportek": ["Trevor Zegras", "Travis Konecny", "Alex Debrincat", "Roope Hintz", "Martin Necas", "Brandon Hagel", "Sam Reinhart", "Filip Forsberg", "Aliaksei Protas", "Nick Schmaltz", "Mathew Barzal", "Drake Batherson", "Danila Yurov", "Macklin Celebrini", "Brock Faber", "John Carlson", "Brandt Clarke", "Morgan Rielly", "Rasmus Andersson", "Mason Lohrei", "Mackenzie Weegar", "Lucas Dostal", "Logan Thompson", "Samuel Ersson"]}, "prospects": {"Pinson": ["Adam Fantilli", "Zeev Buium", "Michael Misa", "Devon Levi", "Tanner Molendyk", "Luca Cagnoni", "Seamus Casey", "Chase Reid", "Tommy Bleyl", "Ryan Lin"], "Couturov": ["Jesper Wallstedt", "Axel Sandin-Pellikka", "Berkly Catton", "Ilya Protas", "Konsta Helenius", "Cayden Lindstrom", "Jonathan Lekkerimaki", "Victor Eklund", "Andrew Cristall", "Elton Hermansson"], "James": ["Ivan Demidov", "Matvei Michkov", "Porter Martone", "Ivar Stenberg", "Gabriel Perreault", "Sam Dickinson", "Artyom Levshunov", "Bradly Nadeau", "Wyatt Cullen", "Liam Greentree"], "Kevin": ["Shane Wright", "Kevin Korchinski", "Trevor Connelly", "Nikita Klepov", "JP Hurlbert", "Brady Martin", "Sacha Boisvert", "Justin Carbonneau", "Alexander Zharovsky"], "Raton": ["Gavin McKenna", "Caleb Desnoyers", "Beckett Sennecke", "Dalibor Dvorsky", "Daxon Rudolph", "Roman Kantserov", "Xavier Villeneuve", "Roger Mcqueen", "Dmitri Simashev", "Matthew Savoie"], "Paym": ["Oliver Moore", "Benjamin Kindel", "Cameron Reid", "Jacob Fowler", "Brad Lambert", "Viggo Bjorck", "Cole Reschny", "Tynan Lawrence", "Quentin Musty"], "Tony": ["Cole Hutson", "Zayne Parekh", "Michael Hage", "Tij Iginla", "Ryan Leonard", "Olen Zellweger", "Caleb Malhotra", "Alberts Smits", "Jackson Smith", "Carson Carels"], "Sportek": ["Zach Benson", "Carter Yakemchuk", "James Hagens", "Jake O'Brien", "Anton Frondell", "Frank Nazar", "Cole Eiserman", "Yaroslav Askarov", "Keaton Verhoeff", "Tristan Luneau"]}, "caps": {"Pinson": {"cap": 160, "total2627": 115.534, "total2728": 153.040667, "retained": 0}, "Couturov": {"cap": 160, "total2627": 95.975, "total2728": 144.22500000000002, "retained": 0}, "James": {"cap": 160, "total2627": 106.09202300000001, "total2728": 175.973214, "retained": 0}, "Kevin": {"cap": 160, "total2627": 116.880714, "total2728": 175.240573, "retained": 0}, "Raton": {"cap": 160, "total2627": 120.475, "total2728": 111.89999999999999, "retained": 0}, "Paym": {"cap": 160, "total2627": 108.571277, "total2728": 158.710556, "retained": 0}, "Tony": {"cap": 160, "total2627": 98.25, "total2728": 146.891667, "retained": 0}, "Sportek": {"cap": 160, "total2627": 95.55, "total2728": 164.125, "retained": 0}}, "meta": {"puckpedia_teams_loaded": ["Toronto Maple Leafs", "Colorado Avalanche", "Edmonton Oilers"], "puckpedia_teams_total": 32, "excel_seasons": ["2026-27", "2027-28"], "note": "Base Excel = saisons 2026-27/2027-28 de vos 8 alignements (fichier mis a jour). PuckPedia comble les joueurs hors alignement."}};
+
+
+const state = {
+  dg: null,
+  season: '2627', // '2627' or '2728'
+  cap: 160,
+  roster: {}, // dgName -> [{name, aav, free, retainPct, custom:bool}]
+  prospects: {}, // dgName -> [{name, free, pos}]  (RFA, hors masse)
+  pickYears: ['2026-2027','2027-2028'],
+  picks: {}, // year -> [{id, round, originalOwner, currentOwner}]
+  rfaPickYears: ['2026-2027','2027-2028'],
+  rfaPicks: {} // year -> [{id, round, originalOwner, currentOwner}] (3 rondes/DG)
+};
+
+function initRosters(){
+  Object.keys(RAW_DATA.rosters).forEach(dg=>{
+    state.roster[dg] = RAW_DATA.rosters[dg].map(name=>{
+      const p = RAW_DATA.players[name] || {};
+      return {
+        name,
+        aav26: p.aav2627,
+        aav27: p.aav2728,
+        free: p.free,
+        pos: p.pos || 'F',
+        retainPct: 0
+      };
+    });
+  });
+}
+initRosters();
+
+function initProspects(){
+  Object.keys(RAW_DATA.prospects).forEach(dg=>{
+    state.prospects[dg] = (RAW_DATA.prospects[dg] || []).map(name=>{
+      const p = RAW_DATA.players[name] || {};
+      return { name, free: p.free || '—', pos: p.pos || 'F' };
+    });
+  });
+}
+initProspects();
+
+function initPicks(){
+  const dgList = Object.keys(RAW_DATA.rosters);
+  state.pickYears.forEach(year=>{
+    const arr = [];
+    let seq = 1;
+    dgList.forEach(dg=>{
+      for(let r=1; r<=12; r++){
+        arr.push({ id: year+'_'+dg+'_R'+r+'_'+(seq++), round:r, originalOwner:dg, currentOwner:dg });
+      }
+    });
+    state.picks[year] = arr;
+  });
+}
+initPicks();
+
+function initRfaPicks(){
+  const dgList = Object.keys(RAW_DATA.rosters);
+  let seq = 1;
+  state.rfaPickYears.forEach(year=>{
+    const arr = [];
+    dgList.forEach(dg=>{
+      for(let r=1; r<=3; r++){
+        arr.push({ id:'RFA_'+year+'_'+dg+'_R'+r+'_'+(seq++), round:r, originalOwner:dg, currentOwner:dg });
+      }
+    });
+    state.rfaPicks[year] = arr;
+  });
+}
+initRfaPicks();
+
+const dgSelect = document.getElementById('dgSelect');
+Object.keys(RAW_DATA.rosters).forEach(dg=>{
+  const opt = document.createElement('option');
+  opt.value = dg; opt.textContent = dg;
+  dgSelect.appendChild(opt);
+});
+state.dg = Object.keys(RAW_DATA.rosters)[0];
+dgSelect.value = state.dg;
+
+// --- RFA + Repêchage: separate DG selectors (mirror main dgSelect options) ---
+const rfaDgSelect = document.getElementById('rfaDgSelect');
+const picksDgSelect = document.getElementById('picksDgSelect');
+Object.keys(RAW_DATA.rosters).forEach(dg=>{
+  const o1 = document.createElement('option'); o1.value = dg; o1.textContent = dg;
+  rfaDgSelect.appendChild(o1);
+  const o2 = document.createElement('option'); o2.value = dg; o2.textContent = dg;
+  picksDgSelect.appendChild(o2);
+});
+rfaDgSelect.value = state.dg;
+picksDgSelect.value = state.dg;
+
+// --- Trade module state ---
+const tradeState = {
+  dgA: null,
+  dgB: null,
+  outA: {},  // { playerName: retainPct }
+  outB: {},
+  outProspectsA: [], // [prospectName]
+  outProspectsB: [],
+  outPicksA: [], // [pickId] (UFA)
+  outPicksB: [],
+  outRfaPicksA: [], // [pickId] (RFA)
+  outRfaPicksB: []
+};
+
+const tradeDgASelect = document.getElementById('tradeDgA');
+const tradeDgBSelect = document.getElementById('tradeDgB');
+Object.keys(RAW_DATA.rosters).forEach(dg=>{
+  const o1 = document.createElement('option'); o1.value = dg; o1.textContent = dg;
+  tradeDgASelect.appendChild(o1);
+  const o2 = document.createElement('option'); o2.value = dg; o2.textContent = dg;
+  tradeDgBSelect.appendChild(o2);
+});
+const dgKeys = Object.keys(RAW_DATA.rosters);
+tradeState.dgA = dgKeys[0];
+tradeState.dgB = dgKeys[1] || dgKeys[0];
+tradeDgASelect.value = tradeState.dgA;
+tradeDgBSelect.value = tradeState.dgB;
+
+function tradeSumFor(dg, outMap){
+  const roster = state.roster[dg] || [];
+  let full = 0, retained = 0, count = 0;
+  roster.forEach(p=>{
+    if(outMap.hasOwnProperty(p.name)){
+      const aav = currentAav(p);
+      const pct = outMap[p.name] || 0;
+      full += aav;
+      retained += aav * (pct/100);
+      count++;
+    }
+  });
+  return { full, retained, net: full - retained, count };
+}
+
+const TRADE_POS_GROUPS = [
+  {key:'F', label:'🏒 Attaquants'},
+  {key:'D', label:'🛡️ Défenseurs'},
+  {key:'G', label:'🥅 Gardiens'}
+];
+
+// collapse state shared across both trade columns, keyed by section key
+const tradeCollapse = {};
+
+function appendCollapsibleGroup(containerEl, key, label, buildRowsFn){
+  const collapsed = !!tradeCollapse[key];
+  const head = document.createElement('div');
+  head.className = 'trade-group-head collapsible';
+  head.innerHTML = `<span class="tgh-arrow">${collapsed ? '▸' : '▾'}</span> ${label}`;
+  const body = document.createElement('div');
+  body.className = 'trade-group-body';
+  if(collapsed) body.style.display = 'none';
+  buildRowsFn(body);
+  head.addEventListener('click', ()=>{
+    tradeCollapse[key] = !tradeCollapse[key];
+    renderTrade();
+  });
+  containerEl.appendChild(head);
+  containerEl.appendChild(body);
+}
+
+function renderTradeList(containerEl, dg, outMap, otherOutMap){
+  const roster = state.roster[dg] || [];
+  containerEl.innerHTML = '';
+  if(roster.length === 0){
+    containerEl.innerHTML = '<div class="suggest-empty">Aucun joueur dans cet alignement.</div>';
+    return;
+  }
+  TRADE_POS_GROUPS.forEach(group=>{
+    const players = roster.filter(p => (p.pos === group.key) || (group.key==='F' && p.pos !== 'D' && p.pos !== 'G'));
+    if(players.length === 0) return;
+    appendCollapsibleGroup(containerEl, group.key, group.label + ' (' + players.length + ')', (body)=>{
+      players.forEach(p=>{
+        const checked = outMap.hasOwnProperty(p.name);
+        const aav = currentAav(p);
+        const row = document.createElement('div');
+        row.className = 'trade-row' + (checked ? ' checked' : '');
+        row.innerHTML = `
+          <input type="checkbox" ${checked?'checked':''} data-name="${p.name}">
+          <span class="tr-name">${p.name}</span>
+          <span class="tr-aav">${aav.toFixed(3)} $M</span>
+          <select class="tr-retain" ${checked?'':'disabled'}>
+            <option value="0" ${(outMap[p.name]||0)===0?'selected':''}>0%</option>
+            <option value="33" ${outMap[p.name]===33?'selected':''}>33%</option>
+            <option value="50" ${outMap[p.name]===50?'selected':''}>50%</option>
+          </select>
+        `;
+        const cb = row.querySelector('input[type=checkbox]');
+        const sel = row.querySelector('select.tr-retain');
+        cb.addEventListener('change', ()=>{
+          if(cb.checked){
+            outMap[p.name] = parseInt(sel.value,10) || 0;
+          } else {
+            delete outMap[p.name];
+          }
+          renderTrade();
+        });
+        sel.addEventListener('change', ()=>{
+          if(outMap.hasOwnProperty(p.name)){
+            outMap[p.name] = parseInt(sel.value,10);
+            renderTrade();
+          }
+        });
+        body.appendChild(row);
+      });
+    });
+  });
+}
+
+function tradeMetricRow(label, before, after, unit){
+  const arrowClass = after > before ? 'neg' : (after < before ? 'pos' : '');
+  return `<div class="trade-metric">
+    <span class="tm-label">${label}</span>
+    <span><span class="tm-value">${before.toFixed(3)}${unit}</span><span class="tm-arrow">→</span><span class="tm-value ${arrowClass}">${after.toFixed(3)}${unit}</span></span>
+  </div>`;
+}
+
+function renderTradeExtra(containerEl, dg, outProspects, outPicks, outRfaPicks){
+  // Prospects (RFA roster, hors masse)
+  const prospects = state.prospects[dg] || [];
+  if(prospects.length){
+    appendCollapsibleGroup(containerEl, 'RFAROSTER', '🌱 Espoirs RFA (' + prospects.length + ')', (body)=>{
+      prospects.forEach(p=>{
+        const checked = outProspects.includes(p.name);
+        const row = document.createElement('div');
+        row.className = 'trade-row mini' + (checked?' checked':'');
+        row.innerHTML = `<input type="checkbox" ${checked?'checked':''}><span class="tr-name">${p.name}</span><span class="tr-aav">—</span>`;
+        const cb = row.querySelector('input');
+        cb.addEventListener('change', ()=>{
+          const i = outProspects.indexOf(p.name);
+          if(cb.checked){ if(i===-1) outProspects.push(p.name); }
+          else { if(i>=0) outProspects.splice(i,1); }
+          renderTrade();
+        });
+        body.appendChild(row);
+      });
+    });
+  }
+  // UFA draft picks
+  state.pickYears.forEach(year=>{
+    const picks = (state.picks[year] || []).filter(p=>p.currentOwner===dg).sort((a,b)=>a.round-b.round);
+    if(!picks.length) return;
+    appendCollapsibleGroup(containerEl, 'UFA_'+year, '🎯 Choix UFA ' + year + ' (' + picks.length + ')', (body)=>{
+      picks.forEach(p=>{
+        const checked = outPicks.includes(p.id);
+        const label = pickLabel(p, 'ufa', year);
+        const row = document.createElement('div');
+        row.className = 'trade-row mini' + (checked?' checked':'');
+        row.innerHTML = `<input type="checkbox" ${checked?'checked':''}><span class="tr-name">${label}</span><span class="tr-aav">—</span>`;
+        const cb = row.querySelector('input');
+        cb.addEventListener('change', ()=>{
+          const i = outPicks.indexOf(p.id);
+          if(cb.checked){ if(i===-1) outPicks.push(p.id); }
+          else { if(i>=0) outPicks.splice(i,1); }
+          renderTrade();
+        });
+        body.appendChild(row);
+      });
+    });
+  });
+  // RFA draft picks
+  state.rfaPickYears.forEach(year=>{
+    const picks = (state.rfaPicks[year] || []).filter(p=>p.currentOwner===dg).sort((a,b)=>a.round-b.round);
+    if(!picks.length) return;
+    appendCollapsibleGroup(containerEl, 'RFAPICKS_'+year, '🌱 Choix RFA ' + year + ' (' + picks.length + ')', (body)=>{
+      picks.forEach(p=>{
+        const checked = outRfaPicks.includes(p.id);
+        const label = pickLabel(p, 'rfa', year);
+        const row = document.createElement('div');
+        row.className = 'trade-row mini' + (checked?' checked':'');
+        row.innerHTML = `<input type="checkbox" ${checked?'checked':''}><span class="tr-name">${label}</span><span class="tr-aav">—</span>`;
+        const cb = row.querySelector('input');
+        cb.addEventListener('change', ()=>{
+          const i = outRfaPicks.indexOf(p.id);
+          if(cb.checked){ if(i===-1) outRfaPicks.push(p.id); }
+          else { if(i>=0) outRfaPicks.splice(i,1); }
+          renderTrade();
+        });
+        body.appendChild(row);
+      });
+    });
+  });
+}
+
+function renderTrade(){
+  tradeState.dgA = tradeDgASelect.value;
+  tradeState.dgB = tradeDgBSelect.value;
+  const dgA = tradeState.dgA, dgB = tradeState.dgB;
+
+  document.getElementById('tradeAHeader').textContent = dgA + ' envoie :';
+  document.getElementById('tradeBHeader').textContent = dgB + ' envoie :';
+
+  const listAEl = document.getElementById('tradeListA');
+  const listBEl = document.getElementById('tradeListB');
+  renderTradeList(listAEl, dgA, tradeState.outA, tradeState.outB);
+  renderTradeList(listBEl, dgB, tradeState.outB, tradeState.outA);
+  renderTradeExtra(listAEl, dgA, tradeState.outProspectsA, tradeState.outPicksA, tradeState.outRfaPicksA);
+  renderTradeExtra(listBEl, dgB, tradeState.outProspectsB, tradeState.outPicksB, tradeState.outRfaPicksB);
+
+  if(dgA === dgB){
+    document.getElementById('tradeSummary').innerHTML = '<div class="empty-note">Choisissez deux DG différents pour proposer une transaction.</div>';
+    return;
+  }
+
+  const sentA = tradeSumFor(dgA, tradeState.outA); // A -> B
+  const sentB = tradeSumFor(dgB, tradeState.outB); // B -> A
+
+  const rosterA = state.roster[dgA] || [];
+  const rosterB = state.roster[dgB] || [];
+  const massBeforeA = rosterA.reduce((s,p)=>s+currentAav(p),0);
+  const massBeforeB = rosterB.reduce((s,p)=>s+currentAav(p),0);
+
+  // A loses sentA.full, keeps retained portion (sentA.retained) on its books, gains sentB.net (what B sends net of B's retention)
+  const massAfterA = massBeforeA - sentA.full + sentA.retained + sentB.net;
+  const massAfterB = massBeforeB - sentB.full + sentB.retained + sentA.net;
+
+  const countBeforeA = rosterA.length;
+  const countAfterA = countBeforeA - sentA.count + sentB.count;
+  const countBeforeB = rosterB.length;
+  const countAfterB = countBeforeB - sentB.count + sentA.count;
+
+  const marginBeforeA = state.cap - massBeforeA;
+  const marginAfterA = state.cap - massAfterA;
+  const marginBeforeB = state.cap - massBeforeB;
+  const marginAfterB = state.cap - massAfterB;
+
+  const html = `
+    <div class="trade-dg-box">
+      <h4>${dgA}</h4>
+      ${tradeMetricRow('Effectif', countBeforeA, countAfterA, '')}
+      ${tradeMetricRow('Masse salariale', massBeforeA, massAfterA, ' $M')}
+      ${tradeMetricRow('Marge', marginBeforeA, marginAfterA, ' $M')}
+      <div class="trade-metric"><span class="tm-label">Salaire donné (net)</span><span class="tm-value">${sentA.net.toFixed(3)} $M</span></div>
+      <div class="trade-metric"><span class="tm-label">Salaire reçu (net)</span><span class="tm-value">${sentB.net.toFixed(3)} $M</span></div>
+    </div>
+    <div class="trade-dg-box">
+      <h4>${dgB}</h4>
+      ${tradeMetricRow('Effectif', countBeforeB, countAfterB, '')}
+      ${tradeMetricRow('Masse salariale', massBeforeB, massAfterB, ' $M')}
+      ${tradeMetricRow('Marge', marginBeforeB, marginAfterB, ' $M')}
+      <div class="trade-metric"><span class="tm-label">Salaire donné (net)</span><span class="tm-value">${sentB.net.toFixed(3)} $M</span></div>
+      <div class="trade-metric"><span class="tm-label">Salaire reçu (net)</span><span class="tm-value">${sentA.net.toFixed(3)} $M</span></div>
+    </div>
+  `;
+  document.getElementById('tradeSummary').innerHTML = html;
+}
+
+function seasonLabel(){
+  return state.season === '2627' ? '2026-27' : '2027-28';
+}
+
+function generateTradeText(title){
+  const dgA = tradeState.dgA, dgB = tradeState.dgB;
+  if(dgA === dgB) return "Choisissez deux DG différents avant de générer le texto.";
+  const namesA = Object.keys(tradeState.outA);
+  const namesB = Object.keys(tradeState.outB);
+  const hasNothing = namesA.length===0 && namesB.length===0 &&
+    tradeState.outProspectsA.length===0 && tradeState.outProspectsB.length===0 &&
+    tradeState.outPicksA.length===0 && tradeState.outPicksB.length===0 &&
+    tradeState.outRfaPicksA.length===0 && tradeState.outRfaPicksB.length===0;
+  if(hasNothing) return "Sélectionnez au moins un élément des deux côtés.";
+
+  const rosterA = state.roster[dgA] || [];
+  const rosterB = state.roster[dgB] || [];
+  const findP = (roster,name)=> roster.find(p=>p.name===name);
+
+  function lineFor(roster, name, pct){
+    const p = findP(roster, name);
+    const aav = p ? currentAav(p) : 0;
+    return `  • ${name} — ${aav.toFixed(3)} $M${pct>0 ? ` (${pct}% retenu par l'expéditeur)` : ''}`;
+  }
+  function prospectLines(names){
+    return names.map(n=>`  • ${n} (espoir RFA)`);
+  }
+  function pickLines(dg, ids){
+    const lines = [];
+    state.pickYears.forEach(year=>{
+      (state.picks[year]||[]).filter(p=>ids.includes(p.id)).sort((a,b)=>a.round-b.round).forEach(p=>{
+        lines.push(`  • Choix ${pickLabel(p, 'ufa', year)}`);
+      });
+    });
+    return lines;
+  }
+  function rfaPickLines(dg, ids){
+    const lines = [];
+    state.rfaPickYears.forEach(year=>{
+      (state.rfaPicks[year]||[]).filter(p=>ids.includes(p.id)).sort((a,b)=>a.round-b.round).forEach(p=>{
+        lines.push(`  • Choix ${pickLabel(p, 'rfa', year)}`);
+      });
+    });
+    return lines;
+  }
+
+  const sentA = tradeSumFor(dgA, tradeState.outA);
+  const sentB = tradeSumFor(dgB, tradeState.outB);
+
+  const rosterAAll = state.roster[dgA] || [];
+  const rosterBAll = state.roster[dgB] || [];
+  const massBeforeA = rosterAAll.reduce((s,p)=>s+currentAav(p),0);
+  const massBeforeB = rosterBAll.reduce((s,p)=>s+currentAav(p),0);
+  const massAfterA = massBeforeA - sentA.full + sentA.retained + sentB.net;
+  const massAfterB = massBeforeB - sentB.full + sentB.retained + sentA.net;
+  const countAfterA = rosterAAll.length - sentA.count + sentB.count;
+  const countAfterB = rosterBAll.length - sentB.count + sentA.count;
+
+  let txt = `${title || '🔁 PROPOSITION DE TRANSACTION'} — Pool des Champions\n`;
+  txt += `Saison de référence : ${seasonLabel()}\n\n`;
+
+  const bodyA = [...namesA.map(n=>lineFor(rosterA, n, tradeState.outA[n])), ...prospectLines(tradeState.outProspectsA), ...pickLines(dgA, tradeState.outPicksA), ...rfaPickLines(dgA, tradeState.outRfaPicksA)];
+  txt += `${dgA} envoie à ${dgB} :\n`;
+  txt += bodyA.length ? bodyA.join('\n') : '  (rien)';
+  txt += `\n  Total salaires envoyés : ${sentA.full.toFixed(3)} $M${sentA.retained>0 ? ` (net après retenue : ${sentA.net.toFixed(3)} $M)` : ''}\n\n`;
+
+  const bodyB = [...namesB.map(n=>lineFor(rosterB, n, tradeState.outB[n])), ...prospectLines(tradeState.outProspectsB), ...pickLines(dgB, tradeState.outPicksB), ...rfaPickLines(dgB, tradeState.outRfaPicksB)];
+  txt += `${dgB} envoie à ${dgA} :\n`;
+  txt += bodyB.length ? bodyB.join('\n') : '  (rien)';
+  txt += `\n  Total salaires envoyés : ${sentB.full.toFixed(3)} $M${sentB.retained>0 ? ` (net après retenue : ${sentB.net.toFixed(3)} $M)` : ''}\n\n`;
+
+  txt += `📊 Impact masse salariale :\n`;
+  txt += `${dgA} : ${massBeforeA.toFixed(3)} $M → ${massAfterA.toFixed(3)} $M | Marge : ${(state.cap-massBeforeA).toFixed(3)} → ${(state.cap-massAfterA).toFixed(3)} $M | Effectif : ${rosterAAll.length} → ${countAfterA}\n`;
+  txt += `${dgB} : ${massBeforeB.toFixed(3)} $M → ${massAfterB.toFixed(3)} $M | Marge : ${(state.cap-massBeforeB).toFixed(3)} → ${(state.cap-massAfterB).toFixed(3)} $M | Effectif : ${rosterBAll.length} → ${countAfterB}\n`;
+  txt += `\nPlafond utilisé pour ce calcul : ${state.cap.toFixed(3)} $M`;
+
+  return txt;
+}
+
+async function copyToClipboard(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    let ok = false;
+    try{ document.execCommand('copy'); ok = true; } catch(e2){ ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+}
+
+document.getElementById('copyTradeBtn').addEventListener('click', async ()=>{
+  const text = generateTradeText('🔁 PROPOSITION DE TRANSACTION');
+  const ok = await copyToClipboard(text);
+  toast(ok ? 'Texto de transaction copié — collez-le dans Messenger !' : "Impossible de copier automatiquement — sélectionnez le texte manuellement.");
+});
+
+// --- DEAL! button : exécute la transaction et met à jour les 2 alignements ---
+function applyOutgoing(dgFrom, dgTo, outMap){
+  const fromRoster = state.roster[dgFrom];
+  const toRoster = state.roster[dgTo];
+  Object.keys(outMap).forEach(name=>{
+    const idx = fromRoster.findIndex(p=>p.name===name);
+    if(idx === -1) return;
+    const player = fromRoster[idx];
+    const pct = outMap[name] || 0;
+    fromRoster.splice(idx,1);
+    if(pct > 0){
+      const rKeep = pct/100, rSend = 1 - rKeep;
+      const scale = (v,f) => (typeof v === 'number' ? +(v*f).toFixed(4) : null);
+      fromRoster.push({
+        name: `🔒 Retenu : ${player.name} (${pct}%)`,
+        aav26: scale(player.aav26, rKeep), aav27: scale(player.aav27, rKeep),
+        free: '—', pos: player.pos, retainPct: 0, _custom: true, _retainedPlaceholder: true
+      });
+      toRoster.push({
+        name: player.name,
+        aav26: scale(player.aav26, rSend), aav27: scale(player.aav27, rSend),
+        free: player.free, pos: player.pos, retainPct: 0, _custom: true
+      });
+    } else {
+      player.retainPct = 0;
+      toRoster.push(player);
+    }
+  });
+}
+
+function applyOutgoingProspects(dgFrom, dgTo, names){
+  names.forEach(name=>{
+    const idx = state.prospects[dgFrom].findIndex(p=>p.name===name);
+    if(idx === -1) return;
+    const p = state.prospects[dgFrom].splice(idx,1)[0];
+    state.prospects[dgTo].push(p);
+  });
+}
+
+function applyOutgoingPicksGeneric(picksStore, years, ids, dgTo){
+  ids.forEach(id=>{
+    years.forEach(year=>{
+      const pick = (picksStore[year] || []).find(p=>p.id===id);
+      if(pick) pick.currentOwner = dgTo;
+    });
+  });
+}
+
+document.getElementById('dealBtn').addEventListener('click', async ()=>{
+  const dgA = tradeState.dgA, dgB = tradeState.dgB;
+  if(dgA === dgB){ toast('Choisissez deux DG différents'); return; }
+  const namesA = Object.keys(tradeState.outA);
+  const namesB = Object.keys(tradeState.outB);
+  const hasNothing = namesA.length===0 && namesB.length===0 &&
+    tradeState.outProspectsA.length===0 && tradeState.outProspectsB.length===0 &&
+    tradeState.outPicksA.length===0 && tradeState.outPicksB.length===0 &&
+    tradeState.outRfaPicksA.length===0 && tradeState.outRfaPicksB.length===0;
+  if(hasNothing){ toast('Sélectionnez au moins un élément des deux côtés'); return; }
+
+  const text = generateTradeText('✅ TRANSACTION COMPLÉTÉE');
+
+  applyOutgoing(dgA, dgB, tradeState.outA);
+  applyOutgoing(dgB, dgA, tradeState.outB);
+  applyOutgoingProspects(dgA, dgB, tradeState.outProspectsA);
+  applyOutgoingProspects(dgB, dgA, tradeState.outProspectsB);
+  applyOutgoingPicksGeneric(state.picks, state.pickYears, tradeState.outPicksA, dgB);
+  applyOutgoingPicksGeneric(state.picks, state.pickYears, tradeState.outPicksB, dgA);
+  applyOutgoingPicksGeneric(state.rfaPicks, state.rfaPickYears, tradeState.outRfaPicksA, dgB);
+  applyOutgoingPicksGeneric(state.rfaPicks, state.rfaPickYears, tradeState.outRfaPicksB, dgA);
+
+  tradeState.outA = {};
+  tradeState.outB = {};
+  tradeState.outProspectsA = [];
+  tradeState.outProspectsB = [];
+  tradeState.outPicksA = [];
+  tradeState.outPicksB = [];
+  tradeState.outRfaPicksA = [];
+  tradeState.outRfaPicksB = [];
+
+  render();
+  renderTrade();
+  renderRfa();
+  renderPicks();
+
+  const ok = await copyToClipboard(text);
+  toast(ok ? `✅ Transaction complétée — texto copié, prêt à coller !` : '✅ Transaction complétée (copie manuelle du texto requise)');
+});
+
+document.getElementById('resetTradeBtn').addEventListener('click', ()=>{
+  tradeState.outA = {};
+  tradeState.outB = {};
+  tradeState.outProspectsA = [];
+  tradeState.outProspectsB = [];
+  tradeState.outPicksA = [];
+  tradeState.outPicksB = [];
+  tradeState.outRfaPicksA = [];
+  tradeState.outRfaPicksB = [];
+  renderTrade();
+  toast('Transaction réinitialisée');
+});
+
+tradeDgASelect.addEventListener('change', ()=>{
+  tradeState.outA = {};
+  tradeState.outProspectsA = [];
+  tradeState.outPicksA = [];
+  tradeState.outRfaPicksA = [];
+  renderTrade();
+});
+tradeDgBSelect.addEventListener('change', ()=>{
+  tradeState.outB = {};
+  tradeState.outProspectsB = [];
+  tradeState.outPicksB = [];
+  tradeState.outRfaPicksB = [];
+  renderTrade();
+});
+
+// player search — reusable factory (avoids native datalist mobile keyboard issues)
+const ALL_PLAYER_NAMES = Object.keys(RAW_DATA.players).sort();
+
+function normalizeStr(s){
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function posLabel(pos){
+  if(pos==='D') return 'Déf.';
+  if(pos==='G') return 'Gard.';
+  return 'Att.';
+}
+
+function createSearchWidget(inputEl, boxEl, onSelect){
+  let matches = [];
+  let activeIdx = -1;
+
+  function renderSuggestions(query){
+    const q = normalizeStr(query.trim());
+    if(q.length === 0){
+      boxEl.classList.remove('show');
+      boxEl.innerHTML = '';
+      matches = [];
+      return;
+    }
+    matches = ALL_PLAYER_NAMES.filter(name => normalizeStr(name).includes(q)).slice(0, 8);
+    activeIdx = -1;
+    if(matches.length === 0){
+      boxEl.innerHTML = '<div class="suggest-empty">Aucun joueur trouvé — utilisez l\'ajout personnalisé ci-dessous.</div>';
+      boxEl.classList.add('show');
+      return;
+    }
+    boxEl.innerHTML = matches.map((name, i)=>{
+      const p = RAW_DATA.players[name];
+      const aav = p.aav2627;
+      return `<div class="suggest-item" data-idx="${i}">
+        <span class="s-name">${name}</span>
+        <span class="s-meta">${posLabel(p.pos)} · ${typeof aav==='number' ? aav.toFixed(3)+' $M' : '—'}</span>
+      </div>`;
+    }).join('');
+    boxEl.classList.add('show');
+    boxEl.querySelectorAll('.suggest-item').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        pick(parseInt(el.dataset.idx,10));
+      });
+    });
+  }
+
+  function pick(i){
+    const name = matches[i];
+    if(!name) return;
+    inputEl.value = name;
+    boxEl.classList.remove('show');
+    boxEl.innerHTML = '';
+    matches = [];
+    if(onSelect) onSelect(name);
+  }
+
+  inputEl.addEventListener('input', ()=> renderSuggestions(inputEl.value));
+  inputEl.addEventListener('keydown', (e)=>{
+    if(!boxEl.classList.contains('show')) return;
+    const items = boxEl.querySelectorAll('.suggest-item');
+    if(e.key === 'ArrowDown'){
+      e.preventDefault();
+      activeIdx = Math.min(activeIdx + 1, items.length - 1);
+      items.forEach((el,i)=>el.classList.toggle('active', i===activeIdx));
+    } else if(e.key === 'ArrowUp'){
+      e.preventDefault();
+      activeIdx = Math.max(activeIdx - 1, 0);
+      items.forEach((el,i)=>el.classList.toggle('active', i===activeIdx));
+    } else if(e.key === 'Enter'){
+      if(activeIdx >= 0){
+        e.preventDefault();
+        pick(activeIdx);
+      }
+    } else if(e.key === 'Escape'){
+      boxEl.classList.remove('show');
+    }
+  });
+  document.addEventListener('click', (e)=>{
+    if(!e.target.closest('.search-wrap')){
+      boxEl.classList.remove('show');
+    }
+  });
+
+  return { clear(){ inputEl.value=''; boxEl.classList.remove('show'); boxEl.innerHTML=''; matches=[]; } };
+}
+
+const searchInput = document.getElementById('playerSearch');
+const suggestBox = document.getElementById('suggestBox');
+const mainSearchWidget = createSearchWidget(searchInput, suggestBox);
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toast._h);
+  toast._h = setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+// --- RFA (prospects) module ---
+function renderRfa(){
+  const dg = rfaDgSelect.value;
+  const list = state.prospects[dg] || [];
+  const board = document.getElementById('rfaBoard');
+  board.innerHTML = '';
+  list.forEach((p, idx)=>{
+    const tag = freeTagInfo(p.free);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <button class="rfa-remove" data-idx="${idx}" title="Retirer">✕</button>
+      <div class="card-name">${p.name}</div>
+      <div class="card-free"><span class="free-tag ${tag.cls}">${tag.text}</span></div>
+      <div style="font-size:0.72rem; color:var(--grey); margin-top:4px;">Ne compte pas sur la masse</div>
+    `;
+    board.appendChild(card);
+  });
+  document.getElementById('rfaEmptyNote').style.display = list.length===0 ? 'block' : 'none';
+  board.querySelectorAll('.rfa-remove').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      const i = parseInt(e.target.dataset.idx,10);
+      const removed = state.prospects[dg].splice(i,1)[0];
+      renderRfa();
+      toast(removed.name + ' retiré des espoirs RFA');
+    });
+  });
+}
+
+rfaDgSelect.addEventListener('change', renderRfa);
+
+const rfaSearchInput = document.getElementById('rfaSearchInput');
+const rfaSuggestBox = document.getElementById('rfaSuggestBox');
+const rfaSearchWidget = createSearchWidget(rfaSearchInput, rfaSuggestBox);
+
+document.getElementById('rfaAddBtn').addEventListener('click', ()=>{
+  const name = rfaSearchInput.value.trim();
+  if(!name) return;
+  const p = RAW_DATA.players[name];
+  if(!p){ toast("Joueur introuvable — utilisez l'ajout personnalisé ci-dessous"); return; }
+  const dg = rfaDgSelect.value;
+  const list = state.prospects[dg];
+  if(list.find(x=>x.name===name)){ toast(name + ' est déjà dans les espoirs de ce DG'); return; }
+  list.push({ name, free: p.free || '—', pos: p.pos || 'F' });
+  rfaSearchWidget.clear();
+  renderRfa();
+  toast(name + ' ajouté aux espoirs RFA de ' + dg);
+});
+
+document.getElementById('rfaAddCustomBtn').addEventListener('click', ()=>{
+  const nameEl = document.getElementById('rfaCustomName');
+  const freeEl = document.getElementById('rfaCustomFree');
+  const name = nameEl.value.trim();
+  if(!name){ toast('Entrez un nom'); return; }
+  const dg = rfaDgSelect.value;
+  state.prospects[dg].push({ name, free: freeEl.value.trim() || '—', pos:'F' });
+  nameEl.value=''; freeEl.value='';
+  renderRfa();
+  toast(name + ' ajouté (perso) aux espoirs RFA');
+});
+
+// --- Repêchage (UFA + RFA draft picks) module ---
+const pickYearAInput = document.getElementById('pickYearAInput');
+const pickYearBInput = document.getElementById('pickYearBInput');
+
+function pickLabel(p, typeAbbrev, year){
+  return `${p.round}${typeAbbrev} ${year} - DG ${p.originalOwner}`;
+}
+
+function renderPickColumn(containerEl, year, dg, picksStore, typeAbbrev){
+  containerEl.innerHTML = '';
+  const yearPicks = (picksStore[year]) || [];
+  const ownedOriginally = yearPicks.filter(p => p.originalOwner === dg);
+  const acquired = yearPicks.filter(p => p.currentOwner === dg && p.originalOwner !== dg);
+
+  ownedOriginally.sort((a,b)=>a.round-b.round).forEach(p=>{
+    const tradedAway = p.currentOwner !== dg;
+    const row = document.createElement('div');
+    row.className = 'pick-row' + (tradedAway ? ' traded-away' : '');
+    row.innerHTML = `
+      <span class="pick-round">${pickLabel(p, typeAbbrev, year)}</span>
+      <span class="pick-status">${tradedAway ? `Échangé à <span class="to-dg">${p.currentOwner}</span>` : 'Conservé'}</span>
+    `;
+    containerEl.appendChild(row);
+  });
+
+  if(acquired.length){
+    const head = document.createElement('div');
+    head.className = 'trade-subsection-head';
+    head.textContent = 'Choix acquis par échange';
+    containerEl.appendChild(head);
+    acquired.sort((a,b)=>a.round-b.round).forEach(p=>{
+      const row = document.createElement('div');
+      row.className = 'pick-row acquired';
+      row.innerHTML = `
+        <span class="pick-round">${pickLabel(p, typeAbbrev, year)}</span>
+        <span class="pick-status">Acquis</span>
+      `;
+      containerEl.appendChild(row);
+    });
+  }
+}
+
+function renderPicks(){
+  const dg = picksDgSelect.value;
+  const yearA = pickYearAInput.value.trim() || state.pickYears[0];
+  const yearB = pickYearBInput.value.trim() || state.pickYears[1];
+  document.getElementById('picksYearALabel').textContent = 'Repêchage ' + yearA;
+  document.getElementById('picksYearBLabel').textContent = 'Repêchage ' + yearB;
+  if(!state.picks[yearA]) { state.picks[yearA] = []; }
+  if(!state.picks[yearB]) { state.picks[yearB] = []; }
+  renderPickColumn(document.getElementById('picksListA'), yearA, dg, state.picks, 'ufa');
+  renderPickColumn(document.getElementById('picksListB'), yearB, dg, state.picks, 'ufa');
+  renderRfaPicks();
+}
+picksDgSelect.addEventListener('change', renderPicks);
+pickYearAInput.addEventListener('change', ()=>{ state.pickYears[0] = pickYearAInput.value.trim(); renderPicks(); });
+pickYearBInput.addEventListener('change', ()=>{ state.pickYears[1] = pickYearBInput.value.trim(); renderPicks(); });
+
+function renderRfaPicks(){
+  const dg = picksDgSelect.value;
+  const [yearA, yearB] = state.rfaPickYears;
+  renderPickColumn(document.getElementById('rfaPicksListA'), yearA, dg, state.rfaPicks, 'rfa');
+  renderPickColumn(document.getElementById('rfaPicksListB'), yearB, dg, state.rfaPicks, 'rfa');
+}
+
+function freeTagInfo(free){
+  if(free === 'RFA') return {cls:'rfa', text:'RFA 2026'};
+  if(free === 'UFA') return {cls:'ufa', text:'UFA 2026'};
+  if(free === 'UNSIGNED') return {cls:'ufa', text:'Non signé'};
+  if(typeof free === 'number') return {cls:'', text:'Auton. ' + free};
+  return {cls:'', text: free || '—'};
+}
+
+function currentAav(p){
+  if(p.overrides && (state.season in p.overrides)){
+    return p.overrides[state.season];
+  }
+  let base;
+  if(state.season === '2627') base = p.aav26;
+  else base = p.aav27; // 2027-28
+  let val = (typeof base === 'number') ? base : 0;
+  if(p.retainPct > 0) val = val * (1 - p.retainPct/100);
+  return val;
+}
+
+function render(){
+  const roster = state.roster[state.dg] || [];
+  const boards = { F: document.getElementById('boardF'), D: document.getElementById('boardD'), G: document.getElementById('boardG') };
+  boards.F.innerHTML = ''; boards.D.innerHTML = ''; boards.G.innerHTML = '';
+  const sums = { F:0, D:0, G:0 };
+  const counts = { F:0, D:0, G:0 };
+  let total = 0;
+  let counted = 0;
+  roster.forEach((p, idx)=>{
+    const aav = currentAav(p);
+    total += aav;
+    counted++;
+    const posKey = (p.pos === 'D' || p.pos === 'G') ? p.pos : 'F';
+    sums[posKey] += aav;
+    counts[posKey] += 1;
+    const tag = freeTagInfo(p.free);
+    const overrideKey = state.season;
+    const hasOverride = p.overrides && (overrideKey in p.overrides);
+    const rawBase = state.season === '2627' ? p.aav26 : p.aav27;
+    const noRealData = !hasOverride && typeof rawBase !== 'number';
+    const isRetained = p.retainPct > 0;
+
+    const card = document.createElement('div');
+    card.className = 'card' + (hasOverride ? ' corrected' : '') + (noRealData ? ' no-data' : '') + (isRetained ? ' retained' : '');
+    card.innerHTML = `
+      <button class="card-remove" data-idx="${idx}" title="Retirer">✕</button>
+      <div class="card-name">${p.name}</div>
+      <div class="card-badges">
+        ${p._custom ? '<span class="pos-tag">perso</span>' : ''}
+        ${hasOverride ? '<span class="pos-tag" style="background:#fff2cc;color:#8a6d00;">corrigé</span>' : ''}
+        ${noRealData ? '<span class="pos-tag" style="background:#fdeceb;color:var(--red);">pas de donnée réelle</span>' : ''}
+        ${hasOverride ? `<button data-idx="${idx}" class="card-revert" title="Revenir au AAV d'origine">↺</button>` : ''}
+      </div>
+      <div class="card-aav-row">
+        <input type="number" step="0.001" class="aav-edit-input ${noRealData?'no-data':''}" data-idx="${idx}" value="${aav.toFixed(3)}">
+        <span class="unit">$M</span>
+      </div>
+      <div class="card-bottom-row">
+        <span class="free-tag ${tag.cls}">${tag.text}</span>
+        <select class="retain-select" data-idx="${idx}" title="Retenue de salaire (trade)">
+          <option value="0" ${p.retainPct===0?'selected':''}>0%</option>
+          <option value="33" ${p.retainPct===33?'selected':''}>33%</option>
+          <option value="50" ${p.retainPct===50?'selected':''}>50%</option>
+        </select>
+      </div>
+    `;
+    boards[posKey].appendChild(card);
+  });
+
+  ['F','D','G'].forEach(k=>{
+    document.getElementById('count'+k).textContent = counts[k];
+    document.getElementById('sum'+k).textContent = sums[k].toFixed(3) + ' $M';
+    if(counts[k]===0){
+      const el = document.createElement('div');
+      el.className = 'board-empty';
+      el.textContent = 'Aucun joueur';
+      boards[k].appendChild(el);
+    }
+  });
+
+  document.getElementById('emptyNote').style.display = roster.length===0 ? 'block':'none';
+
+  document.getElementById('statTotal').textContent = total.toFixed(3);
+  document.getElementById('statCap').textContent = state.cap.toFixed(3);
+  const margin = state.cap - total;
+  const marginEl = document.getElementById('statMargin');
+  marginEl.textContent = margin.toFixed(3);
+  marginEl.className = 'value ' + (margin >= 0 ? 'pos' : 'neg');
+  document.getElementById('statCount').textContent = counted;
+
+  const pct = Math.min(100, (total / state.cap) * 100);
+  const fill = document.getElementById('barFill');
+  fill.style.width = pct + '%';
+  fill.className = 'bar-fill' + (total > state.cap ? ' over' : '');
+  document.getElementById('barPct').textContent = pct.toFixed(1) + '%';
+  document.getElementById('barCapLabel').textContent = state.cap.toFixed(3) + ' $M';
+
+  // sync sticky bar
+  document.getElementById('sbDg').textContent = state.dg;
+  document.getElementById('sbCount').textContent = counted;
+  document.getElementById('sbTotal').textContent = total.toFixed(3);
+  document.getElementById('sbCap').textContent = state.cap.toFixed(3);
+  const sbMarginEl = document.getElementById('sbMargin');
+  sbMarginEl.textContent = margin.toFixed(3);
+  sbMarginEl.className = 'sb-value ' + (margin >= 0 ? 'pos' : 'neg');
+  const sbFill = document.getElementById('sbBarFill');
+  sbFill.style.width = pct + '%';
+  sbFill.className = 'sb-bar-fill' + (total > state.cap ? ' over' : '');
+
+  // bind card events (across all three columns)
+  const board = document.createElement('div'); // virtual union for querySelectorAll convenience
+  const allCards = [...boards.F.querySelectorAll('.card'), ...boards.D.querySelectorAll('.card'), ...boards.G.querySelectorAll('.card')];
+  function bindAll(selector, handler){
+    allCards.forEach(card=>{
+      card.querySelectorAll(selector).forEach(el=>{
+        el.addEventListener(selector.includes('select') || selector.includes('input') ? 'change' : 'click', handler);
+      });
+    });
+  }
+  bindAll('.card-remove', e=>{
+    const i = parseInt(e.target.dataset.idx,10);
+    const removed = state.roster[state.dg].splice(i,1)[0];
+    toast(removed.name + " retiré de l'alignement");
+    render();
+  });
+  bindAll('.retain-select', e=>{
+    const i = parseInt(e.target.dataset.idx,10);
+    state.roster[state.dg][i].retainPct = parseInt(e.target.value,10);
+    render();
+  });
+  bindAll('.aav-edit-input', e=>{
+    const i = parseInt(e.target.dataset.idx,10);
+    const val = parseFloat(e.target.value);
+    if(isNaN(val) || val < 0){
+      toast('Montant invalide');
+      render();
+      return;
+    }
+    const p = state.roster[state.dg][i];
+    if(!p.overrides) p.overrides = {};
+    p.overrides[state.season] = val;
+    toast(p.name + ' : AAV corrigé manuellement pour cette saison');
+    render();
+  });
+  bindAll('.card-revert', e=>{
+    const i = parseInt(e.target.dataset.idx,10);
+    const p = state.roster[state.dg][i];
+    if(p.overrides) delete p.overrides[state.season];
+    toast(p.name + " : retour a l'AAV d'origine");
+    render();
+  });
+
+  // prospects box
+  const prospects = RAW_DATA.prospects[state.dg] || [];
+  const pbox = document.getElementById('prospectsBox');
+  if(prospects.length){
+    pbox.innerHTML = '<b>Espoirs (ne comptent pas sur la masse) :</b><br>' +
+      prospects.map(n=>`<span class="chip">${n}</span>`).join('');
+  } else {
+    pbox.innerHTML = '';
+  }
+
+  if(typeof renderTrade === 'function') renderTrade();
+  if(typeof renderKanban === 'function') renderKanban();
+}
+
+dgSelect.addEventListener('change', ()=>{
+  state.dg = dgSelect.value;
+  render();
+});
+
+document.getElementById('btnS26').addEventListener('click', function(){
+  state.season = '2627';
+  this.classList.add('active');
+  document.getElementById('btnS27').classList.remove('active');
+  render();
+});
+document.getElementById('btnS27').addEventListener('click', function(){
+  state.season = '2728';
+  this.classList.add('active');
+  document.getElementById('btnS26').classList.remove('active');
+  render();
+});
+
+const capInput = document.getElementById('capInput');
+capInput.addEventListener('input', ()=>{
+  const v = parseFloat(capInput.value);
+  state.cap = isNaN(v) ? 0 : v;
+  render();
+});
+
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  initRosters();
+  render();
+  toast('Alignement réinitialisé aux données du fichier');
+});
+
+function addPlayerByName(name){
+  if(!name) return false;
+  const p = RAW_DATA.players[name];
+  if(!p){
+    toast("Joueur introuvable — utilisez l'ajout personnalisé ci-dessous");
+    return false;
+  }
+  const roster = state.roster[state.dg];
+  if(roster.find(r=>r.name===name)){
+    toast(name + ' est déjà dans cet alignement');
+    return false;
+  }
+  roster.push({name, aav26:p.aav2627, aav27:p.aav2728, free:p.free, pos:p.pos || 'F', retainPct:0});
+  render();
+  toast(name + ' ajouté à ' + state.dg);
+  return true;
+}
+
+document.getElementById('addBtn').addEventListener('click', ()=>{
+  const input = document.getElementById('playerSearch');
+  const name = input.value.trim();
+  if(addPlayerByName(name)){
+    mainSearchWidget.clear();
+  }
+});
+
+document.getElementById('addCustomBtn').addEventListener('click', ()=>{
+  const nameEl = document.getElementById('customName');
+  const aavEl = document.getElementById('customAav');
+  const posEl = document.getElementById('customPos');
+  const name = nameEl.value.trim();
+  const aav = parseFloat(aavEl.value);
+  if(!name || isNaN(aav)){
+    toast('Entrez un nom et un montant AAV valides');
+    return;
+  }
+  const roster = state.roster[state.dg];
+  roster.push({name, aav26:aav, aav27:aav, free:'—', pos:posEl.value, retainPct:0, _custom:true});
+  nameEl.value=''; aavEl.value='';
+  render();
+  toast(name + ' ajouté (perso)');
+});
+
+capInput.value = state.cap.toFixed(3);
+render();
+
+// --- Quick-add floating bubble ---
+const fabBtn = document.getElementById('fabBtn');
+const quickAddOverlay = document.getElementById('quickAddOverlay');
+const qaSearchInput = document.getElementById('qaSearchInput');
+const qaSuggestBox = document.getElementById('qaSuggestBox');
+const qaDgLabel = document.getElementById('qaDgLabel');
+const quickSearchWidget = createSearchWidget(qaSearchInput, qaSuggestBox);
+
+function openQuickAdd(){
+  qaDgLabel.textContent = state.dg;
+  quickAddOverlay.classList.add('show');
+  setTimeout(()=> qaSearchInput.focus(), 50);
+}
+function closeQuickAdd(){
+  quickAddOverlay.classList.remove('show');
+  quickSearchWidget.clear();
+}
+fabBtn.addEventListener('click', openQuickAdd);
+document.getElementById('qaCloseBtn').addEventListener('click', closeQuickAdd);
+quickAddOverlay.addEventListener('click', (e)=>{
+  if(e.target === quickAddOverlay) closeQuickAdd();
+});
+document.getElementById('qaAddBtn').addEventListener('click', ()=>{
+  const name = qaSearchInput.value.trim();
+  if(addPlayerByName(name)){
+    quickSearchWidget.clear();
+    qaSearchInput.focus();
+  }
+});
+qaSearchInput.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' && !qaSuggestBox.classList.contains('show')){
+    document.getElementById('qaAddBtn').click();
+  }
+});
+
+// player DB source breakdown + disclaimer
+(function(){
+  const all = Object.values(RAW_DATA.players);
+  const excelCount = all.filter(p=>p.source==='excel').length;
+  const puckCount = all.filter(p=>p.source==='puckpedia').length;
+  document.getElementById('playerSearchLabel').textContent =
+    `Rechercher dans la LNH (${all.length} joueurs — ${excelCount} de votre alignement/espoirs, ${puckCount} importés de PuckPedia)`;
+
+  const teamsLoaded = (RAW_DATA.meta && RAW_DATA.meta.puckpedia_teams_loaded) || [];
+  const totalTeams = (RAW_DATA.meta && RAW_DATA.meta.puckpedia_teams_total) || 32;
+  document.getElementById('disclaimerBox').innerHTML =
+    `⚠️ <b>Provenance des données :</b> les AAV 2026-27/2027-28 viennent de votre fichier Excel « Fichier des Champions » (mis à jour). `+
+    `PuckPedia comble les joueurs absents de vos 8 alignements, chargé une fois lors de la génération de cet outil — `+
+    `<b>${teamsLoaded.length} des ${totalTeams} équipes de la LNH</b> ont été importées à ce jour (${teamsLoaded.join(', ') || 'aucune'}). `+
+    `Un navigateur ne peut pas interroger PuckPedia en continu, donc ces données resteront figées à la date de génération jusqu'à ce qu'on refasse un import. `+
+    `Pour un joueur absent de la base, utilisez l'ajout personnalisé ci-dessus.`;
+})();
+
+// --- Kanban board ---
+var kanbanSelected = null; // {name, fromDg}
+
+function renderKanban(){
+  const board = document.getElementById('kanbanBoard');
+  if(!board) return;
+  board.innerHTML = '';
+  Object.keys(RAW_DATA.rosters).forEach(dg=>{
+    const roster = state.roster[dg] || [];
+    const mass = roster.reduce((s,p)=>s+currentAav(p),0);
+    const list = document.createElement('div');
+    list.className = 'kanban-list';
+    list.innerHTML = `
+      <div class="kanban-list-header">
+        <div class="kl-name">${dg}</div>
+        <div class="kl-meta">${roster.length} joueurs · ${mass.toFixed(3)} $M</div>
+      </div>
+      <div class="kanban-cards"></div>
+    `;
+    board.appendChild(list);
+    const cardsEl = list.querySelector('.kanban-cards');
+    if(roster.length === 0){
+      cardsEl.innerHTML = '<div class="kanban-empty-note">Vide</div>';
+    }
+    roster.forEach(p=>{
+      const aav = currentAav(p);
+      const isSelected = !!(kanbanSelected && kanbanSelected.name===p.name && kanbanSelected.fromDg===dg);
+      const card = document.createElement('div');
+      card.className = 'kanban-card' + (isSelected ? ' selected' : '');
+      card.innerHTML = `<span class="kc-name">${p.name}</span><span class="kc-meta"><span>${posLabel(p.pos)}</span><span>${aav.toFixed(3)} $M</span></span>`;
+      card.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        kanbanSelected = isSelected ? null : { name: p.name, fromDg: dg };
+        renderKanban();
+      });
+      cardsEl.appendChild(card);
+    });
+
+    list.addEventListener('click', ()=>{
+      if(kanbanSelected && kanbanSelected.fromDg !== dg){
+        const fromRoster = state.roster[kanbanSelected.fromDg];
+        const idx = fromRoster.findIndex(x=>x.name===kanbanSelected.name);
+        if(idx !== -1){
+          const [player] = fromRoster.splice(idx,1);
+          player.retainPct = 0;
+          state.roster[dg].push(player);
+          toast(`${player.name} déplacé vers ${dg}`);
+        }
+        kanbanSelected = null;
+        render();
+      }
+    });
+  });
+}
+
+// --- Main navigation (tabs) ---
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.getElementById('tabEffectifs').classList.toggle('active', tab==='effectifs');
+    document.getElementById('tabRfa').classList.toggle('active', tab==='rfa');
+    document.getElementById('tabRepechage').classList.toggle('active', tab==='repechage');
+    document.getElementById('tabTransactions').classList.toggle('active', tab==='transactions');
+    document.getElementById('tabKanban').classList.toggle('active', tab==='kanban');
+    document.getElementById('tabVersions').classList.toggle('active', tab==='versions');
+    if(tab==='transactions') renderTrade();
+    if(tab==='versions') renderVersionsList();
+    if(tab==='rfa') renderRfa();
+    if(tab==='repechage') renderPicks();
+    if(tab==='kanban') renderKanban();
+    window.scrollTo({top:0, behavior:'instant'});
+  });
+});
+
+// --- Versions module (save / restore / export / import) ---
+// Versions live in memory for this browser tab only (no backend / no localStorage in this environment).
+// Export/Import via downloadable .json files is how versions persist across sessions and get shared with other DGs.
+let versions = [];
+let versionSeq = 1;
+
+function snapshotState(){
+  return {
+    roster: JSON.parse(JSON.stringify(state.roster)),
+    cap: state.cap,
+    season: state.season
+  };
+}
+
+function fmtTimestamp(d){
+  const pad = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function renderVersionsList(){
+  const list = document.getElementById('versionsList');
+  const empty = document.getElementById('versionsEmpty');
+  list.innerHTML = '';
+  if(versions.length === 0){
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  versions.slice().reverse().forEach(v=>{
+    const totalPlayers = Object.values(v.roster).reduce((s,r)=>s+r.length,0);
+    const row = document.createElement('div');
+    row.className = 'version-row';
+    row.innerHTML = `
+      <div class="v-info">
+        <div class="v-name">${v.name}</div>
+        <div class="v-meta">${fmtTimestamp(new Date(v.timestamp))} · ${totalPlayers} joueurs · plafond ${v.cap.toFixed(3)} $M · saison ${v.season==='2627'?'2026-27':'2027-28'}</div>
+      </div>
+      <div class="v-actions">
+        <button class="v-restore" data-id="${v.id}">↺ Restaurer</button>
+        <button class="v-export" data-id="${v.id}">⬇ Exporter</button>
+        <button class="v-delete" data-id="${v.id}">✕ Supprimer</button>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+  list.querySelectorAll('.v-restore').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const v = versions.find(x=>x.id===btn.dataset.id);
+      if(!v) return;
+      if(btn.dataset.armed !== '1'){
+        btn.dataset.armed = '1';
+        const original = btn.textContent;
+        btn.textContent = 'Confirmer ?';
+        setTimeout(()=>{ btn.dataset.armed=''; btn.textContent = original; }, 3000);
+        return;
+      }
+      state.roster = JSON.parse(JSON.stringify(v.roster));
+      state.cap = v.cap;
+      state.season = v.season;
+      capInput.value = state.cap.toFixed(3);
+      document.getElementById('btnS26').classList.toggle('active', state.season==='2627');
+      document.getElementById('btnS27').classList.toggle('active', state.season==='2728');
+      render();
+      toast(`Version « ${v.name} » restaurée`);
+    });
+  });
+  list.querySelectorAll('.v-export').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const v = versions.find(x=>x.id===btn.dataset.id);
+      if(!v) return;
+      exportVersion(v);
+    });
+  });
+  list.querySelectorAll('.v-delete').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const v = versions.find(x=>x.id===btn.dataset.id);
+      if(!v) return;
+      if(btn.dataset.armed !== '1'){
+        btn.dataset.armed = '1';
+        const original = btn.textContent;
+        btn.textContent = 'Confirmer ?';
+        setTimeout(()=>{ btn.dataset.armed=''; btn.textContent = original; }, 3000);
+        return;
+      }
+      versions = versions.filter(x=>x.id!==v.id);
+      renderVersionsList();
+      toast('Version supprimée');
+    });
+  });
+}
+
+function exportVersion(v){
+  const payload = {
+    _type: 'pool-des-champions-version',
+    _generatedBy: 'Calculateur de masse salariale',
+    name: v.name,
+    timestamp: v.timestamp,
+    cap: v.cap,
+    season: v.season,
+    roster: v.roster
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeName = v.name.replace(/[^a-z0-9\-_]+/gi,'_').slice(0,40) || 'version';
+  a.href = url;
+  a.download = `pool-des-champions-${safeName}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('Fichier de version téléchargé — prêt à partager');
+}
+
+document.getElementById('saveVersionBtn').addEventListener('click', ()=>{
+  const nameInput = document.getElementById('versionNameInput');
+  const name = nameInput.value.trim() || `Version ${fmtTimestamp(new Date())}`;
+  const snap = snapshotState();
+  const v = {
+    id: 'v' + (versionSeq++) + '_' + Date.now(),
+    name,
+    timestamp: Date.now(),
+    ...snap
+  };
+  versions.push(v);
+  nameInput.value = '';
+  renderVersionsList();
+  toast(`Version « ${name} » sauvegardée`);
+});
+document.getElementById('versionNameInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') document.getElementById('saveVersionBtn').click();
+});
+
+const importDrop = document.getElementById('importDrop');
+const importFileInput = document.getElementById('importFileInput');
+importDrop.addEventListener('click', ()=> importFileInput.click());
+importFileInput.addEventListener('change', ()=>{
+  const file = importFileInput.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    try{
+      const data = JSON.parse(e.target.result);
+      if(!data.roster || typeof data.cap !== 'number'){
+        toast('Fichier invalide — ce ne semble pas être une version exportée par cet outil');
+        return;
+      }
+      const v = {
+        id: 'v' + (versionSeq++) + '_' + Date.now(),
+        name: (data.name || file.name.replace(/\.json$/i,'')) + ' (importée)',
+        timestamp: data.timestamp || Date.now(),
+        roster: data.roster,
+        cap: data.cap,
+        season: data.season || '2627'
+      };
+      versions.push(v);
+      renderVersionsList();
+      toast(`Version « ${v.name} » importée — cliquez « Restaurer » pour l'appliquer`);
+    } catch(err){
+      toast('Impossible de lire ce fichier — assurez-vous que c\'est un .json exporté par cet outil');
+    }
+    importFileInput.value = '';
+  };
+  reader.readAsText(file);
+});
+
+renderVersionsList();
+
+// --- Zoom tool ---
+const zoomLevels = ['zoom-compact', 'zoom-normal', 'zoom-large'];
+const zoomLabels = {'zoom-compact':'Compact', 'zoom-normal':'Normal', 'zoom-large':'Grand'};
+let zoomIdx = 1; // start at normal
+function applyZoom(){
+  zoomLevels.forEach(z => document.body.classList.remove(z));
+  document.body.classList.add(zoomLevels[zoomIdx]);
+  document.getElementById('zoomLabel').textContent = zoomLabels[zoomLevels[zoomIdx]];
+}
+document.getElementById('zoomOutBtn').addEventListener('click', ()=>{
+  zoomIdx = Math.max(0, zoomIdx - 1);
+  applyZoom();
+});
+document.getElementById('zoomInBtn').addEventListener('click', ()=>{
+  zoomIdx = Math.min(zoomLevels.length - 1, zoomIdx + 1);
+  applyZoom();
+});
+applyZoom();
+
+</script>
+
+</body>
+</html>
