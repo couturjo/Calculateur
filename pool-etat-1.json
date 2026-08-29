@@ -1,0 +1,4056 @@
+{
+  "_type": "pool-des-champions-official-state",
+  "_generatedBy": "Calculateur de masse salariale",
+  "publishedAt": 1788041521708,
+  "roster": {
+    "Pinson": [
+      {
+        "name": "Nathan Mackinnon",
+        "aav26": 12.6,
+        "aav27": 12.6,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Mikko Rantanen",
+        "aav26": 12,
+        "aav27": 12,
+        "free": 2033,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Kirill Kaprizov",
+        "aav26": 17,
+        "aav27": 17,
+        "free": 2034,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Kevin Fiala",
+        "aav26": null,
+        "aav27": 7.875,
+        "free": 2029,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Clayton Keller",
+        "aav26": 7.15,
+        "aav27": 7.15,
+        "free": 2028,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Robert Thomas",
+        "aav26": 8.125,
+        "aav27": 8.125,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Alexis Lafrenière",
+        "aav26": 7.45,
+        "aav27": 7.45,
+        "free": 2032,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Morgan Geekie",
+        "aav26": null,
+        "aav27": 5.5,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Nazem Kadri",
+        "aav26": 5.6,
+        "aav27": 7,
+        "free": 2029,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Rutger Mcgroarty",
+        "aav26": null,
+        "aav27": 1.45,
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Kaapo Kakko",
+        "aav26": null,
+        "aav27": 4.525,
+        "free": 2028,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Wyatt Johnston",
+        "aav26": 8.4,
+        "aav27": 8.4,
+        "free": 2030,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Kent Johnson",
+        "aav26": null,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Fabian Lysell",
+        "aav26": 0.85,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Roman Josi",
+        "aav26": 9.059,
+        "aav27": 9.059,
+        "free": 2028,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Erik Karlsson",
+        "aav26": 11.5,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Mikhail Sergachev",
+        "aav26": 8.5,
+        "aav27": 8.5,
+        "free": 2031,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Alexander Nikishin",
+        "aav26": 7.5,
+        "aav27": null,
+        "free": 2026,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Bowen Byram",
+        "aav26": 6.25,
+        "aav27": 12.5,
+        "free": 2033,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Michael Kesselring",
+        "aav26": null,
+        "aav27": 4.5,
+        "free": 2029,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Scott Morrow",
+        "aav26": null,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Philip Broberg",
+        "aav26": null,
+        "aav27": 8,
+        "free": 2032,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Adam Boqvist",
+        "aav26": "RFA",
+        "aav27": null,
+        "free": 2026,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Pyotr Kochetkov",
+        "aav26": null,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "G",
+        "retainPct": 0
+      },
+      {
+        "name": "Juuse Saros",
+        "aav26": null,
+        "aav27": 7.74,
+        "free": 2033,
+        "pos": "G",
+        "retainPct": 0
+      },
+      {
+        "name": "Joseph Woll",
+        "aav26": null,
+        "aav27": 3.6667,
+        "free": 2028,
+        "pos": "G",
+        "retainPct": 0
+      }
+    ],
+    "Couturov": [
+      {
+        "name": "Nikita Kucherov",
+        "aav26": 9.5,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Brayden Point",
+        "aav26": null,
+        "aav27": 9.5,
+        "free": 2030,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Jack Hughes",
+        "aav26": 8,
+        "aav27": 8,
+        "free": 2030,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Tim Stutzle",
+        "aav26": 8.35,
+        "aav27": 8.35,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Jesper Bratt",
+        "aav26": 7.875,
+        "aav27": 7.875,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Artemi Panarin",
+        "aav26": 11,
+        "aav27": 11,
+        "free": 2028,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "J.J. Peterka",
+        "aav26": null,
+        "aav27": 7.7,
+        "free": 2030,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Cole Perfetti",
+        "aav26": null,
+        "aav27": 6,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Kirill Marchenko",
+        "aav26": 3.85,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Alex Tuch",
+        "aav26": null,
+        "aav27": 10.5,
+        "free": 2034,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Mackie Samoskevich",
+        "aav26": null,
+        "aav27": 3.85,
+        "free": 2029,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Ville Koivunen",
+        "aav26": null,
+        "aav27": 4,
+        "free": 2034,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Gabriel Vilardi",
+        "aav26": null,
+        "aav27": 7.5,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Bobby Brink",
+        "aav26": null,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Mavrik Bourque",
+        "aav26": null,
+        "aav27": 5.5,
+        "free": 2032,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Will Smith",
+        "aav26": 4.15,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Adam Fox",
+        "aav26": 9.5,
+        "aav27": 9.5,
+        "free": 2029,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Lane Hutson",
+        "aav26": 8.85,
+        "aav27": 8.85,
+        "free": 2034,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Vince Dunn",
+        "aav26": 7.35,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Jake Sanderson",
+        "aav26": 8.05,
+        "aav27": 8.05,
+        "free": 2032,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "John Klingberg",
+        "aav26": "UFA",
+        "aav27": null,
+        "free": 2026,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Jake Walman",
+        "aav26": 7,
+        "aav27": 7,
+        "free": 2033,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Andrei Vasilevski",
+        "aav26": 9.5,
+        "aav27": 9.5,
+        "free": 2028,
+        "pos": "G",
+        "retainPct": 0
+      },
+      {
+        "name": "Filip Gustavsson",
+        "aav26": null,
+        "aav27": 6.8,
+        "free": 2031,
+        "pos": "G",
+        "retainPct": 0
+      },
+      {
+        "name": "Karel Vejmelka",
+        "aav26": null,
+        "aav27": 4.75,
+        "free": 2030,
+        "pos": "G",
+        "retainPct": 0
+      }
+    ],
+    "James": [
+      {
+        "name": "Aleksander Barkov",
+        "aav26": 10,
+        "aav27": 10,
+        "free": 2030,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Sebastien Aho",
+        "aav26": 9.75,
+        "aav27": 9.75,
+        "free": 2032,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Nick Suzuki",
+        "aav26": 7.875,
+        "aav27": 7.875,
+        "free": 2030,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Cole Caufield",
+        "aav26": 7.85,
+        "aav27": 7.85,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "William Eklund",
+        "aav26": null,
+        "aav27": 5.6,
+        "free": 2029,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Dylan Guenther",
+        "aav26": 7.1429,
+        "aav27": 7.1429,
+        "free": 2033,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Logan Stankoven",
+        "aav26": null,
+        "aav27": 6,
+        "free": 2034,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Dylan Holloway",
+        "aav26": 7.75,
+        "aav27": 7.75,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Dylan Larkin",
+        "aav26": null,
+        "aav27": 8.7,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Marco Rossi",
+        "aav26": null,
+        "aav27": 5,
+        "free": 2028,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Nico Hischier",
+        "aav26": null,
+        "aav27": 11.7,
+        "free": 2032,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Valeri Nichushkin",
+        "aav26": null,
+        "aav27": 6.125,
+        "free": 2030,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Patrick Kane",
+        "aav26": null,
+        "aav27": 8,
+        "free": 2028,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Alexander Ovechkin",
+        "aav26": null,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Cutter Gauthier",
+        "aav26": "RFA",
+        "aav27": null,
+        "free": 2026,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Miro Heiskanen",
+        "aav26": 8.45,
+        "aav27": 8.45,
+        "free": 2029,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Moritz Seider",
+        "aav26": 8.55,
+        "aav27": 8.55,
+        "free": 2031,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Jacob Chychrun",
+        "aav26": 9,
+        "aav27": 9,
+        "free": 2033,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Brandon Montour",
+        "aav26": null,
+        "aav27": 7.1429,
+        "free": 2031,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Jackson Lacombe",
+        "aav26": 9,
+        "aav27": 9,
+        "free": 2034,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Darren Raddysh",
+        "aav26": 8.5,
+        "aav27": 8.5,
+        "free": 2034,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Denton Mateychuk",
+        "aav26": 1.6367,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Ilya Sorokin",
+        "aav26": null,
+        "aav27": 8.25,
+        "free": 2032,
+        "pos": "G",
+        "retainPct": 0
+      },
+      {
+        "name": "Jet Greaves",
+        "aav26": null,
+        "aav27": 5,
+        "free": 2029,
+        "pos": "G",
+        "retainPct": 0
+      }
+    ],
+    "Raton": [
+      {
+        "name": "Austin Matthews",
+        "aav26": 13.25,
+        "aav27": 13.25,
+        "free": 2028,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "David Pastrnak",
+        "aav26": 11.25,
+        "aav27": 11.25,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Matthew Tkachuk",
+        "aav26": 9.5,
+        "aav27": 9.5,
+        "free": 2030,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Matthew Boldy",
+        "aav26": 7,
+        "aav27": 7,
+        "free": 2030,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Jason Robertson",
+        "aav26": 12,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Sidney Crosby",
+        "aav26": 8.7,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Arseny Gritsyuk",
+        "aav26": null,
+        "aav27": 3.25,
+        "free": 2029,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Anton Lundell",
+        "aav26": null,
+        "aav27": 5,
+        "free": 2030,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Bobby Mcmann",
+        "aav26": null,
+        "aav27": 5.75,
+        "free": 2032,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Leo Carlsson",
+        "aav26": 18,
+        "aav27": 18,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Connor McMichael",
+        "aav26": null,
+        "aav27": 6.75,
+        "free": 2032,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Brian Rust",
+        "aav26": null,
+        "aav27": 5.125,
+        "free": 2028,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Matias Macelli",
+        "aav26": null,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Quinn Hughes",
+        "aav26": 7.85,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Shea Theodore",
+        "aav26": 7.425,
+        "aav27": 7.425,
+        "free": 2032,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Luke Hughes",
+        "aav26": 9,
+        "aav27": 9,
+        "free": 2032,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Simon Edvinsson",
+        "aav26": "RFA",
+        "aav27": null,
+        "free": 2026,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Victor Hedman",
+        "aav26": 8,
+        "aav27": 8,
+        "free": 2029,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Noah Hanifin",
+        "aav26": null,
+        "aav27": 7.35,
+        "free": 2032,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Connor Hellebuyck",
+        "aav26": 8.5,
+        "aav27": 8.5,
+        "free": 2031,
+        "pos": "G",
+        "retainPct": 0
+      },
+      {
+        "name": "Darcy Kuemper",
+        "aav26": null,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "G",
+        "retainPct": 0
+      }
+    ],
+    "Paym": [
+      {
+        "name": "Leon Draisaitl",
+        "aav26": 14,
+        "aav27": 14,
+        "free": 2033,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Jake Guentzel",
+        "aav26": 9,
+        "aav27": 9,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Mitch Marner",
+        "aav26": 12,
+        "aav27": 12,
+        "free": 2033,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Tage Thompson",
+        "aav26": 7.1429,
+        "aav27": 7.1429,
+        "free": 2030,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Seth Jarvis",
+        "aav26": 7.4201,
+        "aav27": 7.4201,
+        "free": 2032,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Connor Bedard",
+        "aav26": 15,
+        "aav27": 15,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Quinton Byfield",
+        "aav26": null,
+        "aav27": 6.25,
+        "free": 2029,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Pavel Dorofeyev",
+        "aav26": null,
+        "aav27": 11,
+        "free": 2033,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Matt Duchene",
+        "aav26": null,
+        "aav27": 4.5,
+        "free": 2029,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "John Tavares",
+        "aav26": 4.3893,
+        "aav27": 4.3893,
+        "free": 2029,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Jared Mccann",
+        "aav26": null,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Zack Bolduc",
+        "aav26": null,
+        "aav27": null,
+        "free": 2026,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Josh Doan",
+        "aav26": null,
+        "aav27": 6.95,
+        "free": 2033,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Rasmus Dahlin",
+        "aav26": 11,
+        "aav27": 11,
+        "free": 2032,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Zach Werenski",
+        "aav26": 9.5833,
+        "aav27": 9.5833,
+        "free": 2028,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Charlie McAvoy",
+        "aav26": 9.5,
+        "aav27": 9.5,
+        "free": 2030,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Shayne Gostisbehere",
+        "aav26": 3.2,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Matthew Schaefer",
+        "aav26": 4.475,
+        "aav27": 4.475,
+        "free": 2028,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Joshua Morrissey",
+        "aav26": 6.25,
+        "aav27": 6.25,
+        "free": 2028,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Logan Mailloux",
+        "aav26": null,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Mackenzie Blackwood",
+        "aav26": 5.25,
+        "aav27": 5.25,
+        "free": 2030,
+        "pos": "G",
+        "retainPct": 0
+      },
+      {
+        "name": "Anthony Stolarz",
+        "aav26": 3.75,
+        "aav27": 3.75,
+        "free": 2030,
+        "pos": "G",
+        "retainPct": 0
+      },
+      {
+        "name": "Stuart Skinner",
+        "aav26": null,
+        "aav27": 3.75,
+        "free": 2028,
+        "pos": "G",
+        "retainPct": 0
+      },
+      {
+        "name": "Dustin Wolf",
+        "aav26": null,
+        "aav27": 7.5,
+        "free": 2033,
+        "pos": "G",
+        "retainPct": 0
+      }
+    ],
+    "Tony": [
+      {
+        "name": "William Nylander",
+        "aav26": 11.5,
+        "aav27": 11.5,
+        "free": 2032,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "J.T. Miller",
+        "aav26": 8,
+        "aav27": 8,
+        "free": 2030,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Elias Pettersson",
+        "aav26": 11.6,
+        "aav27": 11.6,
+        "free": 2032,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Logan Cooley",
+        "aav26": 10,
+        "aav27": 10,
+        "free": 2034,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Juraj Slafkovsky",
+        "aav26": 7.6,
+        "aav27": 7.6,
+        "free": 2033,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Jack Quinn",
+        "aav26": 3.375,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Gage Goncalves",
+        "aav26": null,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Mason Mctavish",
+        "aav26": null,
+        "aav27": 7,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Andrei Kuzmenko",
+        "aav26": null,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Jordan Kyrou",
+        "aav26": null,
+        "aav27": 8.125,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Vincent Trocheck",
+        "aav26": null,
+        "aav27": 5.625,
+        "free": 2029,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Ryan Donato",
+        "aav26": null,
+        "aav27": 4,
+        "free": 2029,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Jonathan Drouin",
+        "aav26": "UFA",
+        "aav27": null,
+        "free": 2026,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Mikael Granlund",
+        "aav26": null,
+        "aav27": 7,
+        "free": 2028,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Florian Xhekaj",
+        "aav26": null,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Isaac Howard",
+        "aav26": 0.9725,
+        "aav27": 1.6167,
+        "free": 2028,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Kirby Dach",
+        "aav26": null,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Adrian Kempe",
+        "aav26": 10.625,
+        "aav27": 10.625,
+        "free": 2034,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Jimmy Snuggerud",
+        "aav26": 1.55,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Cale Makar",
+        "aav26": 9,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Noah Dobson",
+        "aav26": 9.5,
+        "aav27": 9.5,
+        "free": 2033,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Thomas Chabot",
+        "aav26": null,
+        "aav27": 8,
+        "free": 2028,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Colton Parayko",
+        "aav26": null,
+        "aav27": 6.5,
+        "free": 2030,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Sam Rinzel",
+        "aav26": null,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "David Jiricek",
+        "aav26": null,
+        "aav27": 1.5,
+        "free": 2028,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Pavel Mintyukov",
+        "aav26": null,
+        "aav27": 7.2,
+        "free": 2031,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Simon Nemec",
+        "aav26": 7.25,
+        "aav27": 7.25,
+        "free": null,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Jake Oettinger",
+        "aav26": 8.25,
+        "aav27": 8.25,
+        "free": 2033,
+        "pos": "G",
+        "retainPct": 0
+      },
+      {
+        "name": "Jacob Markstrom",
+        "aav26": null,
+        "aav27": 6,
+        "free": 2028,
+        "pos": "G",
+        "retainPct": 0
+      },
+      {
+        "name": "Thomas Harley",
+        "aav26": 10.5875,
+        "aav27": 10.5875,
+        "free": 2034,
+        "pos": "D",
+        "retainPct": 0
+      }
+    ],
+    "Sportek": [
+      {
+        "name": "Trevor Zegras",
+        "aav26": 9.125,
+        "aav27": 9.125,
+        "free": 2030,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Travis Konecny",
+        "aav26": 8.75,
+        "aav27": 8.75,
+        "free": 2033,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Alex Debrincat",
+        "aav26": 7.875,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Roope Hintz",
+        "aav26": 8.45,
+        "aav27": 8.45,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Martin Necas",
+        "aav26": 11.5,
+        "aav27": 11.5,
+        "free": 2034,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Brandon Hagel",
+        "aav26": 6.5,
+        "aav27": 6.5,
+        "free": 2032,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Sam Reinhart",
+        "aav26": 8.625,
+        "aav27": 8.625,
+        "free": 2032,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Filip Forsberg",
+        "aav26": null,
+        "aav27": 8.5,
+        "free": 2030,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Aliaksei Protas",
+        "aav26": null,
+        "aav27": 3.375,
+        "free": 2029,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Nick Schmaltz",
+        "aav26": null,
+        "aav27": 8,
+        "free": 2034,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Mathew Barzal",
+        "aav26": null,
+        "aav27": 9.15,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Drake Batherson",
+        "aav26": null,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Danila Yurov",
+        "aav26": null,
+        "aav27": 2.95,
+        "free": 2028,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Macklin Celebrini",
+        "aav26": 4.475,
+        "aav27": 18,
+        "free": 2032,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Brock Faber",
+        "aav26": 8.5,
+        "aav27": 8.5,
+        "free": 2033,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "John Carlson",
+        "aav26": 8.5,
+        "aav27": 8.5,
+        "free": 2028,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Brandt Clarke",
+        "aav26": 7.4,
+        "aav27": 7.4,
+        "free": 2031,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Morgan Rielly",
+        "aav26": 7.5,
+        "aav27": 7.5,
+        "free": 2030,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Rasmus Andersson",
+        "aav26": null,
+        "aav27": 8.5,
+        "free": 2033,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Mason Lohrei",
+        "aav26": null,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Mackenzie Weegar",
+        "aav26": null,
+        "aav27": 6.25,
+        "free": 2031,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Lucas Dostal",
+        "aav26": null,
+        "aav27": 6.5,
+        "free": 2030,
+        "pos": "G",
+        "retainPct": 0
+      },
+      {
+        "name": "Logan Thompson",
+        "aav26": 5.85,
+        "aav27": 5.85,
+        "free": 2031,
+        "pos": "G",
+        "retainPct": 0
+      },
+      {
+        "name": "Samuel Ersson",
+        "aav26": null,
+        "aav27": 2.2,
+        "free": 2028,
+        "pos": "G",
+        "retainPct": 0
+      }
+    ],
+    "Slow mo": [
+      {
+        "name": "Connor McDavid",
+        "aav26": 12.5,
+        "aav27": 12.5,
+        "free": 2028,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Kyle Connor",
+        "aav26": 12,
+        "aav27": 12,
+        "free": 2034,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Brady Tkachuk",
+        "aav26": 8.2057,
+        "aav27": 8.2057,
+        "free": 2028,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Lucas Raymond",
+        "aav26": 8.075,
+        "aav27": 8.075,
+        "free": 2032,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Mark Scheifele",
+        "aav26": 8.5,
+        "aav27": 8.5,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Jack Eichel",
+        "aav26": 13.5,
+        "aav27": 13.5,
+        "free": 2034,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Nikolaj Ehlers",
+        "aav26": null,
+        "aav27": 8.5,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Dylan Strome",
+        "aav26": null,
+        "aav27": 5,
+        "free": 2028,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Matthew Knies",
+        "aav26": 7.75,
+        "aav27": 7.75,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Jackson Blake",
+        "aav26": null,
+        "aav27": 5.117,
+        "free": 2034,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Barrett Hayton",
+        "aav26": null,
+        "aav27": "UFA",
+        "free": 2027,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Kiefer Sherwood",
+        "aav26": null,
+        "aav27": 5.75,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Rickard Rakell",
+        "aav26": null,
+        "aav27": 5,
+        "free": 2028,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Matthew Beniers",
+        "aav26": null,
+        "aav27": 7.1429,
+        "free": 2031,
+        "pos": "F",
+        "retainPct": 0
+      },
+      {
+        "name": "Evan Bouchard",
+        "aav26": 10.5,
+        "aav27": 10.5,
+        "free": 2029,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Owen Power",
+        "aav26": 8.35,
+        "aav27": 8.35,
+        "free": 2031,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Tony DeAngelo",
+        "aav26": null,
+        "aav27": 4.5,
+        "free": 2028,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Cam Fowler",
+        "aav26": null,
+        "aav27": 6.1,
+        "free": 2029,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Jamie Drysdale",
+        "aav26": 6.5,
+        "aav27": 6.5,
+        "free": 2030,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Jordan Spence",
+        "aav26": null,
+        "aav27": 5,
+        "free": 2030,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Seth Jones",
+        "aav26": 9.5,
+        "aav27": 9.5,
+        "free": 2030,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Ryker Evans",
+        "aav26": null,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "D",
+        "retainPct": 0
+      },
+      {
+        "name": "Igor Shesterkin",
+        "aav26": 11.5,
+        "aav27": 11.5,
+        "free": 2033,
+        "pos": "G",
+        "retainPct": 0
+      },
+      {
+        "name": "Adin Hill",
+        "aav26": null,
+        "aav27": 6.25,
+        "free": 2031,
+        "pos": "G",
+        "retainPct": 0
+      },
+      {
+        "name": "Leevi Merilainen",
+        "aav26": null,
+        "aav27": "RFA",
+        "free": 2027,
+        "pos": "G",
+        "retainPct": 0
+      }
+    ]
+  },
+  "prospects": {
+    "Pinson": [
+      {
+        "name": "Adam Fantilli",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Zeev Buium",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Michael Misa",
+        "free": 2030,
+        "pos": "F"
+      },
+      {
+        "name": "Devon Levi",
+        "free": 2028,
+        "pos": "G"
+      },
+      {
+        "name": "Tanner Molendyk",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Luca Cagnoni",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Seamus Casey",
+        "free": 2027,
+        "pos": "F"
+      },
+      {
+        "name": "Chase Reid",
+        "free": 2031,
+        "pos": "F"
+      },
+      {
+        "name": "Tommy Bleyl",
+        "free": 2031,
+        "pos": "F"
+      },
+      {
+        "name": "Ryan Lin",
+        "free": 2031,
+        "pos": "F"
+      }
+    ],
+    "Couturov": [
+      {
+        "name": "Jesper Wallstedt",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Axel Sandin-Pellikka",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Berkly Catton",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Ilya Protas",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Konsta Helenius",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Cayden Lindstrom",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Jonathan Lekkerimaki",
+        "free": 2027,
+        "pos": "F"
+      },
+      {
+        "name": "Victor Eklund",
+        "free": 2030,
+        "pos": "F"
+      },
+      {
+        "name": "Andrew Cristall",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Elton Hermansson",
+        "free": 2031,
+        "pos": "F"
+      }
+    ],
+    "James": [
+      {
+        "name": "Ivan Demidov",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Matvei Michkov",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Porter Martone",
+        "free": 2030,
+        "pos": "F"
+      },
+      {
+        "name": "Ivar Stenberg",
+        "free": 2031,
+        "pos": "F"
+      },
+      {
+        "name": "Gabriel Perreault",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Sam Dickinson",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Artyom Levshunov",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Bradly Nadeau",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Wyatt Cullen",
+        "free": 2032,
+        "pos": "F"
+      },
+      {
+        "name": "Liam Greentree",
+        "free": 2029,
+        "pos": "F"
+      }
+    ],
+    "Raton": [
+      {
+        "name": "Gavin McKenna",
+        "free": 2031,
+        "pos": "F"
+      },
+      {
+        "name": "Caleb Desnoyers",
+        "free": 2030,
+        "pos": "F"
+      },
+      {
+        "name": "Beckett Sennecke",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Dalibor Dvorsky",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Daxon Rudolph",
+        "free": 2031,
+        "pos": "F"
+      },
+      {
+        "name": "Roman Kantserov",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Xavier Villeneuve",
+        "free": 2031,
+        "pos": "F"
+      },
+      {
+        "name": "Roger Mcqueen",
+        "free": 2030,
+        "pos": "F"
+      },
+      {
+        "name": "Dmitri Simashev",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Matthew Savoie",
+        "free": 2027,
+        "pos": "F"
+      }
+    ],
+    "Paym": [
+      {
+        "name": "Oliver Moore",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Benjamin Kindel",
+        "free": 2030,
+        "pos": "F"
+      },
+      {
+        "name": "Cameron Reid",
+        "free": 2030,
+        "pos": "F"
+      },
+      {
+        "name": "Jacob Fowler",
+        "free": 2031,
+        "pos": "F"
+      },
+      {
+        "name": "Brad Lambert",
+        "free": 2027,
+        "pos": "F"
+      },
+      {
+        "name": "Viggo Bjorck",
+        "free": 2031,
+        "pos": "F"
+      },
+      {
+        "name": "Cole Reschny",
+        "free": 2030,
+        "pos": "F"
+      },
+      {
+        "name": "Tynan Lawrence",
+        "free": 2031,
+        "pos": "F"
+      },
+      {
+        "name": "Quentin Musty",
+        "free": 2028,
+        "pos": "F"
+      }
+    ],
+    "Tony": [
+      {
+        "name": "Cole Hutson",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Zayne Parekh",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Michael Hage",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Tij Iginla",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Ryan Leonard",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Olen Zellweger",
+        "free": 2027,
+        "pos": "F"
+      },
+      {
+        "name": "Caleb Malhotra",
+        "free": 2031,
+        "pos": "F"
+      },
+      {
+        "name": "Alberts Smits",
+        "free": 2031,
+        "pos": "F"
+      },
+      {
+        "name": "Jackson Smith",
+        "free": 2030,
+        "pos": "F"
+      },
+      {
+        "name": "Carson Carels",
+        "free": 2031,
+        "pos": "F"
+      }
+    ],
+    "Sportek": [
+      {
+        "name": "Zach Benson",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Carter Yakemchuk",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "James Hagens",
+        "free": 2030,
+        "pos": "F"
+      },
+      {
+        "name": "Jake O'Brien",
+        "free": 2030,
+        "pos": "F"
+      },
+      {
+        "name": "Anton Frondell",
+        "free": 2030,
+        "pos": "F"
+      },
+      {
+        "name": "Frank Nazar",
+        "free": 2027,
+        "pos": "F"
+      },
+      {
+        "name": "Cole Eiserman",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Yaroslav Askarov",
+        "free": 2028,
+        "pos": "F"
+      },
+      {
+        "name": "Keaton Verhoeff",
+        "free": 2031,
+        "pos": "F"
+      },
+      {
+        "name": "Tristan Luneau",
+        "free": 2027,
+        "pos": "F"
+      }
+    ],
+    "Slow mo": [
+      {
+        "name": "Shane Wright",
+        "free": 2027,
+        "pos": "F"
+      },
+      {
+        "name": "Kevin Korchinski",
+        "free": 2027,
+        "pos": "F"
+      },
+      {
+        "name": "Trevor Connelly",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Nikita Klepov",
+        "free": 2031,
+        "pos": "F"
+      },
+      {
+        "name": "JP Hurlbert",
+        "free": 2031,
+        "pos": "F"
+      },
+      {
+        "name": "Brady Martin",
+        "free": 2030,
+        "pos": "F"
+      },
+      {
+        "name": "Sacha Boisvert",
+        "free": 2029,
+        "pos": "F"
+      },
+      {
+        "name": "Justin Carbonneau",
+        "free": 2030,
+        "pos": "F"
+      },
+      {
+        "name": "Alexander Zharovsky",
+        "free": 2030,
+        "pos": "F"
+      }
+    ]
+  },
+  "picks": {
+    "2026-2027": [
+      {
+        "id": "2026-2027_Pinson_R1_1",
+        "round": 1,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2026-2027_Pinson_R2_2",
+        "round": 2,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2026-2027_Pinson_R3_3",
+        "round": 3,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2026-2027_Pinson_R4_4",
+        "round": 4,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2026-2027_Pinson_R5_5",
+        "round": 5,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2026-2027_Pinson_R6_6",
+        "round": 6,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2026-2027_Pinson_R7_7",
+        "round": 7,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2026-2027_Pinson_R8_8",
+        "round": 8,
+        "originalOwner": "Pinson",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2026-2027_Pinson_R9_9",
+        "round": 9,
+        "originalOwner": "Pinson",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2026-2027_Pinson_R10_10",
+        "round": 10,
+        "originalOwner": "Pinson",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2026-2027_Pinson_R11_11",
+        "round": 11,
+        "originalOwner": "Pinson",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2026-2027_Pinson_R12_12",
+        "round": 12,
+        "originalOwner": "Pinson",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2026-2027_Couturov_R1_13",
+        "round": 1,
+        "originalOwner": "Couturov",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2026-2027_Couturov_R2_14",
+        "round": 2,
+        "originalOwner": "Couturov",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2026-2027_Couturov_R3_15",
+        "round": 3,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2026-2027_Couturov_R4_16",
+        "round": 4,
+        "originalOwner": "Couturov",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2026-2027_Couturov_R5_17",
+        "round": 5,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2026-2027_Couturov_R6_18",
+        "round": 6,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2026-2027_Couturov_R7_19",
+        "round": 7,
+        "originalOwner": "Couturov",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2026-2027_Couturov_R8_20",
+        "round": 8,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2026-2027_Couturov_R9_21",
+        "round": 9,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2026-2027_Couturov_R10_22",
+        "round": 10,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2026-2027_Couturov_R11_23",
+        "round": 11,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2026-2027_Couturov_R12_24",
+        "round": 12,
+        "originalOwner": "Couturov",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2026-2027_James_R1_25",
+        "round": 1,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2026-2027_James_R2_26",
+        "round": 2,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2026-2027_James_R3_27",
+        "round": 3,
+        "originalOwner": "James",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2026-2027_James_R4_28",
+        "round": 4,
+        "originalOwner": "James",
+        "currentOwner": "James",
+        "note": "POP'N'LOCK — Mateychuk"
+      },
+      {
+        "id": "2026-2027_James_R5_29",
+        "round": 5,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2026-2027_James_R6_30",
+        "round": 6,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2026-2027_James_R7_31",
+        "round": 7,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2026-2027_James_R8_32",
+        "round": 8,
+        "originalOwner": "James",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2026-2027_James_R9_33",
+        "round": 9,
+        "originalOwner": "James",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2026-2027_James_R10_34",
+        "round": 10,
+        "originalOwner": "James",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2026-2027_James_R11_35",
+        "round": 11,
+        "originalOwner": "James",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2026-2027_James_R12_36",
+        "round": 12,
+        "originalOwner": "James",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2026-2027_Raton_R1_37",
+        "round": 1,
+        "originalOwner": "Raton",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2026-2027_Raton_R2_38",
+        "round": 2,
+        "originalOwner": "Raton",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2026-2027_Raton_R3_39",
+        "round": 3,
+        "originalOwner": "Raton",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2026-2027_Raton_R4_40",
+        "round": 4,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2026-2027_Raton_R5_41",
+        "round": 5,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2026-2027_Raton_R6_42",
+        "round": 6,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2026-2027_Raton_R7_43",
+        "round": 7,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2026-2027_Raton_R8_44",
+        "round": 8,
+        "originalOwner": "Raton",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2026-2027_Raton_R9_45",
+        "round": 9,
+        "originalOwner": "Raton",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2026-2027_Raton_R10_46",
+        "round": 10,
+        "originalOwner": "Raton",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2026-2027_Raton_R11_47",
+        "round": 11,
+        "originalOwner": "Raton",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2026-2027_Raton_R12_48",
+        "round": 12,
+        "originalOwner": "Raton",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2026-2027_Paym_R1_49",
+        "round": 1,
+        "originalOwner": "Paym",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2026-2027_Paym_R2_50",
+        "round": 2,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2026-2027_Paym_R3_51",
+        "round": 3,
+        "originalOwner": "Paym",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2026-2027_Paym_R4_52",
+        "round": 4,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2026-2027_Paym_R5_53",
+        "round": 5,
+        "originalOwner": "Paym",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2026-2027_Paym_R6_54",
+        "round": 6,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2026-2027_Paym_R7_55",
+        "round": 7,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2026-2027_Paym_R8_56",
+        "round": 8,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2026-2027_Paym_R9_57",
+        "round": 9,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2026-2027_Paym_R10_58",
+        "round": 10,
+        "originalOwner": "Paym",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2026-2027_Paym_R11_59",
+        "round": 11,
+        "originalOwner": "Paym",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2026-2027_Paym_R12_60",
+        "round": 12,
+        "originalOwner": "Paym",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2026-2027_Tony_R1_61",
+        "round": 1,
+        "originalOwner": "Tony",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2026-2027_Tony_R2_62",
+        "round": 2,
+        "originalOwner": "Tony",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2026-2027_Tony_R3_63",
+        "round": 3,
+        "originalOwner": "Tony",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2026-2027_Tony_R4_64",
+        "round": 4,
+        "originalOwner": "Tony",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2026-2027_Tony_R5_65",
+        "round": 5,
+        "originalOwner": "Tony",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2026-2027_Tony_R6_66",
+        "round": 6,
+        "originalOwner": "Tony",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2026-2027_Tony_R7_67",
+        "round": 7,
+        "originalOwner": "Tony",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2026-2027_Tony_R8_68",
+        "round": 8,
+        "originalOwner": "Tony",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2026-2027_Tony_R9_69",
+        "round": 9,
+        "originalOwner": "Tony",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2026-2027_Tony_R10_70",
+        "round": 10,
+        "originalOwner": "Tony",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2026-2027_Tony_R11_71",
+        "round": 11,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2026-2027_Tony_R12_72",
+        "round": 12,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2026-2027_Sportek_R1_73",
+        "round": 1,
+        "originalOwner": "Sportek",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2026-2027_Sportek_R2_74",
+        "round": 2,
+        "originalOwner": "Sportek",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2026-2027_Sportek_R3_75",
+        "round": 3,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2026-2027_Sportek_R4_76",
+        "round": 4,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2026-2027_Sportek_R5_77",
+        "round": 5,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2026-2027_Sportek_R6_78",
+        "round": 6,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2026-2027_Sportek_R7_79",
+        "round": 7,
+        "originalOwner": "Sportek",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2026-2027_Sportek_R8_80",
+        "round": 8,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2026-2027_Sportek_R9_81",
+        "round": 9,
+        "originalOwner": "Sportek",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2026-2027_Sportek_R10_82",
+        "round": 10,
+        "originalOwner": "Sportek",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2026-2027_Sportek_R11_83",
+        "round": 11,
+        "originalOwner": "Sportek",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2026-2027_Sportek_R12_84",
+        "round": 12,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2026-2027_Slow mo_R1_85",
+        "round": 1,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2026-2027_Slow mo_R2_86",
+        "round": 2,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2026-2027_Slow mo_R3_87",
+        "round": 3,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2026-2027_Slow mo_R4_88",
+        "round": 4,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2026-2027_Slow mo_R5_89",
+        "round": 5,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2026-2027_Slow mo_R6_90",
+        "round": 6,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2026-2027_Slow mo_R7_91",
+        "round": 7,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2026-2027_Slow mo_R8_92",
+        "round": 8,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2026-2027_Slow mo_R9_93",
+        "round": 9,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2026-2027_Slow mo_R10_94",
+        "round": 10,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2026-2027_Slow mo_R11_95",
+        "round": 11,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2026-2027_Slow mo_R12_96",
+        "round": 12,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      }
+    ],
+    "2027-2028": [
+      {
+        "id": "2027-2028_Pinson_R1_1",
+        "round": 1,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2027-2028_Pinson_R2_2",
+        "round": 2,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2027-2028_Pinson_R3_3",
+        "round": 3,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2027-2028_Pinson_R4_4",
+        "round": 4,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2027-2028_Pinson_R5_5",
+        "round": 5,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2027-2028_Pinson_R6_6",
+        "round": 6,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2027-2028_Pinson_R7_7",
+        "round": 7,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2027-2028_Pinson_R8_8",
+        "round": 8,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2027-2028_Pinson_R9_9",
+        "round": 9,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2027-2028_Pinson_R10_10",
+        "round": 10,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2027-2028_Pinson_R11_11",
+        "round": 11,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2027-2028_Pinson_R12_12",
+        "round": 12,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2027-2028_Couturov_R1_13",
+        "round": 1,
+        "originalOwner": "Couturov",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2027-2028_Couturov_R2_14",
+        "round": 2,
+        "originalOwner": "Couturov",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2027-2028_Couturov_R3_15",
+        "round": 3,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2027-2028_Couturov_R4_16",
+        "round": 4,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2027-2028_Couturov_R5_17",
+        "round": 5,
+        "originalOwner": "Couturov",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2027-2028_Couturov_R6_18",
+        "round": 6,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2027-2028_Couturov_R7_19",
+        "round": 7,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2027-2028_Couturov_R8_20",
+        "round": 8,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2027-2028_Couturov_R9_21",
+        "round": 9,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2027-2028_Couturov_R10_22",
+        "round": 10,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2027-2028_Couturov_R11_23",
+        "round": 11,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2027-2028_Couturov_R12_24",
+        "round": 12,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2027-2028_James_R1_25",
+        "round": 1,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2027-2028_James_R2_26",
+        "round": 2,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2027-2028_James_R3_27",
+        "round": 3,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2027-2028_James_R4_28",
+        "round": 4,
+        "originalOwner": "James",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2027-2028_James_R5_29",
+        "round": 5,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2027-2028_James_R6_30",
+        "round": 6,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2027-2028_James_R7_31",
+        "round": 7,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2027-2028_James_R8_32",
+        "round": 8,
+        "originalOwner": "James",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2027-2028_James_R9_33",
+        "round": 9,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2027-2028_James_R10_34",
+        "round": 10,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2027-2028_James_R11_35",
+        "round": 11,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2027-2028_James_R12_36",
+        "round": 12,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2027-2028_Raton_R1_37",
+        "round": 1,
+        "originalOwner": "Raton",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2027-2028_Raton_R2_38",
+        "round": 2,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2027-2028_Raton_R3_39",
+        "round": 3,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2027-2028_Raton_R4_40",
+        "round": 4,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2027-2028_Raton_R5_41",
+        "round": 5,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2027-2028_Raton_R6_42",
+        "round": 6,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2027-2028_Raton_R7_43",
+        "round": 7,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2027-2028_Raton_R8_44",
+        "round": 8,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2027-2028_Raton_R9_45",
+        "round": 9,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2027-2028_Raton_R10_46",
+        "round": 10,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2027-2028_Raton_R11_47",
+        "round": 11,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2027-2028_Raton_R12_48",
+        "round": 12,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2027-2028_Paym_R1_49",
+        "round": 1,
+        "originalOwner": "Paym",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2027-2028_Paym_R2_50",
+        "round": 2,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2027-2028_Paym_R3_51",
+        "round": 3,
+        "originalOwner": "Paym",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2027-2028_Paym_R4_52",
+        "round": 4,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2027-2028_Paym_R5_53",
+        "round": 5,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2027-2028_Paym_R6_54",
+        "round": 6,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2027-2028_Paym_R7_55",
+        "round": 7,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2027-2028_Paym_R8_56",
+        "round": 8,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2027-2028_Paym_R9_57",
+        "round": 9,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2027-2028_Paym_R10_58",
+        "round": 10,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2027-2028_Paym_R11_59",
+        "round": 11,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2027-2028_Paym_R12_60",
+        "round": 12,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2027-2028_Tony_R1_61",
+        "round": 1,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2027-2028_Tony_R2_62",
+        "round": 2,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2027-2028_Tony_R3_63",
+        "round": 3,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2027-2028_Tony_R4_64",
+        "round": 4,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2027-2028_Tony_R5_65",
+        "round": 5,
+        "originalOwner": "Tony",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2027-2028_Tony_R6_66",
+        "round": 6,
+        "originalOwner": "Tony",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2027-2028_Tony_R7_67",
+        "round": 7,
+        "originalOwner": "Tony",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2027-2028_Tony_R8_68",
+        "round": 8,
+        "originalOwner": "Tony",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2027-2028_Tony_R9_69",
+        "round": 9,
+        "originalOwner": "Tony",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2027-2028_Tony_R10_70",
+        "round": 10,
+        "originalOwner": "Tony",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2027-2028_Tony_R11_71",
+        "round": 11,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2027-2028_Tony_R12_72",
+        "round": 12,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2027-2028_Sportek_R1_73",
+        "round": 1,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2027-2028_Sportek_R2_74",
+        "round": 2,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2027-2028_Sportek_R3_75",
+        "round": 3,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2027-2028_Sportek_R4_76",
+        "round": 4,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2027-2028_Sportek_R5_77",
+        "round": 5,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2027-2028_Sportek_R6_78",
+        "round": 6,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2027-2028_Sportek_R7_79",
+        "round": 7,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2027-2028_Sportek_R8_80",
+        "round": 8,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2027-2028_Sportek_R9_81",
+        "round": 9,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2027-2028_Sportek_R10_82",
+        "round": 10,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2027-2028_Sportek_R11_83",
+        "round": 11,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2027-2028_Sportek_R12_84",
+        "round": 12,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2027-2028_Slow mo_R1_85",
+        "round": 1,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2027-2028_Slow mo_R2_86",
+        "round": 2,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2027-2028_Slow mo_R3_87",
+        "round": 3,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2027-2028_Slow mo_R4_88",
+        "round": 4,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2027-2028_Slow mo_R5_89",
+        "round": 5,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2027-2028_Slow mo_R6_90",
+        "round": 6,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2027-2028_Slow mo_R7_91",
+        "round": 7,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2027-2028_Slow mo_R8_92",
+        "round": 8,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2027-2028_Slow mo_R9_93",
+        "round": 9,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2027-2028_Slow mo_R10_94",
+        "round": 10,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2027-2028_Slow mo_R11_95",
+        "round": 11,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2027-2028_Slow mo_R12_96",
+        "round": 12,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      }
+    ],
+    "2028-2029": [
+      {
+        "id": "2028-2029_Pinson_R1_1",
+        "round": 1,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2028-2029_Pinson_R2_2",
+        "round": 2,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2028-2029_Pinson_R3_3",
+        "round": 3,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2028-2029_Pinson_R4_4",
+        "round": 4,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2028-2029_Pinson_R5_5",
+        "round": 5,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2028-2029_Pinson_R6_6",
+        "round": 6,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2028-2029_Pinson_R7_7",
+        "round": 7,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2028-2029_Pinson_R8_8",
+        "round": 8,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2028-2029_Pinson_R9_9",
+        "round": 9,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2028-2029_Pinson_R10_10",
+        "round": 10,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2028-2029_Pinson_R11_11",
+        "round": 11,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2028-2029_Pinson_R12_12",
+        "round": 12,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "2028-2029_Couturov_R1_13",
+        "round": 1,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2028-2029_Couturov_R2_14",
+        "round": 2,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2028-2029_Couturov_R3_15",
+        "round": 3,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2028-2029_Couturov_R4_16",
+        "round": 4,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2028-2029_Couturov_R5_17",
+        "round": 5,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2028-2029_Couturov_R6_18",
+        "round": 6,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2028-2029_Couturov_R7_19",
+        "round": 7,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2028-2029_Couturov_R8_20",
+        "round": 8,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2028-2029_Couturov_R9_21",
+        "round": 9,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2028-2029_Couturov_R10_22",
+        "round": 10,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2028-2029_Couturov_R11_23",
+        "round": 11,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2028-2029_Couturov_R12_24",
+        "round": 12,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "2028-2029_James_R1_25",
+        "round": 1,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2028-2029_James_R2_26",
+        "round": 2,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2028-2029_James_R3_27",
+        "round": 3,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2028-2029_James_R4_28",
+        "round": 4,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2028-2029_James_R5_29",
+        "round": 5,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2028-2029_James_R6_30",
+        "round": 6,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2028-2029_James_R7_31",
+        "round": 7,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2028-2029_James_R8_32",
+        "round": 8,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2028-2029_James_R9_33",
+        "round": 9,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2028-2029_James_R10_34",
+        "round": 10,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2028-2029_James_R11_35",
+        "round": 11,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2028-2029_James_R12_36",
+        "round": 12,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "2028-2029_Raton_R1_37",
+        "round": 1,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2028-2029_Raton_R2_38",
+        "round": 2,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2028-2029_Raton_R3_39",
+        "round": 3,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2028-2029_Raton_R4_40",
+        "round": 4,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2028-2029_Raton_R5_41",
+        "round": 5,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2028-2029_Raton_R6_42",
+        "round": 6,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2028-2029_Raton_R7_43",
+        "round": 7,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2028-2029_Raton_R8_44",
+        "round": 8,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2028-2029_Raton_R9_45",
+        "round": 9,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2028-2029_Raton_R10_46",
+        "round": 10,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2028-2029_Raton_R11_47",
+        "round": 11,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2028-2029_Raton_R12_48",
+        "round": 12,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "2028-2029_Paym_R1_49",
+        "round": 1,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2028-2029_Paym_R2_50",
+        "round": 2,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2028-2029_Paym_R3_51",
+        "round": 3,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2028-2029_Paym_R4_52",
+        "round": 4,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2028-2029_Paym_R5_53",
+        "round": 5,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2028-2029_Paym_R6_54",
+        "round": 6,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2028-2029_Paym_R7_55",
+        "round": 7,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2028-2029_Paym_R8_56",
+        "round": 8,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2028-2029_Paym_R9_57",
+        "round": 9,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2028-2029_Paym_R10_58",
+        "round": 10,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2028-2029_Paym_R11_59",
+        "round": 11,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2028-2029_Paym_R12_60",
+        "round": 12,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "2028-2029_Tony_R1_61",
+        "round": 1,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2028-2029_Tony_R2_62",
+        "round": 2,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2028-2029_Tony_R3_63",
+        "round": 3,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2028-2029_Tony_R4_64",
+        "round": 4,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2028-2029_Tony_R5_65",
+        "round": 5,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2028-2029_Tony_R6_66",
+        "round": 6,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2028-2029_Tony_R7_67",
+        "round": 7,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2028-2029_Tony_R8_68",
+        "round": 8,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2028-2029_Tony_R9_69",
+        "round": 9,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2028-2029_Tony_R10_70",
+        "round": 10,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2028-2029_Tony_R11_71",
+        "round": 11,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2028-2029_Tony_R12_72",
+        "round": 12,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "2028-2029_Sportek_R1_73",
+        "round": 1,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2028-2029_Sportek_R2_74",
+        "round": 2,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2028-2029_Sportek_R3_75",
+        "round": 3,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2028-2029_Sportek_R4_76",
+        "round": 4,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2028-2029_Sportek_R5_77",
+        "round": 5,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2028-2029_Sportek_R6_78",
+        "round": 6,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2028-2029_Sportek_R7_79",
+        "round": 7,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2028-2029_Sportek_R8_80",
+        "round": 8,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2028-2029_Sportek_R9_81",
+        "round": 9,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2028-2029_Sportek_R10_82",
+        "round": 10,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2028-2029_Sportek_R11_83",
+        "round": 11,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2028-2029_Sportek_R12_84",
+        "round": 12,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "2028-2029_Slow mo_R1_85",
+        "round": 1,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2028-2029_Slow mo_R2_86",
+        "round": 2,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2028-2029_Slow mo_R3_87",
+        "round": 3,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2028-2029_Slow mo_R4_88",
+        "round": 4,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2028-2029_Slow mo_R5_89",
+        "round": 5,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2028-2029_Slow mo_R6_90",
+        "round": 6,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2028-2029_Slow mo_R7_91",
+        "round": 7,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2028-2029_Slow mo_R8_92",
+        "round": 8,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2028-2029_Slow mo_R9_93",
+        "round": 9,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2028-2029_Slow mo_R10_94",
+        "round": 10,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2028-2029_Slow mo_R11_95",
+        "round": 11,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "2028-2029_Slow mo_R12_96",
+        "round": 12,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      }
+    ]
+  },
+  "rfaPicks": {
+    "2027-2028": [
+      {
+        "id": "RFA_2027-2028_Pinson_R1_1",
+        "round": 1,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "RFA_2027-2028_Pinson_R2_2",
+        "round": 2,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "RFA_2027-2028_Pinson_R3_3",
+        "round": 3,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "RFA_2027-2028_Couturov_R1_4",
+        "round": 1,
+        "originalOwner": "Couturov",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "RFA_2027-2028_Couturov_R2_5",
+        "round": 2,
+        "originalOwner": "Couturov",
+        "currentOwner": "James"
+      },
+      {
+        "id": "RFA_2027-2028_Couturov_R3_6",
+        "round": 3,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "RFA_2027-2028_James_R1_7",
+        "round": 1,
+        "originalOwner": "James",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "RFA_2027-2028_James_R2_8",
+        "round": 2,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "RFA_2027-2028_James_R3_9",
+        "round": 3,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "RFA_2027-2028_Raton_R1_10",
+        "round": 1,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "RFA_2027-2028_Raton_R2_11",
+        "round": 2,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "RFA_2027-2028_Raton_R3_12",
+        "round": 3,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "RFA_2027-2028_Paym_R1_13",
+        "round": 1,
+        "originalOwner": "Paym",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "RFA_2027-2028_Paym_R2_14",
+        "round": 2,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "RFA_2027-2028_Paym_R3_15",
+        "round": 3,
+        "originalOwner": "Paym",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "RFA_2027-2028_Tony_R1_16",
+        "round": 1,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "RFA_2027-2028_Tony_R2_17",
+        "round": 2,
+        "originalOwner": "Tony",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "RFA_2027-2028_Tony_R3_18",
+        "round": 3,
+        "originalOwner": "Tony",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "RFA_2027-2028_Sportek_R1_19",
+        "round": 1,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "RFA_2027-2028_Sportek_R2_20",
+        "round": 2,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "RFA_2027-2028_Sportek_R3_21",
+        "round": 3,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "RFA_2027-2028_Slow mo_R1_22",
+        "round": 1,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "RFA_2027-2028_Slow mo_R2_23",
+        "round": 2,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "RFA_2027-2028_Slow mo_R3_24",
+        "round": 3,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      }
+    ],
+    "2028-2029": [
+      {
+        "id": "RFA_2028-2029_Pinson_R1_1",
+        "round": 1,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "RFA_2028-2029_Pinson_R2_2",
+        "round": 2,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "RFA_2028-2029_Pinson_R3_3",
+        "round": 3,
+        "originalOwner": "Pinson",
+        "currentOwner": "Pinson"
+      },
+      {
+        "id": "RFA_2028-2029_Couturov_R1_4",
+        "round": 1,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "RFA_2028-2029_Couturov_R2_5",
+        "round": 2,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "RFA_2028-2029_Couturov_R3_6",
+        "round": 3,
+        "originalOwner": "Couturov",
+        "currentOwner": "Couturov"
+      },
+      {
+        "id": "RFA_2028-2029_James_R1_7",
+        "round": 1,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "RFA_2028-2029_James_R2_8",
+        "round": 2,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "RFA_2028-2029_James_R3_9",
+        "round": 3,
+        "originalOwner": "James",
+        "currentOwner": "James"
+      },
+      {
+        "id": "RFA_2028-2029_Raton_R1_10",
+        "round": 1,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "RFA_2028-2029_Raton_R2_11",
+        "round": 2,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "RFA_2028-2029_Raton_R3_12",
+        "round": 3,
+        "originalOwner": "Raton",
+        "currentOwner": "Raton"
+      },
+      {
+        "id": "RFA_2028-2029_Paym_R1_13",
+        "round": 1,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "RFA_2028-2029_Paym_R2_14",
+        "round": 2,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "RFA_2028-2029_Paym_R3_15",
+        "round": 3,
+        "originalOwner": "Paym",
+        "currentOwner": "Paym"
+      },
+      {
+        "id": "RFA_2028-2029_Tony_R1_16",
+        "round": 1,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "RFA_2028-2029_Tony_R2_17",
+        "round": 2,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "RFA_2028-2029_Tony_R3_18",
+        "round": 3,
+        "originalOwner": "Tony",
+        "currentOwner": "Tony"
+      },
+      {
+        "id": "RFA_2028-2029_Sportek_R1_19",
+        "round": 1,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "RFA_2028-2029_Sportek_R2_20",
+        "round": 2,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "RFA_2028-2029_Sportek_R3_21",
+        "round": 3,
+        "originalOwner": "Sportek",
+        "currentOwner": "Sportek"
+      },
+      {
+        "id": "RFA_2028-2029_Slow mo_R1_22",
+        "round": 1,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "RFA_2028-2029_Slow mo_R2_23",
+        "round": 2,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      },
+      {
+        "id": "RFA_2028-2029_Slow mo_R3_24",
+        "round": 3,
+        "originalOwner": "Slow mo",
+        "currentOwner": "Slow mo"
+      }
+    ]
+  },
+  "cap": 160,
+  "season": "2627"
+}
