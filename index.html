@@ -3218,6 +3218,21 @@ async function sbLoadOfficialState(){
   // applySnapshot ne remplace que les champs présents: les anciennes sauvegardes incomplètes
   // ne détruisent donc pas les prospects et choix initialisés dans cette version de l’application.
   applySnapshot(data.state);
+  // Répare les anciennes sauvegardes qui contiennent prospects:{} ou omettent certains DG.
+  // Les espoirs RFA de base sont restaurés uniquement lorsque les données sont absentes.
+  if(!state.prospects || Object.keys(state.prospects).length===0){
+    state.prospects = {};
+    initProspects();
+  } else {
+    Object.keys(RAW_DATA.rosters).forEach(dg=>{
+      if(!Array.isArray(state.prospects[dg])){
+        state.prospects[dg] = (RAW_DATA.prospects[dg] || []).map(name=>{
+          const p = RAW_DATA.players[name] || {};
+          return { name, free: p.free || '—', pos: p.pos || 'F' };
+        });
+      }
+    });
+  }
   // Répare les anciennes sauvegardes qui contiennent rfaPicks:{} ou omettent les années RFA.
   // Les choix manquants sont recréés selon les propriétaires d'origine et les overrides RAW_DATA.
   state.rfaPickYears.forEach(year => ensureRfaPicksYear(year));
