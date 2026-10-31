@@ -1020,11 +1020,11 @@
         </div>
         <div class="field" style="max-width:120px;">
           <label for="pickYearAInput">Année A</label>
-          <input type="text" id="pickYearAInput" value="2026-2027">
+          <input type="text" id="pickYearAInput" value="2027-2028">
         </div>
         <div class="field" style="max-width:120px;">
           <label for="pickYearBInput">Année B</label>
-          <input type="text" id="pickYearBInput" value="2027-2028">
+          <input type="text" id="pickYearBInput" value="2028-2029">
         </div>
       </div>
       <div class="disclaimer" style="margin-top:10px;">
@@ -1034,11 +1034,11 @@
 
     <div class="picks-columns">
       <div class="picks-col">
-        <h3 id="picksYearALabel">Repêchage 2026-2027</h3>
+        <h3 id="picksYearALabel">Repêchage 2027-2028</h3>
         <div id="picksListA"></div>
       </div>
       <div class="picks-col">
-        <h3 id="picksYearBLabel">Repêchage 2027-2028</h3>
+        <h3 id="picksYearBLabel">Repêchage 2028-2029</h3>
         <div id="picksListB"></div>
       </div>
     </div>
@@ -1241,7 +1241,7 @@ const state = {
   cap: 160,
   roster: {}, // dgName -> [{name, aav, free, retainPct, custom:bool}]
   prospects: {}, // dgName -> [{name, free, pos}]  (RFA, hors masse)
-  pickYears: ['2026-2027','2027-2028'],
+  pickYears: ['2027-2028','2028-2029'], // années affichées par défaut dans le module Repêchage
   picks: {}, // year -> [{id, round, originalOwner, currentOwner}]
   rfaPickYears: ['2027-2028','2028-2029'],
   rfaPicks: {} // year -> [{id, round, originalOwner, currentOwner}] (3 rondes/DG)
@@ -1539,7 +1539,7 @@ function renderTradeExtra(containerEl, dg, outProspects, outPicks, outRfaPicks){
     });
   }
   // UFA draft picks (inclut aussi 2028-2029, verrouillé tant que non déverrouillé)
-  const allUfaYearsForTrade = [...state.pickYears, '2028-2029'];
+  const allUfaYearsForTrade = [...new Set([...state.pickYears, '2028-2029'])];
   allUfaYearsForTrade.forEach(year=>{
     const picks = (state.picks[year] || []).filter(p=>p.currentOwner===dg).sort((a,b)=>a.round-b.round);
     if(!picks.length) return;
