@@ -812,7 +812,6 @@
     thead th:nth-child(3), tbody td:nth-child(3){display:none;}
   }
 </style>
-<style>.official-panel{display:none!important}</style>
 </head>
 <body class="zoom-normal">
 
@@ -1175,37 +1174,7 @@
     <input type="file" id="importFileInput" accept="application/json,.json" style="display:none;">
   </div>
 
-  <div class="panel official-panel">
-    <h2>🔐 Publication officielle</h2>
-    <div class="disclaimer" style="margin-top:0;">
-      Distinct des versions ci-dessus. Cette section génère un fichier <code id="officialFilenameLabel">pool-etat.json</code> — <b>toujours le même nom</b> — que vous déposez ensuite sur GitHub Pages, au même endroit que ce fichier HTML. À chaque chargement de l'outil, il essaiera automatiquement de lire ce fichier pour afficher l'état le plus à jour à tout le monde, sans qu'aucun DG n'ait besoin d'importer quoi que ce soit manuellement.
-      <br><br>⚠️ Ceci reste un outil autonome sans vrai serveur : le mot de passe est une protection légère contre les publications accidentelles, pas une sécurité forte — n'importe qui inspectant le code source pourrait le contourner. Suffisant pour un groupe d'amis, pas pour des données sensibles.
-    </div>
-
-    <div id="officialLocked">
-      <div class="controls-row">
-        <div class="field" style="flex:1; min-width:200px;">
-          <label for="officialPasswordInput">Mot de passe</label>
-          <input type="password" id="officialPasswordInput" placeholder="••••••••">
-        </div>
-        <button class="primary" id="officialUnlockBtn">Déverrouiller</button>
-      </div>
-    </div>
-
-    <div id="officialUnlocked" style="display:none;">
-      <div class="version-row" style="background:#eafaf0; border-color:var(--green);">
-        <div class="v-info">
-          <div class="v-name">✅ Déverrouillé</div>
-          <div class="v-meta">Ce téléchargement génère l'état actuel complet (effectifs, espoirs, choix UFA/RFA, plafond, saison).</div>
-        </div>
-        <div class="v-actions">
-          <button class="v-export" id="officialPublishBtn">⬇ Générer pool-etat.json</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  </div><!-- /tabVersions -->
+    </div><!-- /tabVersions -->
 
   <footer>Pool des Champions · Coin du Claude · outil généré à partir de fichier_des_champions.xlsx</footer>
 </div>
@@ -3203,53 +3172,7 @@ document.getElementById('stTradeTopBtn').addEventListener('click', ()=>{
   window.scrollTo({top:0, behavior:'smooth'});
 });
 
-// --- Publication officielle (distincte des versions locales) ---
-const OFFICIAL_FILENAME = 'pool-etat.json';
-const OFFICIAL_PASSWORD = 'champions2026'; // ⚠️ visible dans le code source — protection légère seulement
-
-document.getElementById('officialUnlockBtn').addEventListener('click', ()=>{
-  const input = document.getElementById('officialPasswordInput');
-  if(input.value === OFFICIAL_PASSWORD){
-    document.getElementById('officialLocked').style.display = 'none';
-    document.getElementById('officialUnlocked').style.display = 'block';
-    input.value = '';
-    toast('Accès à la publication officielle déverrouillé');
-  } else {
-    toast('Mot de passe incorrect');
-  }
-});
-document.getElementById('officialPasswordInput').addEventListener('keydown', (e)=>{
-  if(e.key === 'Enter') document.getElementById('officialUnlockBtn').click();
-});
-
-function buildOfficialPayload(){
-  const snap = snapshotState();
-  return {
-    _type: 'pool-des-champions-official-state',
-    _generatedBy: 'Calculateur de masse salariale',
-    publishedAt: Date.now(),
-    ...snap
-  };
-}
-
-document.getElementById('officialPublishBtn').addEventListener('click', ()=>{
-  const payload = buildOfficialPayload();
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = OFFICIAL_FILENAME;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  toast(`${OFFICIAL_FILENAME} généré — déposez-le sur GitHub Pages pour le publier à tous`);
-});
-
-// Au chargement : tente de lire le dernier état officiel déposé au même endroit que ce fichier.
-// Ne fonctionne que si l'outil est hébergé en ligne (ex. GitHub Pages) — pas en ouverture locale du fichier.
-// Chargement officiel effectué après authentification Supabase.
-
+// Publication officielle gérée exclusivement par Supabase Auth et RLS.
 
 // --- Zoom tool ---
 const zoomLevels = ['zoom-compact', 'zoom-normal', 'zoom-large'];
