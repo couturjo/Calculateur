@@ -3218,6 +3218,9 @@ async function sbLoadOfficialState(){
   // applySnapshot ne remplace que les champs présents: les anciennes sauvegardes incomplètes
   // ne détruisent donc pas les prospects et choix initialisés dans cette version de l’application.
   applySnapshot(data.state);
+  // Répare les anciennes sauvegardes qui contiennent rfaPicks:{} ou omettent les années RFA.
+  // Les choix manquants sont recréés selon les propriétaires d'origine et les overrides RAW_DATA.
+  state.rfaPickYears.forEach(year => ensureRfaPicksYear(year));
   capInput.value=state.cap.toFixed(3);
   document.getElementById('btnS26').classList.toggle('active',state.season==='2627');
   document.getElementById('btnS27').classList.toggle('active',state.season==='2728');
