@@ -724,6 +724,17 @@
     display:flex; gap:12px; overflow-x:auto; padding:4px 2px 14px 2px;
     -webkit-overflow-scrolling:touch;
   }
+  .kanban-toolbar{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:12px;
+  }
+  .kanban-toolbar-label{
+    color:var(--grey); font-size:0.76rem; font-weight:700; margin-right:4px;
+  }
+  .kanban-toolbar button{font-size:0.76rem; padding:7px 10px;}
+  @media(max-width:520px){
+    .kanban-toolbar-label{flex-basis:100%;}
+    .kanban-toolbar button{flex:1;}
+  }
   .kanban-list{
     background:var(--ice); border:1px solid var(--line); border-radius:10px;
     min-width:210px; max-width:230px; flex:0 0 auto;
@@ -1111,6 +1122,11 @@
       <h2>🗂️ Mur</h2>
       <div class="disclaimer" style="margin-top:6px;">
         Chaque liste = un DG. Touchez une carte pour la sélectionner, puis touchez une autre liste pour y déplacer le joueur — un déplacement direct et rapide, sans passer par le module Transaction (donc sans texto ni suivi de retenue). Idéal pour corriger une erreur ou réorganiser vite.
+      </div>
+      <div class="kanban-toolbar">
+        <span class="kanban-toolbar-label">Sections du Mur</span>
+        <button type="button" class="ghost" id="kanbanCollapseAll">− Tout contracter</button>
+        <button type="button" class="ghost" id="kanbanExpandAll">＋ Tout développer</button>
       </div>
     </div>
     <div class="kanban-board" id="kanbanBoard"></div>
@@ -2584,6 +2600,23 @@ qaSearchInput.addEventListener('keydown', (e)=>{
     `Un navigateur ne peut pas interroger PuckPedia en continu, donc ces données resteront figées à la date de génération jusqu'à ce qu'on refasse un import. `+
     `Pour un joueur absent de la base, utilisez l'ajout personnalisé ci-dessus.`;
 })();
+
+// --- Kanban board (Mur) ---
+document.getElementById('kanbanCollapseAll').addEventListener('click', ()=>{
+  kanbanCollapse = {};
+  Object.keys(RAW_DATA.rosters).forEach(dg=>{
+    TRADE_POS_GROUPS.forEach(group=>{ kanbanCollapse[dg + '_' + group.key] = true; });
+    kanbanCollapse[dg + '_RFAROSTER'] = true;
+    state.pickYears.forEach(year=>{ kanbanCollapse[dg + '_UFA_' + year] = true; });
+    state.rfaPickYears.forEach(year=>{ kanbanCollapse[dg + '_RFAPICKS_' + year] = true; });
+  });
+  renderKanban();
+});
+
+document.getElementById('kanbanExpandAll').addEventListener('click', ()=>{
+  kanbanCollapse = {};
+  renderKanban();
+});
 
 // --- Kanban board (Mur) ---
 function renderKanban(){
