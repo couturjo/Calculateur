@@ -2278,6 +2278,20 @@ function promoteProspect(dg, index){
   const marginAfter = state.cap - massAfter;
   const seasonLabel = state.season === '2627' ? '2026-2027' : '2027-2028';
   const money = value => value.toFixed(3) + ' M$';
+
+  // Reprendre les mêmes règles que le module des transactions.
+  const offSeason = isOffSeason();
+  const effectiveCap = offSeason ? state.cap * 1.10 : state.cap;
+  const capNote = offSeason ? ' (marge hors-saison de 10 % incluse)' : '';
+  if(massAfter > effectiveCap + 1e-9){
+    toast('Promotion refusée : masse de ' + money(massAfter) + ' supérieure au maximum de ' + money(effectiveCap) + capNote);
+    return;
+  }
+  const countAfter = realPlayerCount(roster) + 1;
+  if(!offSeason && countAfter > MAX_ROSTER_SIZE){
+    toast('Promotion refusée : limite de ' + MAX_ROSTER_SIZE + ' joueurs dépassée (' + countAfter + ')');
+    return;
+  }
   const preview = [
     'PROMOTION — ' + prospect.name,
     'DG : ' + dg + ' · Position : ' + (prospect.pos || source.pos || 'F'),
