@@ -902,26 +902,37 @@ body{padding-top:68px}
 </style>
 <style id="login-centering-fix">
 /* La fenêtre reste centrée sans empêcher le code de la masquer après connexion. */
+html:has(body.login-locked),
+body.login-locked{
+  overflow:hidden!important;
+  height:100%!important;
+  overscroll-behavior:none!important;
+}
+body.login-locked{position:fixed!important;width:100%!important;inset:0!important;}
 #supabaseGate{
   position:fixed!important;
   inset:0!important;
-  width:100vw;
-  height:100vh;
-  height:100dvh;
+  width:100vw!important;
+  height:100vh!important;
+  height:100dvh!important;
+  min-height:100%!important;
   box-sizing:border-box;
   align-items:center!important;
   justify-content:center!important;
   padding:20px;
   margin:0!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain!important;
+  touch-action:pan-y;
 }
-#sbLoginForm{margin:auto!important;max-height:calc(100dvh - 40px);overflow-y:auto}
+#sbLoginForm{margin:auto!important;max-height:calc(100dvh - 40px);overflow-y:auto;flex-shrink:0}
 </style>
 <style id="prospect-promotion-style">
 .promote-prospect{display:block;width:100%;margin-top:9px;padding:8px 10px;border:1px solid var(--gold);border-radius:7px;background:linear-gradient(135deg,#fff8e7,#f5e4b8);color:var(--navy);font-size:.78rem;font-weight:800;cursor:pointer}
 .promote-prospect:active{transform:translateY(1px)}
 </style>
 </head>
-<body class="zoom-normal">
+<body class="zoom-normal login-locked">
 
 <header>
   <div class="header-inner">
@@ -3585,6 +3596,8 @@ async function sbStartSession(user){
   }
   sbMember=member;
   document.getElementById('supabaseGate').style.display='none';
+  document.body.classList.remove('login-locked');
+  document.body.style.top='';
   document.getElementById('sbUserBar').style.display='flex';
   document.getElementById('sbUserLabel').textContent='Connecté : '+member.dg_name+(member.role==='admin'?' · Administrateur':'');
   document.getElementById('sbPublishBtn').style.display=member.role==='admin'?'inline-block':'none';
@@ -3613,6 +3626,8 @@ document.getElementById('sbLogoutBtn').addEventListener('click',async()=>{
   sbUser=null; sbMember=null;
   document.getElementById('sbUserBar').style.display='none';
   document.getElementById('supabaseGate').style.display='flex';
+  document.body.classList.add('login-locked');
+  window.scrollTo(0,0);
   sbMessage('Vous êtes déconnecté.');
 });
 
