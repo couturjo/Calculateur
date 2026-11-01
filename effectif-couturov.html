@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Le Pool des champions — Effectif Couturov</title>
+<style>
+:root{--navy:#071525;--navy2:#102a43;--panel:#132f4a;--gold:#d8b56d;--gold2:#f0d99f;--ice:#edf3f8;--muted:#9aadc0;--line:#29445d;--white:#fff;--green:#63c49a;--blue:#78a9d8;--purple:#ad9ad7;--amber:#d8ad5e}
+*{box-sizing:border-box}body{margin:0;background:#071321;color:#edf3f8;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% -20%,#244765 0,transparent 55%),linear-gradient(120deg,#071321,#0a1b2c 65%,#071321);z-index:-1}
+.wrap{max-width:1440px;margin:auto;padding:26px clamp(14px,3vw,42px) 60px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid #ffffff18;padding-bottom:18px}
+.brand{display:flex;align-items:center;gap:12px}.crest{width:48px;height:48px;border:1px solid #b89553;border-radius:14px;display:grid;place-items:center;color:var(--gold);font-size:25px;background:linear-gradient(145deg,#1a3853,#0b1d30);box-shadow:inset 0 0 18px #d8b56d12}
+.brand strong{display:block;font-size:13px;letter-spacing:1.8px}.brand small{display:block;color:#91a7bc;font-size:9px;letter-spacing:2.5px;margin-top:4px}
+.mode{font-size:10px;font-weight:800;letter-spacing:1.2px;color:var(--gold2);border:1px solid #d8b56d55;border-radius:30px;padding:8px 12px;background:#d8b56d12}
+.hero{display:flex;justify-content:space-between;align-items:end;gap:22px;padding:34px 0 24px}
+.kicker{color:var(--gold);font-size:10px;font-weight:900;letter-spacing:2.3px;text-transform:uppercase}
+h1{font-size:clamp(30px,4vw,48px);line-height:1;margin:9px 0 10px;letter-spacing:-1.5px}
+.hero p{margin:0;color:#a7b8c8;font-size:13px}
+.season{text-align:right;color:#a7b8c8;font-size:10px;letter-spacing:1.4px}.season b{display:block;color:#fff;font-size:18px;letter-spacing:.5px;margin-top:5px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.metric{background:linear-gradient(145deg,#132d46,#0e2237);border:1px solid #29445d;border-radius:14px;padding:15px 17px;box-shadow:0 12px 35px #0002}
+.metric label{display:block;color:#8fa5b9;font-size:9px;font-weight:900;letter-spacing:1.3px;text-transform:uppercase}
+.metric strong{display:block;font-size:25px;margin-top:5px;color:#fff;letter-spacing:-.5px}.metric small{display:block;color:#9aadc0;font-size:10px;margin-top:2px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:28px 0 14px}
+.toolbar h2{margin:0;font-size:16px;letter-spacing:.2px}.toolbar p{margin:4px 0 0;color:#8fa5b9;font-size:11px}
+.search{background:#0c2033;border:1px solid #2b4964;border-radius:9px;padding:10px 12px;color:white;min-width:230px;font:inherit;font-size:11px;outline:none}.search:focus{border-color:var(--gold)}
+.columns{display:grid;grid-template-columns:1.35fr 1fr .78fr;gap:14px;align-items:start}
+.position{border:1px solid #29445d;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#102840,#0b1d2f);box-shadow:0 18px 40px #0003}
+.poshead{padding:15px 16px 13px;background:linear-gradient(110deg,#173752,#102840);border-bottom:1px solid #ffffff16;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pos-title{display:flex;align-items:center;gap:10px}.pos-icon{width:34px;height:34px;border-radius:10px;background:#ffffff12;display:grid;place-items:center;color:var(--gold2);font-size:18px}
+.poshead h3{font-size:12px;letter-spacing:1.3px;margin:0}.poshead small{display:block;color:#9cb0c3;font-size:9px;margin-top:3px}
+.count{font-size:10px;color:var(--gold2);background:#d8b56d18;border:1px solid #d8b56d44;padding:5px 8px;border-radius:20px;white-space:nowrap}
+.playerlist{padding:10px;display:grid;gap:8px}
+.player{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:10px;padding:10px;background:linear-gradient(110deg,#18334c,#122a41);border:1px solid #29445d;border-radius:11px;min-width:0;transition:.18s}
+.player:hover{transform:translateY(-2px);border-color:#b89553;box-shadow:0 8px 20px #0003}
+.avatar{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:11px;font-weight:900;color:#f4dfb0;background:linear-gradient(145deg,#315473,#1a344d);border:1px solid #52718d}
+.pname{font-size:11px;font-weight:850;color:#f5f7fa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.club{font-size:9px;color:#91a7bc;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.right{text-align:right;min-width:60px}.salary{font-size:11px;font-weight:850;color:#f0d99f;white-space:nowrap}.free{font-size:8px;color:#91a7bc;margin-top:4px;white-space:nowrap}
+.tag{display:inline-block;font-size:8px;font-weight:900;letter-spacing:.5px;padding:3px 5px;border-radius:4px;margin-top:5px}.rfa{background:#573c2b;color:#ffd09c}.ufa{background:#214b3c;color:#9ae0bd}.unsigned{background:#493d25;color:#f1d18b}
+.prospect-box{margin-top:22px;border:1px solid #29445d;border-radius:16px;background:linear-gradient(110deg,#10283f,#0b1d2f);overflow:hidden}
+.prospect-head{padding:15px 17px;border-bottom:1px solid #ffffff16;display:flex;align-items:center;justify-content:space-between;gap:10px}.prospect-head h3{font-size:12px;letter-spacing:1.3px;margin:0}.prospect-head p{font-size:10px;color:#91a7bc;margin:4px 0 0}.prospect-grid{padding:12px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.prospect{background:#142f48;border:1px solid #29445d;border-radius:9px;padding:10px;min-width:0}.prospect b{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.prospect small{display:block;color:#91a7bc;font-size:9px;margin-top:5px}.prospect .salary{display:block;margin-top:7px}
+.note{margin-top:16px;color:#718aa1;font-size:9px;line-height:1.5;text-align:right}
+.empty{display:none;color:#8fa5b9;text-align:center;padding:25px;font-size:12px}
+@media(max-width:900px){.columns{grid-template-columns:1fr 1fr}.position:first-child{grid-column:1/-1}.prospect-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.wrap{padding:16px 12px 40px}.hero{align-items:start;flex-direction:column;padding:27px 0 20px}.season{text-align:left}.metrics{grid-template-columns:repeat(2,1fr);gap:8px}.metric{padding:12px}.metric strong{font-size:21px}.columns{grid-template-columns:1fr}.position:first-child{grid-column:auto}.search{width:100%;min-width:0}.prospect-grid{grid-template-columns:repeat(2,1fr)}.topbar{align-items:start}.mode{font-size:8px}}
+</style>
+</head>
+<body><main class="wrap">
+<header class="topbar"><div class="brand"><div class="crest">♜</div><div><strong>LE POOL DES CHAMPIONS</strong><small>EST. 2013 · FRONT OFFICE</small></div></div><div class="mode">PROTOTYPE · NON OFFICIEL</div></header>
+<section class="hero"><div><div class="kicker">Franchise · DG Couturov</div><h1>Alignement principal</h1><p>Une vue premium de l'effectif, des contrats et des actifs de la franchise.</p></div><div class="season">SAISON DE RÉFÉRENCE<b>2026 — 2027</b></div></section>
+<section class="metrics">
+<div class="metric"><label>Joueurs actifs</label><strong>24</strong><small>Attaquants · défenseurs · gardiens</small></div>
+<div class="metric"><label>Attaquants</label><strong>15</strong><small>Profondeur offensive</small></div>
+<div class="metric"><label>Défenseurs</label><strong>7</strong><small>Sept options à la ligne bleue</small></div>
+<div class="metric"><label>Gardiens</label><strong>2</strong><small>Un duo devant le filet</small></div>
+</section>
+<div class="toolbar"><div><h2>Composition de l'effectif</h2><p>Cartes joueurs · AAV 2026-2027 · échéance contractuelle</p></div><input class="search" id="search" type="search" placeholder="⌕ Rechercher un joueur ou une équipe…"></div>
+<section class="columns" id="columns">
+<div class="position"><div class="poshead"><div class="pos-title"><div class="pos-icon">⚡</div><div><h3>ATTAQUANTS</h3><small>UNITÉ OFFENSIVE</small></div></div><span class="count">15 JOUEURS</span></div><div class="playerlist" id="forwards"></div></div>
+<div class="position"><div class="poshead"><div class="pos-title"><div class="pos-icon">🛡</div><div><h3>DÉFENSEURS</h3><small>LIGNE BLEUE</small></div></div><span class="count">7 JOUEURS</span></div><div class="playerlist" id="defense"></div></div>
+<div class="position"><div class="poshead"><div class="pos-title"><div class="pos-icon">🥅</div><div><h3>GARDIENS</h3><small>DERNIER REMPart</small></div></div><span class="count">2 JOUEURS</span></div><div class="playerlist" id="goalies"></div></div>
+</section>
+<section class="prospect-box"><div class="prospect-head"><div><h3>RÉSERVE DE PROSPECTS</h3><p>Actifs de développement · affichés séparément de l'alignement principal</p></div><span class="count">10 PROSPECTS</span></div><div class="prospect-grid" id="prospects"></div></section>
+<div class="note">Données de joueurs, AAV et échéances reprises de l'effectif Couturov présent dans la version officielle au moment de la création de cette maquette.<br>Les points Fantrax ne sont pas affichés dans ce prototype.</div>
+</main>
+<script>
+const players = [
+{name:"Nikita Kucherov",team:"Tampa Bay Lightning",pos:"F",aav:9.5,free:"2027"},
+{name:"Jack Hughes",team:"New Jersey Devils",pos:"F",aav:8,free:"2030"},
+{name:"Tim Stutzle",team:"Ottawa Senators",pos:"F",aav:8.35,free:"2031"},
+{name:"Jesper Bratt",team:"New Jersey Devils",pos:"F",aav:7.875,free:"2031"},
+{name:"Artemi Panarin",team:"Los Angeles Kings",pos:"F",aav:11,free:"2028"},
+{name:"Will Smith",team:"San Jose Sharks",pos:"F",aav:4.15,free:"RFA"},
+{name:"Adrian Kempe",team:"Los Angeles Kings",pos:"F",aav:10.625,free:"2034"},
+{name:"Kirill Marchenko",team:"Columbus Blue Jackets",pos:"F",aav:3.85,free:"RFA"},
+{name:"Drake Batherson",team:"Ottawa Senators",pos:"F",aav:4.975,free:"UFA"},
+{name:"Dylan Holloway",team:"St. Louis Blues",pos:"F",aav:7.75,free:"2031"},
+{name:"Ryan Nugent-Hopkins",team:"Edmonton Oilers",pos:"F",aav:5.125,free:"—"},
+{name:"John-Jason Peterka",team:"Boston Bruins",pos:"F",aav:7.7,free:"—"},
+{name:"Tyson Foerster",team:"Philadelphia Flyers",pos:"F",aav:3.75,free:"—"},
+{name:"Marco Rossi",team:"Équipe non précisée",pos:"F",aav:null,free:"2028"},
+{name:"Justin Sourdif",team:"Washington Capitals",pos:"F",aav:.825,free:"—"},
+{name:"Adam Fox",team:"New York Rangers",pos:"D",aav:9.5,free:"2029"},
+{name:"Lane Hutson",team:"Montreal Canadiens",pos:"D",aav:8.85,free:"2034"},
+{name:"Vince Dunn",team:"Seattle Kraken",pos:"D",aav:7.35,free:"UFA"},
+{name:"Jake Sanderson",team:"Ottawa Senators",pos:"D",aav:8.05,free:"2032"},
+{name:"Filip Hronek",team:"Équipe non précisée",pos:"D",aav:7.25,free:"2032"},
+{name:"Brent Burns",team:"Colorado Avalanche",pos:"D",aav:.85,free:"—"},
+{name:"Mike Reilly",team:"Équipe non précisée",pos:"D",aav:.85,free:"2027"},
+{name:"Andrei Vasilevski",team:"Équipe non précisée",pos:"G",aav:9.5,free:"2028"},
+{name:"Joel Hofer",team:"St. Louis Blues",pos:"G",aav:3.4,free:"—"}
+];
+const prospects=[
+{name:"Jesper Wallstedt",team:"Minnesota Wild",pos:"G",aav:2.2,free:"2028"},
+{name:"Axel Sandin-Pellikka",team:"Équipe non précisée",pos:"D",aav:1.4408,free:"2028"},
+{name:"Berkly Catton",team:"Seattle Kraken",pos:"F",aav:1.9538,free:"2029"},
+{name:"Ilya Protas",team:"Washington Capitals",pos:"F",aav:1.0183,free:"2029"},
+{name:"Konsta Helenius",team:"Buffalo Sabres",pos:"F",aav:1.5537,free:"2029"},
+{name:"Cayden Lindstrom",team:"Équipe non précisée",pos:"F",aav:"Non signé",free:"2029"},
+{name:"Jonathan Lekkerimaki",team:"Équipe non précisée",pos:"F",aav:1.3933,free:"RFA"},
+{name:"Victor Eklund",team:"New York Islanders",pos:"F",aav:1.4742,free:"2030"},
+{name:"Andrew Cristall",team:"Washington Capitals",pos:"F",aav:.9342,free:"2028"},
+{name:"Elton Hermansson",team:"Los Angeles Kings",pos:"F",aav:1.4083,free:"2031"}
+];
+const money=v=>typeof v==="number"?v.toFixed(3).replace(/0+$/,"").replace(/\.$/,"")+" M$":(v||"—");
+const initials=n=>n.split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase();
+function badge(free){if(free==="RFA")return '<span class="tag rfa">RFA</span>';if(free==="UFA")return '<span class="tag ufa">UFA</span>';if(free==="Non signé")return '<span class="tag unsigned">NON SIGNÉ</span>';return ""}
+function card(p){return '<article class="player" data-search="'+(p.name+" "+p.team).toLowerCase()+'"><div class="avatar">'+initials(p.name)+'</div><div><div class="pname">'+p.name+'</div><div class="club">'+p.team+' · '+p.pos+'</div>'+badge(p.free)+'</div><div class="right"><div class="salary">'+money(p.aav)+'</div><div class="free">'+(p.free==="RFA"||p.free==="UFA"?"Statut":p.free==="—"?"Échéance à confirmer":"Libre en "+p.free)+'</div></div></article>'}
+function render(){for(const [pos,id] of [["F","forwards"],["D","defense"],["G","goalies"]])document.getElementById(id).innerHTML=players.filter(p=>p.pos===pos).map(card).join("");document.getElementById("prospects").innerHTML=prospects.map(p=>'<div class="prospect" data-search="'+(p.name+" "+p.team).toLowerCase()+'"><b>'+p.name+'</b><small>'+p.team+' · '+p.pos+'</small><span class="salary">'+money(p.aav)+'</span><small>'+(p.free==="RFA"?"Statut RFA":p.free==="Non signé"?"Contrat non signé":"Libre en "+p.free)+'</small></div>').join("")}
+render();
+document.getElementById("search").addEventListener("input",e=>{const q=e.target.value.trim().toLowerCase();document.querySelectorAll("[data-search]").forEach(el=>el.style.display=el.dataset.search.includes(q)?"grid":"none")});
+</script></body></html>
