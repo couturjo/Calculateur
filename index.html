@@ -890,6 +890,22 @@ body{padding-top:68px}
  #tabEffectifs .pos-columns{grid-template-columns:1fr}
 }
 </style>
+<style id="login-centering-fix">
+/* La fenêtre de connexion reste centrée dans le viewport, indépendamment de la barre Effectifs. */
+#supabaseGate{
+  position:fixed!important;
+  inset:0!important;
+  width:100vw;
+  height:100vh;
+  height:100dvh;
+  box-sizing:border-box;
+  display:grid!important;
+  place-items:center!important;
+  padding:20px;
+  margin:0!important;
+}
+#sbLoginForm{margin:auto!important;max-height:calc(100dvh - 40px);overflow-y:auto}
+</style>
 <style id="prospect-promotion-style">
 .promote-prospect{display:block;width:100%;margin-top:9px;padding:8px 10px;border:1px solid var(--gold);border-radius:7px;background:linear-gradient(135deg,#fff8e7,#f5e4b8);color:var(--navy);font-size:.78rem;font-weight:800;cursor:pointer}
 .promote-prospect:active{transform:translateY(1px)}
