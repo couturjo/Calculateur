@@ -2717,7 +2717,18 @@ function validateRosterAddition(dg, player){
   const massAfter = massBefore + (typeof salary === 'number' && Number.isFinite(salary) ? salary : 0);
   const offSeason = isOffSeason();
   const effectiveCap = offSeason ? state.cap * 1.10 : state.cap;
-  const money = value => value.toFixed(3) + ' M
+  const money = value => value.toFixed(3) + ' M$';
+  if(massAfter > effectiveCap + 1e-9){
+    toast('Ajout refusé : masse salariale de ' + money(massAfter) + ' supérieure au plafond permis de ' + money(effectiveCap) + '.');
+    return false;
+  }
+  const countAfter = realPlayerCount(roster) + 1;
+  if(!offSeason && countAfter > MAX_ROSTER_SIZE){
+    toast('Ajout refusé : l’alignement ne peut pas dépasser ' + MAX_ROSTER_SIZE + ' joueurs.');
+    return false;
+  }
+  return true;
+}
 
 document.getElementById('addBtn').addEventListener('click', ()=>{
   const input = document.getElementById('playerSearch');
