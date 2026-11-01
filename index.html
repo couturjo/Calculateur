@@ -890,6 +890,10 @@ body{padding-top:68px}
  #tabEffectifs .pos-columns{grid-template-columns:1fr}
 }
 </style>
+<style id="prospect-promotion-style">
+.promote-prospect{display:block;width:100%;margin-top:9px;padding:8px 10px;border:1px solid var(--gold);border-radius:7px;background:linear-gradient(135deg,#fff8e7,#f5e4b8);color:var(--navy);font-size:.78rem;font-weight:800;cursor:pointer}
+.promote-prospect:active{transform:translateY(1px)}
+</style>
 </head>
 <body class="zoom-normal">
 
@@ -2208,6 +2212,34 @@ function toast(msg){
   toast._h = setTimeout(()=>t.classList.remove('show'), 1800);
 }
 
+// --- Promotion d'un espoir RFA vers l'alignement principal ---
+function promoteProspect(dg, index){
+  const prospects = state.prospects[dg] || [];
+  const prospect = prospects[index];
+  if(!prospect) return;
+  const roster = state.roster[dg] || [];
+  if(roster.some(p => p.name === prospect.name)){
+    toast(prospect.name + ' est déjà dans l’alignement de ' + dg);
+    return;
+  }
+  const source = RAW_DATA.players[prospect.name] || {};
+  roster.push({
+    name: prospect.name,
+    aav26: typeof source.aav2627 === 'number' ? source.aav2627 : undefined,
+    aav27: typeof source.aav2728 === 'number' ? source.aav2728 : undefined,
+    free: prospect.free || source.free || '—',
+    pos: prospect.pos || source.pos || 'F',
+    retainPct: 0,
+    _custom: !RAW_DATA.players[prospect.name]
+  });
+  prospects.splice(index, 1);
+  state.roster[dg] = roster;
+  state.prospects[dg] = prospects;
+  render();
+  renderRfa();
+  toast(prospect.name + ' promu dans l’alignement de ' + dg + (typeof source.aav2627 === 'number' || typeof source.aav2728 === 'number' ? ' · AAV ajouté à la masse' : ' · AAV à compléter'));
+}
+
 // --- RFA (prospects) module ---
 function renderRfa(){
   const dg = rfaDgSelect.value;
@@ -2223,6 +2255,7 @@ function renderRfa(){
       <div class="card-name">${p.name}</div>
       <div class="card-free"><span class="free-tag ${tag.cls}">${tag.text}</span></div>
       <div style="font-size:0.72rem; color:var(--grey); margin-top:4px;">Ne compte pas sur la masse</div>
+      <button type="button" class="promote-prospect" data-idx="${idx}">↑ Promouvoir dans l’alignement</button>
     `;
     board.appendChild(card);
   });
@@ -2232,8 +2265,12 @@ function renderRfa(){
       const i = parseInt(e.target.dataset.idx,10);
       const removed = state.prospects[dg].splice(i,1)[0];
       renderRfa();
+      render();
       toast(removed.name + ' retiré des espoirs RFA');
     });
+  });
+  board.querySelectorAll('.promote-prospect').forEach(btn=>{
+    btn.addEventListener('click', e=>promoteProspect(dg, parseInt(e.currentTarget.dataset.idx,10)));
   });
 }
 
@@ -2490,12 +2527,15 @@ function render(){
   prospectBoard.innerHTML = '';
   document.getElementById('countRFA').textContent = prospects.length;
   document.getElementById('emptyRFA').style.display = prospects.length ? 'none' : 'block';
-  prospects.forEach(p=>{
+  prospects.forEach((p, idx)=>{
     const card = document.createElement('div');
     card.className = 'prospect-card';
     const pos = p.pos || 'F';
-    card.innerHTML = '<div class="card-name">' + p.name + '</div><div class="prospect-meta"><span class="pos-tag">' + posLabel(pos) + '</span><span class="pos-tag">RFA · Hors masse</span><span class="pos-tag">' + (p.free || '—') + '</span></div>';
+    card.innerHTML = '<div class="card-name">' + p.name + '</div><div class="prospect-meta"><span class="pos-tag">' + posLabel(pos) + '</span><span class="pos-tag">RFA · Hors masse</span><span class="pos-tag">' + (p.free || '—') + '</span></div><button type="button" class="promote-prospect" data-idx="' + idx + '">↑ Promouvoir</button>';
     prospectBoard.appendChild(card);
+  });
+  prospectBoard.querySelectorAll('.promote-prospect').forEach(btn=>{
+    btn.addEventListener('click', e=>promoteProspect(state.dg, parseInt(e.currentTarget.dataset.idx,10)));
   });
   document.getElementById('prospectsBox').innerHTML = '';
 
