@@ -998,7 +998,7 @@ body.login-locked{height:100%;width:100%;}
       </div>
       <div class="field">
         <label for="capInput">Plafond salarial ($M)</label>
-        <input type="number" id="capInput" step="0.001" value="160">
+        <input type="number" id="capInput" step="any" value="160">
       </div>
       <div class="field">
         <label>&nbsp;</label>
@@ -1086,7 +1086,7 @@ body.login-locked{height:100%;width:100%;}
       </div>
       <div class="field" style="max-width:140px;">
         <label for="customAav">AAV ($M)</label>
-        <input type="number" id="customAav" step="0.001" placeholder="0.000">
+        <input type="number" id="customAav" step="any" inputmode="decimal" placeholder="0.000">
       </div>
       <div class="field" style="max-width:130px;">
         <label for="customPos">Position</label>
@@ -2349,7 +2349,7 @@ function renderRfa(){
     const source = RAW_DATA.players[p.name] || {};
     const aav26 = typeof p.aav26 === 'number' ? p.aav26 : source.aav2627;
     const aav27 = typeof p.aav27 === 'number' ? p.aav27 : source.aav2728;
-    const salaryValue = value => typeof value === 'number' ? value.toFixed(3) : '';
+    const salaryValue = value => typeof value === 'number' ? String(value) : '';
     card.innerHTML = `
       <button class="rfa-remove" data-idx="${idx}" title="Retirer">✕</button>
       <div class="card-name">${p.name}</div>
@@ -2358,13 +2358,13 @@ function renderRfa(){
         <div class="prospect-aav-title">AAV estimé / contrat</div>
         <label>2026-2027
           <div class="card-aav-row">
-            <input type="number" min="0" step="0.001" inputmode="decimal" class="prospect-aav-input" data-idx="${idx}" data-season="aav26" value="${salaryValue(aav26)}" placeholder="À saisir">
+            <input type="number" min="0" step="any" inputmode="decimal" class="prospect-aav-input" data-idx="${idx}" data-season="aav26" value="${salaryValue(aav26)}" placeholder="À saisir">
             <span class="unit">$M</span>
           </div>
         </label>
         <label>2027-2028
           <div class="card-aav-row">
-            <input type="number" min="0" step="0.001" inputmode="decimal" class="prospect-aav-input" data-idx="${idx}" data-season="aav27" value="${salaryValue(aav27)}" placeholder="À saisir">
+            <input type="number" min="0" step="any" inputmode="decimal" class="prospect-aav-input" data-idx="${idx}" data-season="aav27" value="${salaryValue(aav27)}" placeholder="À saisir">
             <span class="unit">$M</span>
           </div>
         </label>
@@ -2558,7 +2558,7 @@ function render(){
         ${hasOverride ? `<button data-idx="${idx}" class="card-revert" title="Revenir au AAV d'origine">↺</button>` : ''}
       </div>
       <div class="card-aav-row">
-        <input type="number" step="0.001" class="aav-edit-input ${noRealData?'no-data':''}" data-idx="${idx}" value="${aav.toFixed(3)}">
+        <input type="number" step="any" class="aav-edit-input ${noRealData?'no-data':''}" data-idx="${idx}" value="${String(aav)}">
         <span class="unit">$M</span>
       </div>
       <div class="card-bottom-row">
