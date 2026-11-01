@@ -4,18 +4,7 @@ async function openApp(page) {
   await page.route('**/@supabase/supabase-js**', route => route.fulfill({
     status: 200,
     contentType: 'application/javascript',
-    body: \`window.supabase = { createClient: () => ({
-      auth: {
-        getSession: async () => ({ data: { session: null }, error: null }),
-        signInWithPassword: async () => ({ data: { user: null }, error: { message: 'Connexion de test simulée' } }),
-        signOut: async () => ({ error: null })
-      },
-      from: () => ({
-        select() { return this; }, eq() { return this; }, order() { return this; },
-        limit() { return this; }, maybeSingle: async () => ({ data: null, error: null }),
-        insert: async () => ({ error: null }), update() { return this; }
-      })
-    }) };\`
+    body: "window.supabase = { createClient: () => ({ auth: { getSession: async () => ({ data: { session: null }, error: null }), signInWithPassword: async () => ({ data: { user: null }, error: { message: 'Connexion de test simulée' } }), signOut: async () => ({ error: null }) }, from: () => ({ select() { return this; }, eq() { return this; }, order() { return this; }, limit() { return this; }, maybeSingle: async () => ({ data: null, error: null }), insert: async () => ({ error: null }), update() { return this; } }) }) };"
   }));
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));
