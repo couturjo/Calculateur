@@ -2238,6 +2238,7 @@ function promoteProspect(dg, index){
   state.dg = dg;
   dgSelect.value = dg;
   stickyDgSelect.value = dg;
+  rfaDgSelect.value = dg;
   render();
   renderRfa();
   toast(prospect.name + ' promu dans l’alignement de ' + dg + (typeof source.aav2627 === 'number' || typeof source.aav2728 === 'number' ? ' · AAV ajouté à la masse' : ' · AAV à compléter'));
