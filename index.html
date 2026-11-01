@@ -824,6 +824,14 @@
   }
 </style>
 <style id="hide-draftday-tab">.nav-btn[data-tab="draftday"]{display:none!important}</style>
+<style id="effectifs-config-cleanup">
+/* Le DG et les indicateurs salariaux sont désormais regroupés dans la barre fixe. */
+#tabEffectifs>.panel:first-child>h2{font-size:1rem;letter-spacing:.02em}
+#tabEffectifs>.panel:first-child .controls-row>.field:first-child{display:none!important}
+#tabEffectifs>.panel:first-child .cap-summary,
+#tabEffectifs>.panel:first-child .bar-wrap{display:none!important}
+#tabEffectifs>.panel:first-child .controls-row{margin-top:4px}
+</style>
 <style id="effectifs-premium-integration">
 /* Vue Effectifs — présentation hockey premium */
 #stickyBar{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:1000!important;min-height:62px;padding:8px 14px!important;flex-wrap:nowrap!important;gap:12px!important;box-shadow:0 5px 22px rgba(3,18,34,.28)}
