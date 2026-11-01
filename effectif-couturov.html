@@ -58,18 +58,18 @@ h1{font-size:clamp(30px,4vw,48px);line-height:1;margin:9px 0 10px;letter-spacing
 <section class="teambar" aria-label="Gestion de l’effectif"><div class="team-picker"><label for="teamSelect">EFFECTIF SÉLECTIONNÉ</label><select id="teamSelect"></select></div><div class="sticky-stat"><label>Masse salariale</label><strong id="stickyMass">—</strong><small id="salaryWarning" style="display:none;color:#f3c66b;font-size:9px">* AAV manquant</small></div><div class="sticky-stat margin" id="marginStat"><label>Marge disponible</label><strong id="stickyMargin">—</strong></div><div class="sticky-stat"><label>Plafond salarial</label><strong id="stickyCap">—</strong></div></section>
 <section class="hero"><div><div class="kicker" id="franchiseKicker">Franchise · DG Couturov</div><h1>Alignement principal</h1><p>Une vue premium de l'effectif, des contrats et des actifs de la franchise.</p></div><div class="season">SAISON DE RÉFÉRENCE<b>2026 — 2027</b></div></section>
 <section class="metrics">
-<div class="metric"><label>Joueurs actifs</label><strong id="activeCount">24</strong><small>Alignement principal</small></div>
-<div class="metric"><label>Attaquants</label><strong id="forwardCount">15</strong><small>Profondeur offensive</small></div>
-<div class="metric"><label>Défenseurs</label><strong id="defenseCount">7</strong><small>Options à la ligne bleue</small></div>
-<div class="metric"><label>Gardiens</label><strong id="goalieCount">2</strong><small>Devant le filet</small></div>
+<div class="metric"><label>Joueurs actifs</label><strong id="activeCount">—</strong><small>Alignement principal</small></div>
+<div class="metric"><label>Attaquants</label><strong id="forwardCount">—</strong><small>Profondeur offensive</small></div>
+<div class="metric"><label>Défenseurs</label><strong id="defenseCount">—</strong><small>Options à la ligne bleue</small></div>
+<div class="metric"><label>Gardiens</label><strong id="goalieCount">—</strong><small>Devant le filet</small></div>
 </section>
 <div class="toolbar"><div><h2>Composition de l'effectif</h2><p>Cartes joueurs · AAV 2026-2027 · échéance contractuelle</p></div><div class="toolbar-actions"><button class="collapse-all" id="collapseAll">− Tout contracter</button><button class="collapse-all" id="expandAll">＋ Tout développer</button><input class="search" id="search" type="search" placeholder="⌕ Rechercher un joueur ou une équipe…"></div></div>
 <section class="columns" id="columns">
-<div class="position"><div class="poshead"><div class="pos-title"><div class="pos-icon">⚡</div><div><h3>ATTAQUANTS</h3><small>UNITÉ OFFENSIVE</small></div></div><div style="display:flex;align-items:center;gap:8px"><span class="count">15 JOUEURS</span><button class="section-toggle" aria-expanded="true">− Réduire</button></div></div><div class="playerlist" id="forwards"></div></div>
-<div class="position"><div class="poshead"><div class="pos-title"><div class="pos-icon">🛡</div><div><h3>DÉFENSEURS</h3><small>LIGNE BLEUE</small></div></div><div style="display:flex;align-items:center;gap:8px"><span class="count">7 JOUEURS</span><button class="section-toggle" aria-expanded="true">− Réduire</button></div></div><div class="playerlist" id="defense"></div></div>
-<div class="position"><div class="poshead"><div class="pos-title"><div class="pos-icon">🥅</div><div><h3>GARDIENS</h3><small>DERNIER REMPart</small></div></div><div style="display:flex;align-items:center;gap:8px"><span class="count">2 JOUEURS</span><button class="section-toggle" aria-expanded="true">− Réduire</button></div></div><div class="playerlist" id="goalies"></div></div>
+<div class="position"><div class="poshead"><div class="pos-title"><div class="pos-icon">⚡</div><div><h3>ATTAQUANTS</h3><small>UNITÉ OFFENSIVE</small></div></div><div style="display:flex;align-items:center;gap:8px"><span class="count" id="forwardSectionCount">—</span><button class="section-toggle" aria-expanded="true">− Réduire</button></div></div><div class="playerlist" id="forwards"></div></div>
+<div class="position"><div class="poshead"><div class="pos-title"><div class="pos-icon">🛡</div><div><h3>DÉFENSEURS</h3><small>LIGNE BLEUE</small></div></div><div style="display:flex;align-items:center;gap:8px"><span class="count" id="defenseSectionCount">—</span><button class="section-toggle" aria-expanded="true">− Réduire</button></div></div><div class="playerlist" id="defense"></div></div>
+<div class="position"><div class="poshead"><div class="pos-title"><div class="pos-icon">🥅</div><div><h3>GARDIENS</h3><small>DERNIER REMPart</small></div></div><div style="display:flex;align-items:center;gap:8px"><span class="count" id="goalieSectionCount">—</span><button class="section-toggle" aria-expanded="true">− Réduire</button></div></div><div class="playerlist" id="goalies"></div></div>
 </section>
-<section class="prospect-box"><div class="prospect-head"><div><h3>RÉSERVE DE PROSPECTS</h3><p>Actifs de développement · affichés séparément de l'alignement principal</p></div><div style="display:flex;align-items:center;gap:8px"><span class="count">10 PROSPECTS</span><button class="section-toggle" aria-expanded="true">− Réduire</button></div></div><div class="prospect-grid" id="prospects"></div></section>
+<section class="prospect-box"><div class="prospect-head"><div><h3>RÉSERVE DE PROSPECTS</h3><p>Actifs de développement · affichés séparément de l'alignement principal</p></div><div style="display:flex;align-items:center;gap:8px"><span class="count" id="prospectSectionCount">—</span><button class="section-toggle" aria-expanded="true">− Réduire</button></div></div><div class="prospect-grid" id="prospects"></div></section>
 <div class="note">Données de joueurs, AAV et échéances reprises de l'effectif Couturov présent dans la version officielle au moment de la création de cette maquette.<br>Les points Fantrax ne sont pas affichés dans ce prototype.</div>
 </main>
 <script>
@@ -86,7 +86,13 @@ function loadRoster(dg){
   document.getElementById("activeCount").textContent=players.length;
   document.getElementById("forwardCount").textContent=players.filter(p=>p.pos==="F").length;
   document.getElementById("defenseCount").textContent=players.filter(p=>p.pos==="D").length;
-  document.getElementById("goalieCount").textContent=players.filter(p=>p.pos==="G").length;
+  const forwardTotal=players.filter(p=>p.pos==="F").length;
+  const defenseTotal=players.filter(p=>p.pos==="D").length;
+  const goalieTotal=players.filter(p=>p.pos==="G").length;
+  document.getElementById("forwardSectionCount").textContent=forwardTotal+" JOUEURS";
+  document.getElementById("defenseSectionCount").textContent=defenseTotal+" JOUEURS";
+  document.getElementById("goalieSectionCount").textContent=goalieTotal+" JOUEURS";
+  document.getElementById("prospectSectionCount").textContent=prospects.length+" PROSPECTS";
   const cap=data.cap, missingAav=players.filter(p=>typeof p.aav!=="number").length, mass=players.reduce((sum,p)=>sum+(typeof p.aav==="number"?p.aav:0),0), margin=cap-mass;
   const fmt=v=>Number(v).toFixed(3)+" M$";
   document.getElementById("stickyMass").textContent=fmt(mass)+(missingAav?"*":"");
