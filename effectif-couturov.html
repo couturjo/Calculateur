@@ -61,7 +61,7 @@ h1{font-size:clamp(30px,4vw,48px);line-height:1;margin:9px 0 10px;letter-spacing
 <div class="metric"><label>Joueurs actifs</label><strong id="activeCount">—</strong><small>Alignement principal</small></div>
 <div class="metric"><label>Attaquants</label><strong id="forwardCount">—</strong><small>Profondeur offensive</small></div>
 <div class="metric"><label>Défenseurs</label><strong id="defenseCount">—</strong><small>Options à la ligne bleue</small></div>
-<div class="metric"><label>Gardiens</label><strong id="goalieCount">—</strong><small>Devant le filet</small></div>
+<div class="metric"><label>Gardiens</label><strong id="topGoalieCount">—</strong><small>Devant le filet</small></div>
 </section>
 <div class="toolbar"><div><h2>Composition de l'effectif</h2><p>Cartes joueurs · AAV 2026-2027 · échéance contractuelle</p></div><div class="toolbar-actions"><button class="collapse-all" id="collapseAll">− Tout contracter</button><button class="collapse-all" id="expandAll">＋ Tout développer</button><input class="search" id="search" type="search" placeholder="⌕ Rechercher un joueur ou une équipe…"></div></div>
 <section class="columns" id="columns">
@@ -86,7 +86,7 @@ function loadRoster(dg){
   document.getElementById("activeCount").textContent=players.length;
   document.getElementById("forwardCount").textContent=players.filter(p=>p.pos==="F").length;
   document.getElementById("defenseCount").textContent=players.filter(p=>p.pos==="D").length;
-  document.getElementById("goalieCount").textContent=players.filter(p=>p.pos==="G").length;
+  document.getElementById("topGoalieCount").textContent=players.filter(p=>p.pos==="G").length;
   const forwardTotal=players.filter(p=>p.pos==="F").length;
   const defenseTotal=players.filter(p=>p.pos==="D").length;
   const goalieTotal=players.filter(p=>p.pos==="G").length;
@@ -115,6 +115,7 @@ function refreshRoster(){loadRoster(teamSelect.value);render();document.querySel
 teamSelect.addEventListener("change",refreshRoster);
 loadRoster(selectedDG);
 render();
+document.getElementById("topGoalieCount").textContent=players.filter(p=>p.pos==="G").length;
 document.querySelectorAll('.position,.prospect-box').forEach(section=>{const btn=section.querySelector('.section-toggle');btn.addEventListener('click',()=>setCollapsed(section,!section.classList.contains('is-collapsed')));});
 function setCollapsed(section,collapsed){section.classList.toggle('is-collapsed',collapsed);const btn=section.querySelector('.section-toggle');btn.textContent=collapsed?'＋ Développer':'− Réduire';btn.setAttribute('aria-expanded',String(!collapsed));}
 document.getElementById('collapseAll').addEventListener('click',()=>document.querySelectorAll('.position,.prospect-box').forEach(s=>setCollapsed(s,true)));
