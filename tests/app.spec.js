@@ -4,7 +4,7 @@ async function openApp(page) {
   await page.route('**/@supabase/supabase-js**', route => route.fulfill({
     status: 200,
     contentType: 'application/javascript',
-    body: `window.supabase = { createClient: () => ({
+    body: \`window.supabase = { createClient: () => ({
       auth: {
         getSession: async () => ({ data: { session: null }, error: null }),
         signInWithPassword: async () => ({ data: { user: null }, error: { message: 'Connexion de test simulée' } }),
@@ -15,7 +15,7 @@ async function openApp(page) {
         limit() { return this; }, maybeSingle: async () => ({ data: null, error: null }),
         insert: async () => ({ error: null }), update() { return this; }
       })
-    }) };`
+    }) };\`
   }));
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));
@@ -45,7 +45,7 @@ test('la barre salariale est dans le conteneur sticky et reste en haut au défil
   });
   const wrapper = page.locator('.sticky-wrap');
   const bar = page.locator('#stickyBar');
-  await expect(wrapper).toContainElement(bar);
+  expect(await bar.evaluate(el => el.closest('.sticky-wrap') !== null)).toBe(true);
   await page.evaluate(() => window.scrollTo(0, 700));
   await expect.poll(async () => (await wrapper.boundingBox())?.y).toBeLessThanOrEqual(1);
   await expect.poll(async () => (await bar.boundingBox())?.y).toBeLessThanOrEqual(1);
