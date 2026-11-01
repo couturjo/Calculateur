@@ -902,20 +902,18 @@ body{padding-top:68px}
 </style>
 <style id="login-centering-fix">
 /* La fenêtre reste centrée sans empêcher le code de la masquer après connexion. */
-html:has(body.login-locked),
+html.login-locked,
 body.login-locked{
   overflow:hidden!important;
-  height:100%!important;
   overscroll-behavior:none!important;
 }
-body.login-locked{position:fixed!important;width:100%!important;inset:0!important;}
+body.login-locked{height:100%;width:100%;}
 #supabaseGate{
   position:fixed!important;
   inset:0!important;
   width:100vw!important;
   height:100vh!important;
   height:100dvh!important;
-  min-height:100%!important;
   box-sizing:border-box;
   align-items:center!important;
   justify-content:center!important;
@@ -923,7 +921,6 @@ body.login-locked{position:fixed!important;width:100%!important;inset:0!importan
   margin:0!important;
   overflow-y:auto!important;
   overscroll-behavior:contain!important;
-  touch-action:pan-y;
 }
 #sbLoginForm{margin:auto!important;max-height:calc(100dvh - 40px);overflow-y:auto;flex-shrink:0}
 </style>
@@ -3597,7 +3594,6 @@ async function sbStartSession(user){
   sbMember=member;
   document.getElementById('supabaseGate').style.display='none';
   document.body.classList.remove('login-locked');
-  document.body.style.top='';
   document.getElementById('sbUserBar').style.display='flex';
   document.getElementById('sbUserLabel').textContent='Connecté : '+member.dg_name+(member.role==='admin'?' · Administrateur':'');
   document.getElementById('sbPublishBtn').style.display=member.role==='admin'?'inline-block':'none';
