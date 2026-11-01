@@ -399,9 +399,35 @@
     font-size:0.78rem; background:#fff7e6; border:1px solid #f0d99a; border-radius:8px; padding:10px 14px; color:#7a5a12;
     margin-top:14px;
   }
-  .sticky-wrap{
-    position:sticky; top:0; z-index:200;
-    box-shadow:0 3px 10px rgba(11,37,69,0.25);
+  .sticky-wrap{position:static;z-index:200}
+  .main-nav{
+    position:fixed;top:0;left:0;bottom:0;width:min(290px,84vw);height:100dvh;
+    z-index:1002;display:flex;flex-direction:column;gap:7px;padding:76px 14px 18px;
+    overflow-y:auto;overflow-x:hidden;background:linear-gradient(180deg,#071b31 0%,#102f50 100%);
+    box-shadow:12px 0 36px rgba(0,0,0,.3);transform:translateX(-110%);
+    transition:transform .28s cubic-bezier(.2,.8,.2,1);border-right:1px solid rgba(255,255,255,.12)
+  }
+  .main-nav.open{transform:translateX(0)}
+  .main-nav .nav-btn{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;
+    text-align:left;border:1px solid rgba(255,255,255,.08);border-radius:10px;
+    background:rgba(255,255,255,.055);color:#d8e8f8;padding:12px 14px;font-size:.92rem}
+  .main-nav .nav-btn.active{background:linear-gradient(100deg,#e7f2fc,#c8def0);color:#09233d;border-color:#e5c46c}
+  .nav-overlay{position:fixed;inset:0;background:rgba(2,10,20,.58);z-index:1001;opacity:0;visibility:hidden;transition:opacity .25s}
+  .nav-overlay.open{opacity:1;visibility:visible}
+  .sticky-bar{position:fixed;top:0;left:0;right:0;z-index:1000;min-height:58px;padding:8px 16px;
+    box-shadow:0 4px 18px rgba(0,0,0,.24);backdrop-filter:blur(12px)}
+  .sticky-bar .menu-toggle{flex:0 0 auto;width:40px;height:38px;border-radius:9px;border:1px solid rgba(255,255,255,.28);
+    color:white;background:rgba(255,255,255,.12);font-size:1.2rem;cursor:pointer}
+  body{padding-top:58px}
+  .sticky-trade-bar{position:fixed;top:0;left:0;right:0;z-index:1000}
+  @media(max-width:640px){
+    .sticky-bar{gap:8px;padding:7px 9px;min-height:62px;flex-wrap:wrap}
+    .sticky-bar .sb-dg{font-size:.82rem;padding-right:6px}
+    .sticky-bar .sb-item{gap:3px}
+    .sticky-bar .sb-item .sb-label{font-size:.56rem}
+    .sticky-bar .sb-item .sb-value{font-size:.82rem}
+    .sticky-bar .sb-bar-track{flex-basis:100%;height:5px}
+    body{padding-top:66px}
   }
   .main-nav{
     display:flex; gap:6px; background:var(--navy); padding:8px 16px 0 16px;
@@ -838,7 +864,8 @@
 </header>
 
 <div class="sticky-wrap">
-<div class="main-nav" id="mainNav">
+<div class="nav-overlay" id="navOverlay"></div>
+<div class="main-nav" id="mainNav" aria-label="Navigation principale">
   <button class="nav-btn active" data-tab="effectifs">📋 Effectifs</button>
   <button class="nav-btn" data-tab="rfa">🌱 RFA</button>
   <button class="nav-btn" data-tab="repechage">🎯 Repêchage</button>
@@ -850,6 +877,7 @@
 </div>
 
 <div class="sticky-bar" id="stickyBar">
+  <button class="menu-toggle" id="menuToggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
   <span class="sb-dg" id="sbDg">—</span>
   <div class="sb-item count"><span class="sb-label">Effectif</span><span class="sb-value" id="sbCount">0</span></div>
   <div class="sb-item"><span class="sb-label">Masse</span><span class="sb-value" id="sbTotal">0.000</span></div>
@@ -2330,13 +2358,15 @@ function render(){
 
   document.getElementById('statTotal').textContent = total.toFixed(3);
   document.getElementById('statCap').textContent = state.cap.toFixed(3);
-  const margin = state.cap - total;
+  // Marge réelle = plafond configuré moins tous les AAV imputés à l'alignement,
+  // incluant les retenues de salaire et les joueurs personnalisés.
+  const margin = Number((state.cap - total).toFixed(6));
   const marginEl = document.getElementById('statMargin');
   marginEl.textContent = margin.toFixed(3);
   marginEl.className = 'value ' + (margin >= 0 ? 'pos' : 'neg');
   document.getElementById('statCount').textContent = counted;
 
-  const pct = Math.min(100, (total / state.cap) * 100);
+  const pct = state.cap > 0 ? Math.min(100, (total / state.cap) * 100) : (total > 0 ? 100 : 0);
   const fill = document.getElementById('barFill');
   fill.style.width = pct + '%';
   fill.className = 'bar-fill' + (total > state.cap ? ' over' : '');
@@ -2991,12 +3021,30 @@ function renderCharte(){
 document.getElementById('charteSearch').addEventListener('input', renderCharte);
 renderCharte();
 
-// --- Main navigation (tabs) ---
+// --- Menu latéral mobile et navigation principale ---
+const mainNav=document.getElementById('mainNav');
+const navOverlay=document.getElementById('navOverlay');
+const menuToggle=document.getElementById('menuToggle');
+function closeMainMenu(){
+  mainNav.classList.remove('open');navOverlay.classList.remove('open');
+  menuToggle.setAttribute('aria-expanded','false');
+}
+function toggleMainMenu(){
+  const open=!mainNav.classList.contains('open');
+  mainNav.classList.toggle('open',open);navOverlay.classList.toggle('open',open);
+  menuToggle.setAttribute('aria-expanded',String(open));
+}
+menuToggle.addEventListener('click',toggleMainMenu);
+navOverlay.addEventListener('click',closeMainMenu);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMainMenu();});
+
+// --- Main navigation ---
 document.querySelectorAll('.nav-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     const tab = btn.dataset.tab;
+    closeMainMenu();
     document.getElementById('tabEffectifs').classList.toggle('active', tab==='effectifs');
     document.getElementById('tabRfa').classList.toggle('active', tab==='rfa');
     document.getElementById('tabRepechage').classList.toggle('active', tab==='repechage');
