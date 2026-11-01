@@ -891,7 +891,7 @@ body{padding-top:68px}
 }
 </style>
 <style id="login-centering-fix">
-/* La fenêtre de connexion reste centrée dans le viewport, indépendamment de la barre Effectifs. */
+/* La fenêtre reste centrée sans empêcher le code de la masquer après connexion. */
 #supabaseGate{
   position:fixed!important;
   inset:0!important;
@@ -899,8 +899,8 @@ body{padding-top:68px}
   height:100vh;
   height:100dvh;
   box-sizing:border-box;
-  display:grid!important;
-  place-items:center!important;
+  align-items:center!important;
+  justify-content:center!important;
   padding:20px;
   margin:0!important;
 }
