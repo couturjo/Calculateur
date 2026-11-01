@@ -86,6 +86,7 @@ function loadRoster(dg){
   document.getElementById("activeCount").textContent=players.length;
   document.getElementById("forwardCount").textContent=players.filter(p=>p.pos==="F").length;
   document.getElementById("defenseCount").textContent=players.filter(p=>p.pos==="D").length;
+  document.getElementById("goalieCount").textContent=players.filter(p=>p.pos==="G").length;
   const forwardTotal=players.filter(p=>p.pos==="F").length;
   const defenseTotal=players.filter(p=>p.pos==="D").length;
   const goalieTotal=players.filter(p=>p.pos==="G").length;
