@@ -615,15 +615,18 @@
   .fab-mini.mini-add{background:linear-gradient(135deg, var(--navy2), var(--navy));}
   .fab-mini.mini-save{background:linear-gradient(135deg, var(--gold), #b3831f); color:#3a2a05;}
   .quick-add-overlay{
-    position:fixed; inset:0; background:rgba(11,37,69,0.5);
-    z-index:400; display:none; align-items:flex-end; justify-content:center;
+    position:fixed; left:0; right:0; top:var(--qa-vv-top, 0px);
+    height:var(--qa-vv-height, 100dvh); background:rgba(11,37,69,0.5);
+    z-index:400; display:none; align-items:center; justify-content:center;
+    box-sizing:border-box; padding:12px 12px max(12px, env(safe-area-inset-bottom));
   }
   .quick-add-overlay.show{display:flex;}
   .quick-add-modal{
     background:white; width:100%; max-width:480px;
-    border-radius:16px 16px 0 0; padding:18px 18px 22px 18px;
-    box-shadow:0 -6px 24px rgba(0,0,0,0.3);
-    max-height:75vh; overflow-y:auto;
+    border-radius:16px; padding:18px 18px 22px 18px;
+    box-shadow:0 6px 24px rgba(0,0,0,0.3);
+    max-height:calc(var(--qa-vv-height, 100dvh) - 24px); overflow-y:auto;
+    transform:translateY(-3vh);
   }
   .qa-header{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
   .qa-title{font-weight:800; font-size:1.05rem; color:var(--navy);}
@@ -822,10 +825,113 @@
     .controls-row{flex-direction:column; align-items:stretch;}
     thead th:nth-child(3), tbody td:nth-child(3){display:none;}
   }
+/* Champs AAV des prospects RFA — indépendants de la masse salariale */
+.prospect-aav-editor{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 6px}
+.prospect-aav-editor .prospect-aav-title{grid-column:1/-1;font-size:.72rem;font-weight:700;color:var(--grey)}
+.prospect-aav-editor label{display:block;font-size:.68rem;color:var(--grey)}
+.prospect-aav-editor .card-aav-row{display:flex;align-items:center;gap:4px;margin-top:3px}
+.prospect-aav-editor input{min-width:0;width:100%;box-sizing:border-box;padding:7px 5px;border:1px solid var(--border);border-radius:7px;background:var(--input-bg, #fff);color:var(--text);font:inherit;font-size:.82rem}
+@media(max-width:480px){.prospect-aav-editor{gap:5px}.prospect-aav-editor input{font-size:.78rem}}
 </style>
 <style id="hide-draftday-tab">.nav-btn[data-tab="draftday"]{display:none!important}</style>
+<style id="effectifs-prospects-integration">
+#tabEffectifs .prospects-section{margin-top:16px}
+#tabEffectifs .prospects-note{font-size:.75rem;color:var(--grey);margin:0 4px 9px}
+#tabEffectifs .prospects-board{grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px}
+#tabEffectifs .prospect-card{position:relative;min-height:74px;display:flex;flex-direction:column;justify-content:center;gap:7px;padding:12px 14px;background:linear-gradient(145deg,#fff,#f4f7fa);border:1px solid #cfdae4;border-left:4px solid var(--gold);border-radius:10px;box-shadow:0 2px 7px rgba(11,37,69,.07)}
+#tabEffectifs .prospect-card .card-name{font-weight:800;color:var(--navy2);font-size:.92rem;padding-right:0}
+#tabEffectifs .prospect-card .prospect-meta{display:flex;gap:6px;flex-wrap:wrap}
+#tabEffectifs .prospect-card .pos-tag{background:#e8eef4;color:#24445e}
+#tabEffectifs .prospects-section.is-collapsed .prospects-note{display:none}
+@media(max-width:820px){#tabEffectifs .prospects-board{grid-template-columns:repeat(auto-fill,minmax(145px,1fr))}}
+</style>
+<style id="effectifs-config-cleanup">
+/* Le DG et les indicateurs salariaux sont désormais regroupés dans la barre fixe. */
+#tabEffectifs>.panel:first-child>h2{font-size:1rem;letter-spacing:.02em}
+#tabEffectifs>.panel:first-child .controls-row>.field:first-child{display:none!important}
+#tabEffectifs>.panel:first-child .cap-summary,
+#tabEffectifs>.panel:first-child .bar-wrap{display:none!important}
+#tabEffectifs>.panel:first-child .controls-row{margin-top:4px}
+</style>
+<style id="effectifs-premium-integration">
+/* Vue Effectifs — présentation hockey premium */
+/* Le bandeau salarial et la navigation restent ensemble dans un conteneur sticky.
+   Cette approche évite les limites de position:fixed sur certains navigateurs Android. */
+.sticky-wrap{position:sticky!important;top:0!important;z-index:10000!important}
+#stickyBar{position:relative!important;top:auto!important;left:auto!important;right:auto!important;width:100%;z-index:10000!important;min-height:62px;padding:8px 14px!important;flex-wrap:nowrap!important;gap:12px!important;box-shadow:0 5px 22px rgba(3,18,34,.28)}
+#stickyBar .sb-dg{display:none}
+.sb-dg-picker{display:flex;align-items:center;gap:7px;flex:0 0 auto;padding-right:12px;border-right:1px solid rgba(255,255,255,.24)}
+.sb-dg-label{font-size:.66rem;font-weight:800;letter-spacing:.08em;color:#d8b56d}
+#stickyDgSelect{max-width:145px;min-width:105px;padding:7px 24px 7px 9px;border:1px solid rgba(255,255,255,.28);border-radius:8px;background:#102b46;color:#fff;font-weight:750;font-size:.83rem}
+#stickyBar .sb-item{display:flex;flex-direction:column;align-items:flex-start;gap:1px}
+#stickyBar .sb-item .sb-label{font-size:.58rem;letter-spacing:.08em}
+#stickyBar .sb-item .sb-value{font-size:1rem;font-variant-numeric:tabular-nums}
+#stickyBar .sb-bar-track{min-width:55px;max-width:180px;height:7px}
+#tabEffectifs .panel{border-radius:15px;border:1px solid #d4e0ea;box-shadow:0 8px 24px rgba(8,32,54,.07)}
+#tabEffectifs .panel>h2{color:#102b46}
+#tabEffectifs .pos-columns{gap:14px;margin-top:12px}
+#tabEffectifs .pos-column{background:linear-gradient(155deg,#102b46,#0a1d31);border:1px solid #294761;border-radius:14px;padding:13px;box-shadow:0 8px 20px rgba(7,24,41,.14);color:#eef4f8}
+#tabEffectifs .pos-column-header{border-bottom:1px solid rgba(216,181,109,.4);gap:8px;flex-wrap:wrap}
+#tabEffectifs .pos-column-header h3{color:#f0f5f9;font-size:.9rem;letter-spacing:.07em}
+#tabEffectifs .pos-column-header .pos-count{margin-left:auto;background:#1c3a55;color:#f2d18a;border:1px solid #42617c}
+#tabEffectifs .pos-collapse{width:28px;height:27px;border-radius:7px;border:1px solid #55718a;background:#193650;color:#f3d38d;font-weight:800;cursor:pointer}
+#tabEffectifs .pos-column .pos-sum{color:#e4c47e;font-size:.78rem;font-weight:800;margin:0 4px 10px}
+#tabEffectifs .pos-column .board{grid-template-columns:1fr;gap:8px}
+#tabEffectifs .pos-column .card{position:relative;background:linear-gradient(135deg,#f7fafc,#e9f0f5);border:1px solid #cbd9e4;border-left:4px solid #c49b4d;border-radius:10px;box-shadow:0 3px 9px rgba(0,0,0,.12);padding:11px 12px;gap:7px}
+#tabEffectifs .pos-column .card-name{color:#102b46;font-weight:800}
+#tabEffectifs .pos-column .card-aav-row input{font-weight:800;color:#102b46}
+#tabEffectifs .pos-column .card-bottom-row{border-top:1px solid #d8e2e9;padding-top:6px}
+#tabEffectifs .effectifs-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:18px 0 4px;padding:13px 15px;border-radius:12px;background:linear-gradient(110deg,#0a2035,#173b59);color:#f4f7fa}
+#tabEffectifs .effectifs-toolbar strong{display:block;font-size:.8rem;letter-spacing:.1em;color:#f0d18c}
+#tabEffectifs .effectifs-toolbar small{display:block;margin-top:3px;color:#c2d2df;font-size:.72rem}
+#tabEffectifs .effectifs-toolbar .toolbar-actions button{border:1px solid #617b91;background:#1a3b58;color:#f3d38d;border-radius:8px}
+#tabEffectifs .effectifs-toolbar .toolbar-actions button:hover{background:#285273}
+#tabEffectifs .pos-column .board[hidden],#tabEffectifs .pos-column .pos-sum[hidden]{display:none!important}
+#tabEffectifs .prospects-box{border-radius:10px;background:#eef3f7;border:1px solid #cfdae4;padding:12px;color:#17334c}
+@media(max-width:700px){
+ body{padding-top:66px}
+ #stickyBar{min-height:62px;padding:6px 8px!important;gap:8px!important;overflow-x:auto;overflow-y:hidden}
+ #stickyDgSelect{min-width:94px;max-width:110px;font-size:.76rem;padding:6px 18px 6px 6px}
+ #stickyBar .sb-dg-picker{gap:5px;padding-right:7px}
+ #stickyBar .sb-item .sb-label{font-size:.5rem}
+ #stickyBar .sb-item .sb-value{font-size:.83rem}
+ #stickyBar .sb-bar-track{flex:0 0 48px;min-width:48px}
+ #tabEffectifs .effectifs-toolbar{align-items:flex-start}
+ #tabEffectifs .effectifs-toolbar .toolbar-actions{width:100%}
+ #tabEffectifs .effectifs-toolbar .toolbar-actions button{flex:1}
+ #tabEffectifs .pos-columns{grid-template-columns:1fr}
+}
+</style>
+<style id="login-centering-fix">
+/* La fenêtre reste centrée sans empêcher le code de la masquer après connexion. */
+html.login-locked,
+body.login-locked{
+  overflow:hidden!important;
+  overscroll-behavior:none!important;
+}
+body.login-locked{height:100%;width:100%;}
+#supabaseGate{
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100vh!important;
+  height:100dvh!important;
+  box-sizing:border-box;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:20px;
+  margin:0!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain!important;
+}
+#sbLoginForm{margin:auto!important;max-height:calc(100dvh - 40px);overflow-y:auto;flex-shrink:0}
+</style>
+<style id="prospect-promotion-style">
+.promote-prospect{display:block;width:100%;margin-top:9px;padding:8px 10px;border:1px solid var(--gold);border-radius:7px;background:linear-gradient(135deg,#fff8e7,#f5e4b8);color:var(--navy);font-size:.78rem;font-weight:800;cursor:pointer}
+.promote-prospect:active{transform:translateY(1px)}
+</style>
 </head>
-<body class="zoom-normal">
+<body class="zoom-normal login-locked">
 
 <header>
   <div class="header-inner">
@@ -850,7 +956,8 @@
 </div>
 
 <div class="sticky-bar" id="stickyBar">
-  <span class="sb-dg" id="sbDg">—</span>
+  <label class="sb-dg-picker" for="stickyDgSelect"><span class="sb-dg-label">DG</span><select id="stickyDgSelect" aria-label="Changer de directeur général"></select></label>
+  <span class="sb-dg" id="sbDg" aria-hidden="true">—</span>
   <div class="sb-item count"><span class="sb-label">Effectif</span><span class="sb-value" id="sbCount">0</span></div>
   <div class="sb-item"><span class="sb-label">Masse</span><span class="sb-value" id="sbTotal">0.000</span></div>
   <div class="sb-item"><span class="sb-label">Plafond</span><span class="sb-value" id="sbCap">0.000</span></div>
@@ -868,7 +975,7 @@
 
 <div class="wrap">
 
-  <div class="tab-page active" id="tabEffectifs">
+  <div class="tab-page active effectifs-redesign" id="tabEffectifs">
 
   <div class="panel">
     <h2>Configuration</h2>
@@ -917,31 +1024,42 @@
         <button id="zoomInBtn" title="Voir moins de cartes (plus grandes)">+</button>
       </div>
     </div>
+    <div class="effectifs-toolbar"><div><strong>ALIGNEMENT DE LA FRANCHISE</strong><small>Effectif actif · AAV selon la saison sélectionnée</small></div><div class="toolbar-actions"><button type="button" id="collapseEffectifs">− Tout contracter</button><button type="button" id="expandEffectifs">＋ Tout développer</button></div></div>
     <div class="pos-columns">
-      <div class="pos-column">
+      <div class="pos-column effectif-section" data-position="F">
         <div class="pos-column-header">
           <h3>🏒 Attaquants</h3>
-          <span class="pos-count" id="countF">0</span>
+          <span class="pos-count" id="countF">0</span><button type="button" class="pos-collapse" aria-expanded="true" data-target="boardF">−</button>
         </div>
         <div class="pos-sum" id="sumF">0.000 $M</div>
         <div class="board" id="boardF"></div>
       </div>
-      <div class="pos-column">
+      <div class="pos-column effectif-section" data-position="D">
         <div class="pos-column-header">
           <h3>🛡️ Défenseurs</h3>
-          <span class="pos-count" id="countD">0</span>
+          <span class="pos-count" id="countD">0</span><button type="button" class="pos-collapse" aria-expanded="true" data-target="boardD">−</button>
         </div>
         <div class="pos-sum" id="sumD">0.000 $M</div>
         <div class="board" id="boardD"></div>
       </div>
-      <div class="pos-column">
+      <div class="pos-column effectif-section" data-position="G">
         <div class="pos-column-header">
           <h3>🥅 Gardiens</h3>
-          <span class="pos-count" id="countG">0</span>
+          <span class="pos-count" id="countG">0</span><button type="button" class="pos-collapse" aria-expanded="true" data-target="boardG">−</button>
         </div>
         <div class="pos-sum" id="sumG">0.000 $M</div>
         <div class="board" id="boardG"></div>
       </div>
+    </div>
+    <div class="pos-column effectif-section prospects-section" data-position="RFA">
+      <div class="pos-column-header">
+        <h3>🌱 Espoirs RFA</h3>
+        <span class="pos-count" id="countRFA">0</span>
+        <button type="button" class="pos-collapse" aria-expanded="true" data-target="boardRFA">−</button>
+      </div>
+      <div class="prospects-note">Relève de la franchise · Hors masse salariale</div>
+      <div class="board prospects-board" id="boardRFA"></div>
+      <div class="board-empty" id="emptyRFA" style="display:none;">Aucun espoir RFA</div>
     </div>
     <div id="emptyNote" class="empty-note" style="display:none;">Aucun joueur — ajoutez-en ci-dessous.</div>
   </div>
@@ -1285,7 +1403,11 @@ function initProspects(){
   Object.keys(RAW_DATA.prospects).forEach(dg=>{
     state.prospects[dg] = (RAW_DATA.prospects[dg] || []).map(name=>{
       const p = RAW_DATA.players[name] || {};
-      return { name, free: p.free || '—', pos: p.pos || 'F' };
+      return {
+        name, free: p.free || '—', pos: p.pos || 'F',
+        aav26: typeof p.aav2627 === 'number' ? p.aav2627 : undefined,
+        aav27: typeof p.aav2728 === 'number' ? p.aav2728 : undefined
+      };
     });
   });
 }
@@ -1394,6 +1516,13 @@ Object.keys(RAW_DATA.rosters).forEach(dg=>{
 });
 state.dg = Object.keys(RAW_DATA.rosters)[0];
 dgSelect.value = state.dg;
+const stickyDgSelect = document.getElementById('stickyDgSelect');
+Object.keys(RAW_DATA.rosters).forEach(dg=>{
+  const opt=document.createElement('option'); opt.value=dg; opt.textContent=dg;
+  stickyDgSelect.appendChild(opt);
+});
+stickyDgSelect.value=state.dg;
+stickyDgSelect.addEventListener('change',()=>{dgSelect.value=stickyDgSelect.value;state.dg=dgSelect.value;render();});
 
 // --- RFA + Repêchage: separate DG selectors (mirror main dgSelect options) ---
 const rfaDgSelect = document.getElementById('rfaDgSelect');
@@ -2123,6 +2252,91 @@ function toast(msg){
   toast._h = setTimeout(()=>t.classList.remove('show'), 1800);
 }
 
+// --- Promotion d'un espoir RFA vers l'alignement principal ---
+function promoteProspect(dg, index){
+  const prospects = state.prospects[dg] || [];
+  const prospect = prospects[index];
+  if(!prospect) return;
+  const roster = state.roster[dg] || [];
+  if(roster.some(p => p.name === prospect.name)){
+    toast(prospect.name + ' est déjà dans l’alignement de ' + dg);
+    return;
+  }
+
+  const source = RAW_DATA.players[prospect.name] || {};
+  let aav26 = typeof prospect.aav26 === 'number' ? prospect.aav26 : source.aav2627;
+  let aav27 = typeof prospect.aav27 === 'number' ? prospect.aav27 : source.aav2728;
+  const currentKey = state.season === '2627' ? 'aav26' : 'aav27';
+  let currentSalary = currentKey === 'aav26' ? aav26 : aav27;
+
+  // Si le salaire de la saison affichée est absent, le DG doit le saisir avant la promotion.
+  if(typeof currentSalary !== 'number' || !Number.isFinite(currentSalary)){
+    const entered = window.prompt(
+      'AAV de ' + prospect.name + ' pour ' + (state.season === '2627' ? '2026-2027' : '2027-2028') + ' (en millions $, ex. 0.925) :',
+      ''
+    );
+    if(entered === null || entered.trim() === '') return;
+    currentSalary = Number(entered.replace(',', '.'));
+    if(!Number.isFinite(currentSalary) || currentSalary < 0){
+      toast('Salaire invalide — promotion annulée');
+      return;
+    }
+    if(currentKey === 'aav26') aav26 = currentSalary;
+    else aav27 = currentSalary;
+  }
+
+  const massBefore = roster.reduce((sum, player) => sum + currentAav(player), 0);
+  const massAfter = massBefore + currentSalary;
+  const marginBefore = state.cap - massBefore;
+  const marginAfter = state.cap - massAfter;
+  const seasonLabel = state.season === '2627' ? '2026-2027' : '2027-2028';
+  const money = value => value.toFixed(3) + ' M$';
+
+  // Reprendre les mêmes règles que le module des transactions.
+  const offSeason = isOffSeason();
+  const effectiveCap = offSeason ? state.cap * 1.10 : state.cap;
+  const capNote = offSeason ? ' (marge hors-saison de 10 % incluse)' : '';
+  if(massAfter > effectiveCap + 1e-9){
+    toast('Promotion refusée : masse de ' + money(massAfter) + ' supérieure au maximum de ' + money(effectiveCap) + capNote);
+    return;
+  }
+  const countAfter = realPlayerCount(roster) + 1;
+  if(!offSeason && countAfter > MAX_ROSTER_SIZE){
+    toast('Promotion refusée : limite de ' + MAX_ROSTER_SIZE + ' joueurs dépassée (' + countAfter + ')');
+    return;
+  }
+  const preview = [
+    'PROMOTION — ' + prospect.name,
+    'DG : ' + dg + ' · Position : ' + (prospect.pos || source.pos || 'F'),
+    'Salaire AAV ' + seasonLabel + ' : ' + money(currentSalary),
+    '',
+    'Masse salariale : ' + money(massBefore) + ' → ' + money(massAfter),
+    'Marge sous le plafond : ' + money(marginBefore) + ' → ' + money(marginAfter),
+    '',
+    'Confirmer l’ajout à l’alignement ?'
+  ].join('\n');
+  if(!window.confirm(preview)) return;
+
+  roster.push({
+    name: prospect.name,
+    aav26: typeof aav26 === 'number' ? aav26 : undefined,
+    aav27: typeof aav27 === 'number' ? aav27 : undefined,
+    free: prospect.free || source.free || '—',
+    pos: prospect.pos || source.pos || 'F',
+    retainPct: 0,
+    _custom: !RAW_DATA.players[prospect.name]
+  });
+  prospects.splice(index, 1);
+  state.roster[dg] = roster;
+  state.prospects[dg] = prospects;
+  state.dg = dg;
+  dgSelect.value = dg;
+  stickyDgSelect.value = dg;
+  rfaDgSelect.value = dg;
+  render();
+  renderRfa();
+  toast(prospect.name + ' promu dans l’alignement de ' + dg + ' · AAV de ' + money(currentSalary) + ' ajouté');
+}
 // --- RFA (prospects) module ---
 function renderRfa(){
   const dg = rfaDgSelect.value;
@@ -2133,11 +2347,31 @@ function renderRfa(){
     const tag = freeTagInfo(p.free);
     const card = document.createElement('div');
     card.className = 'card';
+    const source = RAW_DATA.players[p.name] || {};
+    const aav26 = typeof p.aav26 === 'number' ? p.aav26 : source.aav2627;
+    const aav27 = typeof p.aav27 === 'number' ? p.aav27 : source.aav2728;
+    const salaryValue = value => typeof value === 'number' ? value.toFixed(3) : '';
     card.innerHTML = `
       <button class="rfa-remove" data-idx="${idx}" title="Retirer">✕</button>
       <div class="card-name">${p.name}</div>
       <div class="card-free"><span class="free-tag ${tag.cls}">${tag.text}</span></div>
-      <div style="font-size:0.72rem; color:var(--grey); margin-top:4px;">Ne compte pas sur la masse</div>
+      <div class="prospect-aav-editor">
+        <div class="prospect-aav-title">AAV estimé / contrat</div>
+        <label>2026-2027
+          <div class="card-aav-row">
+            <input type="number" min="0" step="0.001" inputmode="decimal" class="prospect-aav-input" data-idx="${idx}" data-season="aav26" value="${salaryValue(aav26)}" placeholder="À saisir">
+            <span class="unit">$M</span>
+          </div>
+        </label>
+        <label>2027-2028
+          <div class="card-aav-row">
+            <input type="number" min="0" step="0.001" inputmode="decimal" class="prospect-aav-input" data-idx="${idx}" data-season="aav27" value="${salaryValue(aav27)}" placeholder="À saisir">
+            <span class="unit">$M</span>
+          </div>
+        </label>
+      </div>
+      <div style="font-size:0.72rem; color:var(--grey); margin-top:4px;">Hors masse salariale jusqu’à la promotion</div>
+      <button type="button" class="promote-prospect" data-idx="${idx}">↑ Promouvoir dans l’alignement</button>
     `;
     board.appendChild(card);
   });
@@ -2147,8 +2381,33 @@ function renderRfa(){
       const i = parseInt(e.target.dataset.idx,10);
       const removed = state.prospects[dg].splice(i,1)[0];
       renderRfa();
+      render();
       toast(removed.name + ' retiré des espoirs RFA');
     });
+  });
+  board.querySelectorAll('.prospect-aav-input').forEach(input=>{
+    input.addEventListener('change', e=>{
+      const idx = parseInt(e.currentTarget.dataset.idx,10);
+      const key = e.currentTarget.dataset.season;
+      const raw = e.currentTarget.value.trim();
+      if(raw === ''){
+        delete state.prospects[dg][idx][key];
+        return;
+      }
+      const value = Number(raw.replace(',', '.'));
+      if(!Number.isFinite(value) || value < 0){
+        toast('AAV invalide — entrez un montant positif ou laissez le champ vide');
+        e.currentTarget.value = '';
+        delete state.prospects[dg][idx][key];
+        return;
+      }
+      state.prospects[dg][idx][key] = value;
+      e.currentTarget.value = value.toFixed(3);
+      toast('AAV de ' + state.prospects[dg][idx].name + ' mis à jour · hors masse salariale');
+    });
+  });
+  board.querySelectorAll('.promote-prospect').forEach(btn=>{
+    btn.addEventListener('click', e=>promoteProspect(dg, parseInt(e.currentTarget.dataset.idx,10)));
   });
 }
 
@@ -2330,13 +2589,13 @@ function render(){
 
   document.getElementById('statTotal').textContent = total.toFixed(3);
   document.getElementById('statCap').textContent = state.cap.toFixed(3);
-  const margin = state.cap - total;
+  const margin = Number((state.cap - total).toFixed(6));
   const marginEl = document.getElementById('statMargin');
   marginEl.textContent = margin.toFixed(3);
   marginEl.className = 'value ' + (margin >= 0 ? 'pos' : 'neg');
   document.getElementById('statCount').textContent = counted;
 
-  const pct = Math.min(100, (total / state.cap) * 100);
+  const pct = state.cap > 0 ? Math.min(100, (total / state.cap) * 100) : (total > 0 ? 100 : 0);
   const fill = document.getElementById('barFill');
   fill.style.width = pct + '%';
   fill.className = 'bar-fill' + (total > state.cap ? ' over' : '');
@@ -2345,6 +2604,7 @@ function render(){
 
   // sync sticky bar
   document.getElementById('sbDg').textContent = state.dg;
+  if(stickyDgSelect.value!==state.dg) stickyDgSelect.value=state.dg;
   document.getElementById('sbCount').textContent = counted;
   document.getElementById('sbTotal').textContent = total.toFixed(3);
   document.getElementById('sbCap').textContent = state.cap.toFixed(3);
@@ -2398,15 +2658,23 @@ function render(){
     render();
   });
 
-  // prospects box
-  const prospects = RAW_DATA.prospects[state.dg] || [];
-  const pbox = document.getElementById('prospectsBox');
-  if(prospects.length){
-    pbox.innerHTML = '<b>Espoirs (ne comptent pas sur la masse) :</b><br>' +
-      prospects.map(n=>`<span class="chip">${n}</span>`).join('');
-  } else {
-    pbox.innerHTML = '';
-  }
+  // Espoirs RFA visibles dans l’effectif, sans incidence sur la masse salariale.
+  const prospects = state.prospects[state.dg] || [];
+  const prospectBoard = document.getElementById('boardRFA');
+  prospectBoard.innerHTML = '';
+  document.getElementById('countRFA').textContent = prospects.length;
+  document.getElementById('emptyRFA').style.display = prospects.length ? 'none' : 'block';
+  prospects.forEach((p, idx)=>{
+    const card = document.createElement('div');
+    card.className = 'prospect-card';
+    const pos = p.pos || 'F';
+    card.innerHTML = '<div class="card-name">' + p.name + '</div><div class="prospect-meta"><span class="pos-tag">' + posLabel(pos) + '</span><span class="pos-tag">RFA · Hors masse</span><span class="pos-tag">' + (p.free || '—') + '</span></div><button type="button" class="promote-prospect" data-idx="' + idx + '">↑ Promouvoir</button>';
+    prospectBoard.appendChild(card);
+  });
+  prospectBoard.querySelectorAll('.promote-prospect').forEach(btn=>{
+    btn.addEventListener('click', e=>promoteProspect(state.dg, parseInt(e.currentTarget.dataset.idx,10)));
+  });
+  document.getElementById('prospectsBox').innerHTML = '';
 
   if(typeof renderTrade === 'function') renderTrade();
   if(typeof renderKanban === 'function') renderKanban();
@@ -2414,6 +2682,7 @@ function render(){
 
 dgSelect.addEventListener('change', ()=>{
   state.dg = dgSelect.value;
+  if(stickyDgSelect.value!==state.dg) stickyDgSelect.value=state.dg;
   render();
 });
 
@@ -2443,6 +2712,27 @@ document.getElementById('resetBtn').addEventListener('click', ()=>{
   toast('Alignement réinitialisé aux données du fichier');
 });
 
+function validateRosterAddition(dg, player){
+  const roster = state.roster[dg] || [];
+  const salary = state.season === '2627' ? player.aav26 : player.aav27;
+  const massBefore = roster.reduce((sum, item) => sum + currentAav(item), 0);
+  const massAfter = massBefore + (typeof salary === 'number' && Number.isFinite(salary) ? salary : 0);
+  const offSeason = isOffSeason();
+  const effectiveCap = offSeason ? state.cap * 1.10 : state.cap;
+  const money = value => value.toFixed(3) + ' M$';
+  if(massAfter > effectiveCap + 1e-9){
+    const capNote = offSeason ? ' (marge hors-saison de 10 % incluse)' : '';
+    toast('Ajout refusé : masse de ' + money(massAfter) + ' supérieure au maximum de ' + money(effectiveCap) + capNote);
+    return false;
+  }
+  const countAfter = realPlayerCount(roster) + 1;
+  if(!offSeason && countAfter > MAX_ROSTER_SIZE){
+    toast('Ajout refusé : limite de ' + MAX_ROSTER_SIZE + ' joueurs dépassée (' + countAfter + ')');
+    return false;
+  }
+  return true;
+}
+
 function addPlayerByName(name){
   if(!name) return false;
   const p = RAW_DATA.players[name];
@@ -2455,7 +2745,9 @@ function addPlayerByName(name){
     toast(name + ' est déjà dans cet alignement');
     return false;
   }
-  roster.push({name, aav26:p.aav2627, aav27:p.aav2728, free:p.free, pos:p.pos || 'F', retainPct:0});
+  const player = {name, aav26:p.aav2627, aav27:p.aav2728, free:p.free, pos:p.pos || 'F', retainPct:0};
+  if(!validateRosterAddition(state.dg, player)) return false;
+  roster.push(player);
   render();
   toast(name + ' ajouté à ' + state.dg);
   return true;
@@ -2480,13 +2772,45 @@ document.getElementById('addCustomBtn').addEventListener('click', ()=>{
     return;
   }
   const roster = state.roster[state.dg];
-  roster.push({name, aav26:aav, aav27:aav, free:'—', pos:posEl.value, retainPct:0, _custom:true});
+  const player = {name, aav26:aav, aav27:aav, free:'—', pos:posEl.value, retainPct:0, _custom:true};
+  if(roster.some(r=>r.name===name)){
+    toast(name + ' est déjà dans cet alignement');
+    return;
+  }
+  if(!validateRosterAddition(state.dg, player)) return;
+  roster.push(player);
   nameEl.value=''; aavEl.value='';
   render();
   toast(name + ' ajouté (perso)');
 });
 
+// Repli individuel et commandes globales des sections d'effectifs
+function setEffectifCollapsed(section, collapsed){
+  const board=section.querySelector('.board');
+  const sum=section.querySelector('.pos-sum');
+  const empty=section.querySelector('.board-empty');
+  const button=section.querySelector('.pos-collapse');
+  if(board) board.hidden=collapsed;
+  if(sum) sum.hidden=collapsed;
+  if(empty) empty.hidden=collapsed;
+  section.classList.toggle('is-collapsed',collapsed);
+  if(button){button.textContent=collapsed?'＋':'−';button.setAttribute('aria-expanded',String(!collapsed));}
+}
+document.querySelectorAll('.effectif-section .pos-collapse').forEach(button=>{
+  button.addEventListener('click',()=>{
+    const section=button.closest('.effectif-section');
+    setEffectifCollapsed(section,button.getAttribute('aria-expanded')==='true');
+  });
+});
+document.getElementById('collapseEffectifs').addEventListener('click',()=>{
+  document.querySelectorAll('.effectif-section').forEach(section=>setEffectifCollapsed(section,true));
+});
+document.getElementById('expandEffectifs').addEventListener('click',()=>{
+  document.querySelectorAll('.effectif-section').forEach(section=>setEffectifCollapsed(section,false));
+});
+
 capInput.value = state.cap.toFixed(3);
+stickyDgSelect.value=state.dg;
 render();
 
 // --- Quick-add floating bubble ---
@@ -2497,10 +2821,26 @@ const qaSuggestBox = document.getElementById('qaSuggestBox');
 const qaDgLabel = document.getElementById('qaDgLabel');
 const quickSearchWidget = createSearchWidget(qaSearchInput, qaSuggestBox, null, name => !isPlayerUnavailable(name));
 
+function syncQuickAddViewport(){
+  const viewport = window.visualViewport;
+  if(!viewport) return;
+  quickAddOverlay.style.setProperty('--qa-vv-top', viewport.offsetTop + 'px');
+  quickAddOverlay.style.setProperty('--qa-vv-height', viewport.height + 'px');
+}
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize', syncQuickAddViewport);
+  window.visualViewport.addEventListener('scroll', syncQuickAddViewport);
+}
+window.addEventListener('resize', syncQuickAddViewport);
+
 function openQuickAdd(){
   qaDgLabel.textContent = state.dg;
+  syncQuickAddViewport();
   quickAddOverlay.classList.add('show');
-  setTimeout(()=> qaSearchInput.focus(), 50);
+  setTimeout(()=>{
+    qaSearchInput.focus();
+    syncQuickAddViewport();
+  }, 50);
 }
 function closeQuickAdd(){
   quickAddOverlay.classList.remove('show');
