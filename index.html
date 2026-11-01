@@ -615,15 +615,18 @@
   .fab-mini.mini-add{background:linear-gradient(135deg, var(--navy2), var(--navy));}
   .fab-mini.mini-save{background:linear-gradient(135deg, var(--gold), #b3831f); color:#3a2a05;}
   .quick-add-overlay{
-    position:fixed; inset:0; background:rgba(11,37,69,0.5);
-    z-index:400; display:none; align-items:flex-end; justify-content:center;
+    position:fixed; left:0; right:0; top:var(--qa-vv-top, 0px);
+    height:var(--qa-vv-height, 100dvh); background:rgba(11,37,69,0.5);
+    z-index:400; display:none; align-items:center; justify-content:center;
+    box-sizing:border-box; padding:12px 12px max(12px, env(safe-area-inset-bottom));
   }
   .quick-add-overlay.show{display:flex;}
   .quick-add-modal{
     background:white; width:100%; max-width:480px;
-    border-radius:16px 16px 0 0; padding:18px 18px 22px 18px;
-    box-shadow:0 -6px 24px rgba(0,0,0,0.3);
-    max-height:75vh; overflow-y:auto;
+    border-radius:16px; padding:18px 18px 22px 18px;
+    box-shadow:0 6px 24px rgba(0,0,0,0.3);
+    max-height:calc(var(--qa-vv-height, 100dvh) - 24px); overflow-y:auto;
+    transform:translateY(-3vh);
   }
   .qa-header{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
   .qa-title{font-weight:800; font-size:1.05rem; color:var(--navy);}
@@ -2779,10 +2782,26 @@ const qaSuggestBox = document.getElementById('qaSuggestBox');
 const qaDgLabel = document.getElementById('qaDgLabel');
 const quickSearchWidget = createSearchWidget(qaSearchInput, qaSuggestBox, null, name => !isPlayerUnavailable(name));
 
+function syncQuickAddViewport(){
+  const viewport = window.visualViewport;
+  if(!viewport) return;
+  quickAddOverlay.style.setProperty('--qa-vv-top', viewport.offsetTop + 'px');
+  quickAddOverlay.style.setProperty('--qa-vv-height', viewport.height + 'px');
+}
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize', syncQuickAddViewport);
+  window.visualViewport.addEventListener('scroll', syncQuickAddViewport);
+}
+window.addEventListener('resize', syncQuickAddViewport);
+
 function openQuickAdd(){
   qaDgLabel.textContent = state.dg;
+  syncQuickAddViewport();
   quickAddOverlay.classList.add('show');
-  setTimeout(()=> qaSearchInput.focus(), 50);
+  setTimeout(()=>{
+    qaSearchInput.focus();
+    syncQuickAddViewport();
+  }, 50);
 }
 function closeQuickAdd(){
   quickAddOverlay.classList.remove('show');
