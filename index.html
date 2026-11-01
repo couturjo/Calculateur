@@ -824,6 +824,17 @@
   }
 </style>
 <style id="hide-draftday-tab">.nav-btn[data-tab="draftday"]{display:none!important}</style>
+<style id="effectifs-prospects-integration">
+#tabEffectifs .prospects-section{margin-top:16px}
+#tabEffectifs .prospects-note{font-size:.75rem;color:var(--grey);margin:0 4px 9px}
+#tabEffectifs .prospects-board{grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px}
+#tabEffectifs .prospect-card{position:relative;min-height:74px;display:flex;flex-direction:column;justify-content:center;gap:7px;padding:12px 14px;background:linear-gradient(145deg,#fff,#f4f7fa);border:1px solid #cfdae4;border-left:4px solid var(--gold);border-radius:10px;box-shadow:0 2px 7px rgba(11,37,69,.07)}
+#tabEffectifs .prospect-card .card-name{font-weight:800;color:var(--navy2);font-size:.92rem;padding-right:0}
+#tabEffectifs .prospect-card .prospect-meta{display:flex;gap:6px;flex-wrap:wrap}
+#tabEffectifs .prospect-card .pos-tag{background:#e8eef4;color:#24445e}
+#tabEffectifs .prospects-section.is-collapsed .prospects-note{display:none}
+@media(max-width:820px){#tabEffectifs .prospects-board{grid-template-columns:repeat(auto-fill,minmax(145px,1fr))}}
+</style>
 <style id="effectifs-config-cleanup">
 /* Le DG et les indicateurs salariaux sont désormais regroupés dans la barre fixe. */
 #tabEffectifs>.panel:first-child>h2{font-size:1rem;letter-spacing:.02em}
@@ -999,6 +1010,16 @@ body{padding-top:68px}
         <div class="pos-sum" id="sumG">0.000 $M</div>
         <div class="board" id="boardG"></div>
       </div>
+    </div>
+    <div class="pos-column effectif-section prospects-section" data-position="RFA">
+      <div class="pos-column-header">
+        <h3>🌱 Espoirs RFA</h3>
+        <span class="pos-count" id="countRFA">0</span>
+        <button type="button" class="pos-collapse" aria-expanded="true" data-target="boardRFA">−</button>
+      </div>
+      <div class="prospects-note">Relève de la franchise · Hors masse salariale</div>
+      <div class="board prospects-board" id="boardRFA"></div>
+      <div class="board-empty" id="emptyRFA" style="display:none;">Aucun espoir RFA</div>
     </div>
     <div id="emptyNote" class="empty-note" style="display:none;">Aucun joueur — ajoutez-en ci-dessous.</div>
   </div>
@@ -2463,15 +2484,20 @@ function render(){
     render();
   });
 
-  // prospects box
-  const prospects = RAW_DATA.prospects[state.dg] || [];
-  const pbox = document.getElementById('prospectsBox');
-  if(prospects.length){
-    pbox.innerHTML = '<b>Espoirs (ne comptent pas sur la masse) :</b><br>' +
-      prospects.map(n=>`<span class="chip">${n}</span>`).join('');
-  } else {
-    pbox.innerHTML = '';
-  }
+  // Espoirs RFA visibles dans l’effectif, sans incidence sur la masse salariale.
+  const prospects = state.prospects[state.dg] || [];
+  const prospectBoard = document.getElementById('boardRFA');
+  prospectBoard.innerHTML = '';
+  document.getElementById('countRFA').textContent = prospects.length;
+  document.getElementById('emptyRFA').style.display = prospects.length ? 'none' : 'block';
+  prospects.forEach(p=>{
+    const card = document.createElement('div');
+    card.className = 'prospect-card';
+    const pos = p.pos || 'F';
+    card.innerHTML = '<div class="card-name">' + p.name + '</div><div class="prospect-meta"><span class="pos-tag">' + posLabel(pos) + '</span><span class="pos-tag">RFA · Hors masse</span><span class="pos-tag">' + (p.free || '—') + '</span></div>';
+    prospectBoard.appendChild(card);
+  });
+  document.getElementById('prospectsBox').innerHTML = '';
 
   if(typeof renderTrade === 'function') renderTrade();
   if(typeof renderKanban === 'function') renderKanban();
