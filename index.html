@@ -824,6 +824,53 @@
   }
 </style>
 <style id="hide-draftday-tab">.nav-btn[data-tab="draftday"]{display:none!important}</style>
+<style id="effectifs-premium-integration">
+/* Vue Effectifs — présentation hockey premium */
+#stickyBar{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:1000!important;min-height:62px;padding:8px 14px!important;flex-wrap:nowrap!important;gap:12px!important;box-shadow:0 5px 22px rgba(3,18,34,.28)}
+body{padding-top:68px}
+#stickyBar .sb-dg{display:none}
+.sb-dg-picker{display:flex;align-items:center;gap:7px;flex:0 0 auto;padding-right:12px;border-right:1px solid rgba(255,255,255,.24)}
+.sb-dg-label{font-size:.66rem;font-weight:800;letter-spacing:.08em;color:#d8b56d}
+#stickyDgSelect{max-width:145px;min-width:105px;padding:7px 24px 7px 9px;border:1px solid rgba(255,255,255,.28);border-radius:8px;background:#102b46;color:#fff;font-weight:750;font-size:.83rem}
+#stickyBar .sb-item{display:flex;flex-direction:column;align-items:flex-start;gap:1px}
+#stickyBar .sb-item .sb-label{font-size:.58rem;letter-spacing:.08em}
+#stickyBar .sb-item .sb-value{font-size:1rem;font-variant-numeric:tabular-nums}
+#stickyBar .sb-bar-track{min-width:55px;max-width:180px;height:7px}
+#tabEffectifs .panel{border-radius:15px;border:1px solid #d4e0ea;box-shadow:0 8px 24px rgba(8,32,54,.07)}
+#tabEffectifs .panel>h2{color:#102b46}
+#tabEffectifs .pos-columns{gap:14px;margin-top:12px}
+#tabEffectifs .pos-column{background:linear-gradient(155deg,#102b46,#0a1d31);border:1px solid #294761;border-radius:14px;padding:13px;box-shadow:0 8px 20px rgba(7,24,41,.14);color:#eef4f8}
+#tabEffectifs .pos-column-header{border-bottom:1px solid rgba(216,181,109,.4);gap:8px;flex-wrap:wrap}
+#tabEffectifs .pos-column-header h3{color:#f0f5f9;font-size:.9rem;letter-spacing:.07em}
+#tabEffectifs .pos-column-header .pos-count{margin-left:auto;background:#1c3a55;color:#f2d18a;border:1px solid #42617c}
+#tabEffectifs .pos-collapse{width:28px;height:27px;border-radius:7px;border:1px solid #55718a;background:#193650;color:#f3d38d;font-weight:800;cursor:pointer}
+#tabEffectifs .pos-column .pos-sum{color:#e4c47e;font-size:.78rem;font-weight:800;margin:0 4px 10px}
+#tabEffectifs .pos-column .board{grid-template-columns:1fr;gap:8px}
+#tabEffectifs .pos-column .card{position:relative;background:linear-gradient(135deg,#f7fafc,#e9f0f5);border:1px solid #cbd9e4;border-left:4px solid #c49b4d;border-radius:10px;box-shadow:0 3px 9px rgba(0,0,0,.12);padding:11px 12px;gap:7px}
+#tabEffectifs .pos-column .card-name{color:#102b46;font-weight:800}
+#tabEffectifs .pos-column .card-aav-row input{font-weight:800;color:#102b46}
+#tabEffectifs .pos-column .card-bottom-row{border-top:1px solid #d8e2e9;padding-top:6px}
+#tabEffectifs .effectifs-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:18px 0 4px;padding:13px 15px;border-radius:12px;background:linear-gradient(110deg,#0a2035,#173b59);color:#f4f7fa}
+#tabEffectifs .effectifs-toolbar strong{display:block;font-size:.8rem;letter-spacing:.1em;color:#f0d18c}
+#tabEffectifs .effectifs-toolbar small{display:block;margin-top:3px;color:#c2d2df;font-size:.72rem}
+#tabEffectifs .effectifs-toolbar .toolbar-actions button{border:1px solid #617b91;background:#1a3b58;color:#f3d38d;border-radius:8px}
+#tabEffectifs .effectifs-toolbar .toolbar-actions button:hover{background:#285273}
+#tabEffectifs .pos-column .board[hidden],#tabEffectifs .pos-column .pos-sum[hidden]{display:none!important}
+#tabEffectifs .prospects-box{border-radius:10px;background:#eef3f7;border:1px solid #cfdae4;padding:12px;color:#17334c}
+@media(max-width:700px){
+ body{padding-top:66px}
+ #stickyBar{min-height:62px;padding:6px 8px!important;gap:8px!important;overflow-x:auto;overflow-y:hidden}
+ #stickyDgSelect{min-width:94px;max-width:110px;font-size:.76rem;padding:6px 18px 6px 6px}
+ #stickyBar .sb-dg-picker{gap:5px;padding-right:7px}
+ #stickyBar .sb-item .sb-label{font-size:.5rem}
+ #stickyBar .sb-item .sb-value{font-size:.83rem}
+ #stickyBar .sb-bar-track{flex:0 0 48px;min-width:48px}
+ #tabEffectifs .effectifs-toolbar{align-items:flex-start}
+ #tabEffectifs .effectifs-toolbar .toolbar-actions{width:100%}
+ #tabEffectifs .effectifs-toolbar .toolbar-actions button{flex:1}
+ #tabEffectifs .pos-columns{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body class="zoom-normal">
 
@@ -850,7 +897,8 @@
 </div>
 
 <div class="sticky-bar" id="stickyBar">
-  <span class="sb-dg" id="sbDg">—</span>
+  <label class="sb-dg-picker" for="stickyDgSelect"><span class="sb-dg-label">DG</span><select id="stickyDgSelect" aria-label="Changer de directeur général"></select></label>
+  <span class="sb-dg" id="sbDg" aria-hidden="true">—</span>
   <div class="sb-item count"><span class="sb-label">Effectif</span><span class="sb-value" id="sbCount">0</span></div>
   <div class="sb-item"><span class="sb-label">Masse</span><span class="sb-value" id="sbTotal">0.000</span></div>
   <div class="sb-item"><span class="sb-label">Plafond</span><span class="sb-value" id="sbCap">0.000</span></div>
@@ -868,7 +916,7 @@
 
 <div class="wrap">
 
-  <div class="tab-page active" id="tabEffectifs">
+  <div class="tab-page active effectifs-redesign" id="tabEffectifs">
 
   <div class="panel">
     <h2>Configuration</h2>
@@ -917,27 +965,28 @@
         <button id="zoomInBtn" title="Voir moins de cartes (plus grandes)">+</button>
       </div>
     </div>
+    <div class="effectifs-toolbar"><div><strong>ALIGNEMENT DE LA FRANCHISE</strong><small>Effectif actif · AAV selon la saison sélectionnée</small></div><div class="toolbar-actions"><button type="button" id="collapseEffectifs">− Tout contracter</button><button type="button" id="expandEffectifs">＋ Tout développer</button></div></div>
     <div class="pos-columns">
-      <div class="pos-column">
+      <div class="pos-column effectif-section" data-position="F">
         <div class="pos-column-header">
           <h3>🏒 Attaquants</h3>
-          <span class="pos-count" id="countF">0</span>
+          <span class="pos-count" id="countF">0</span><button type="button" class="pos-collapse" aria-expanded="true" data-target="boardF">−</button>
         </div>
         <div class="pos-sum" id="sumF">0.000 $M</div>
         <div class="board" id="boardF"></div>
       </div>
-      <div class="pos-column">
+      <div class="pos-column effectif-section" data-position="D">
         <div class="pos-column-header">
           <h3>🛡️ Défenseurs</h3>
-          <span class="pos-count" id="countD">0</span>
+          <span class="pos-count" id="countD">0</span><button type="button" class="pos-collapse" aria-expanded="true" data-target="boardD">−</button>
         </div>
         <div class="pos-sum" id="sumD">0.000 $M</div>
         <div class="board" id="boardD"></div>
       </div>
-      <div class="pos-column">
+      <div class="pos-column effectif-section" data-position="G">
         <div class="pos-column-header">
           <h3>🥅 Gardiens</h3>
-          <span class="pos-count" id="countG">0</span>
+          <span class="pos-count" id="countG">0</span><button type="button" class="pos-collapse" aria-expanded="true" data-target="boardG">−</button>
         </div>
         <div class="pos-sum" id="sumG">0.000 $M</div>
         <div class="board" id="boardG"></div>
@@ -1394,6 +1443,13 @@ Object.keys(RAW_DATA.rosters).forEach(dg=>{
 });
 state.dg = Object.keys(RAW_DATA.rosters)[0];
 dgSelect.value = state.dg;
+const stickyDgSelect = document.getElementById('stickyDgSelect');
+Object.keys(RAW_DATA.rosters).forEach(dg=>{
+  const opt=document.createElement('option'); opt.value=dg; opt.textContent=dg;
+  stickyDgSelect.appendChild(opt);
+});
+stickyDgSelect.value=state.dg;
+stickyDgSelect.addEventListener('change',()=>{dgSelect.value=stickyDgSelect.value;state.dg=dgSelect.value;render();});
 
 // --- RFA + Repêchage: separate DG selectors (mirror main dgSelect options) ---
 const rfaDgSelect = document.getElementById('rfaDgSelect');
@@ -2330,13 +2386,13 @@ function render(){
 
   document.getElementById('statTotal').textContent = total.toFixed(3);
   document.getElementById('statCap').textContent = state.cap.toFixed(3);
-  const margin = state.cap - total;
+  const margin = Number((state.cap - total).toFixed(6));
   const marginEl = document.getElementById('statMargin');
   marginEl.textContent = margin.toFixed(3);
   marginEl.className = 'value ' + (margin >= 0 ? 'pos' : 'neg');
   document.getElementById('statCount').textContent = counted;
 
-  const pct = Math.min(100, (total / state.cap) * 100);
+  const pct = state.cap > 0 ? Math.min(100, (total / state.cap) * 100) : (total > 0 ? 100 : 0);
   const fill = document.getElementById('barFill');
   fill.style.width = pct + '%';
   fill.className = 'bar-fill' + (total > state.cap ? ' over' : '');
@@ -2345,6 +2401,7 @@ function render(){
 
   // sync sticky bar
   document.getElementById('sbDg').textContent = state.dg;
+  if(stickyDgSelect.value!==state.dg) stickyDgSelect.value=state.dg;
   document.getElementById('sbCount').textContent = counted;
   document.getElementById('sbTotal').textContent = total.toFixed(3);
   document.getElementById('sbCap').textContent = state.cap.toFixed(3);
@@ -2414,6 +2471,7 @@ function render(){
 
 dgSelect.addEventListener('change', ()=>{
   state.dg = dgSelect.value;
+  if(stickyDgSelect.value!==state.dg) stickyDgSelect.value=state.dg;
   render();
 });
 
@@ -2486,7 +2544,31 @@ document.getElementById('addCustomBtn').addEventListener('click', ()=>{
   toast(name + ' ajouté (perso)');
 });
 
+// Repli individuel et commandes globales des sections d'effectifs
+function setEffectifCollapsed(section, collapsed){
+  const board=section.querySelector('.board');
+  const sum=section.querySelector('.pos-sum');
+  const button=section.querySelector('.pos-collapse');
+  if(board) board.hidden=collapsed;
+  if(sum) sum.hidden=collapsed;
+  section.classList.toggle('is-collapsed',collapsed);
+  if(button){button.textContent=collapsed?'＋':'−';button.setAttribute('aria-expanded',String(!collapsed));}
+}
+document.querySelectorAll('.effectif-section .pos-collapse').forEach(button=>{
+  button.addEventListener('click',()=>{
+    const section=button.closest('.effectif-section');
+    setEffectifCollapsed(section,button.getAttribute('aria-expanded')==='true');
+  });
+});
+document.getElementById('collapseEffectifs').addEventListener('click',()=>{
+  document.querySelectorAll('.effectif-section').forEach(section=>setEffectifCollapsed(section,true));
+});
+document.getElementById('expandEffectifs').addEventListener('click',()=>{
+  document.querySelectorAll('.effectif-section').forEach(section=>setEffectifCollapsed(section,false));
+});
+
 capInput.value = state.cap.toFixed(3);
+stickyDgSelect.value=state.dg;
 render();
 
 // --- Quick-add floating bubble ---
