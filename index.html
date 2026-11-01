@@ -855,7 +855,10 @@
 </style>
 <style id="effectifs-premium-integration">
 /* Vue Effectifs — présentation hockey premium */
-#stickyBar{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:1000!important;min-height:62px;padding:8px 14px!important;flex-wrap:nowrap!important;gap:12px!important;box-shadow:0 5px 22px rgba(3,18,34,.28)}
+/* Le bandeau est déplacé directement sous body pour éviter qu'un parent sticky
+   ou un conteneur de navigation ne limite son positionnement fixe sur mobile. */
+.sticky-wrap{top:62px!important}
+#stickyBar{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:10000!important;min-height:62px;padding:8px 14px!important;flex-wrap:nowrap!important;gap:12px!important;box-shadow:0 5px 22px rgba(3,18,34,.28)}
 body{padding-top:68px}
 #stickyBar .sb-dg{display:none}
 .sb-dg-picker{display:flex;align-items:center;gap:7px;flex:0 0 auto;padding-right:12px;border-right:1px solid rgba(255,255,255,.24)}
@@ -3544,6 +3547,13 @@ document.getElementById('zoomInBtn').addEventListener('click', ()=>{
 });
 applyZoom();
 
+
+// Le bandeau salarial est placé directement sous body : son positionnement fixed
+// reste indépendant du conteneur sticky de navigation, notamment sur Android.
+const salaryStickyBar = document.getElementById('stickyBar');
+if(salaryStickyBar && salaryStickyBar.parentElement !== document.body){
+  document.body.appendChild(salaryStickyBar);
+}
 
 // ===== Connexion et publication Supabase =====
 const SB_URL = 'https://hjmqcbnuujknzzhthmwt.supabase.co';
