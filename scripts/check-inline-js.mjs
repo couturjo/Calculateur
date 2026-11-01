@@ -10,12 +10,12 @@ if (!scripts.length) {
 let failed = false;
 scripts.forEach((match, index) => {
   try {
-    new vm.Script(match[1], { filename: \`index.html:inline-script-\${index + 1}\` });
-    console.log(\`OK — script intégré \${index + 1}\`);
+    new vm.Script(match[1], { filename: 'index.html:inline-script-' + (index + 1) });
+    console.log('OK — script intégré ' + (index + 1));
   } catch (error) {
     failed = true;
-    console.error(\`ERREUR — script intégré \${index + 1}: \${error.message}\`);
+    console.error('ERREUR — script intégré ' + (index + 1) + ': ' + error.message);
   }
 });
 if (failed) process.exit(1);
-console.log(\`Validation syntaxique terminée : \${scripts.length} script(s).\`);
+console.log('Validation syntaxique terminée : ' + scripts.length + ' script(s).');
