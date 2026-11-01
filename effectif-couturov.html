@@ -55,7 +55,7 @@ h1{font-size:clamp(30px,4vw,48px);line-height:1;margin:9px 0 10px;letter-spacing
 </head>
 <body><main class="wrap">
 <header class="topbar"><div class="brand"><div class="crest">♜</div><div><strong>LE POOL DES CHAMPIONS</strong><small>EST. 2013 · FRONT OFFICE</small></div></div><div class="mode">PROTOTYPE · NON OFFICIEL</div></header>
-<section class="teambar" aria-label="Gestion de l’effectif"><div class="team-picker"><label for="teamSelect">EFFECTIF SÉLECTIONNÉ</label><select id="teamSelect"></select></div><div class="sticky-stat"><label>Masse salariale</label><strong id="stickyMass">—</strong></div><div class="sticky-stat margin" id="marginStat"><label>Marge disponible</label><strong id="stickyMargin">—</strong></div><div class="sticky-stat"><label>Plafond salarial</label><strong id="stickyCap">—</strong></div></section>
+<section class="teambar" aria-label="Gestion de l’effectif"><div class="team-picker"><label for="teamSelect">EFFECTIF SÉLECTIONNÉ</label><select id="teamSelect"></select></div><div class="sticky-stat"><label>Masse salariale</label><strong id="stickyMass">—</strong><small id="salaryWarning" style="display:none;color:#f3c66b;font-size:9px">* AAV manquant</small></div><div class="sticky-stat margin" id="marginStat"><label>Marge disponible</label><strong id="stickyMargin">—</strong></div><div class="sticky-stat"><label>Plafond salarial</label><strong id="stickyCap">—</strong></div></section>
 <section class="hero"><div><div class="kicker" id="franchiseKicker">Franchise · DG Couturov</div><h1>Alignement principal</h1><p>Une vue premium de l'effectif, des contrats et des actifs de la franchise.</p></div><div class="season">SAISON DE RÉFÉRENCE<b>2026 — 2027</b></div></section>
 <section class="metrics">
 <div class="metric"><label>Joueurs actifs</label><strong id="activeCount">24</strong><small>Alignement principal</small></div>
@@ -87,11 +87,11 @@ function loadRoster(dg){
   document.getElementById("forwardCount").textContent=players.filter(p=>p.pos==="F").length;
   document.getElementById("defenseCount").textContent=players.filter(p=>p.pos==="D").length;
   document.getElementById("goalieCount").textContent=players.filter(p=>p.pos==="G").length;
-  const cap=data.cap, mass=data.total, margin=cap-mass;
+  const cap=data.cap, missingAav=players.filter(p=>typeof p.aav!=="number").length, mass=players.reduce((sum,p)=>sum+(typeof p.aav==="number"?p.aav:0),0), margin=cap-mass;
   const fmt=v=>Number(v).toFixed(3)+" M$";
-  document.getElementById("stickyMass").textContent=fmt(mass);
-  document.getElementById("stickyMargin").textContent=(margin<0?"−":"")+fmt(Math.abs(margin));
-  document.getElementById("stickyCap").textContent=fmt(cap);
+  document.getElementById("stickyMass").textContent=fmt(mass)+(missingAav?"*":"");
+  document.getElementById("stickyMargin").textContent=(margin<0?"−":"")+fmt(Math.abs(margin))+(missingAav?"*":"");
+  document.getElementById("stickyCap").textContent=fmt(cap);\n  document.getElementById("salaryWarning").style.display=missingAav?"block":"none";\n  document.getElementById("marginStat").title=missingAav?missingAav+" joueur(s) sans AAV : marge indicative, à confirmer.":"Marge calculée à partir des AAV des joueurs actifs.";
   document.getElementById("marginStat").classList.toggle("over",margin<0);
   document.getElementById("teamSelect").value=dg;
 }
