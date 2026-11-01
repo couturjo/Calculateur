@@ -91,7 +91,9 @@ function loadRoster(dg){
   const fmt=v=>Number(v).toFixed(3)+" M$";
   document.getElementById("stickyMass").textContent=fmt(mass)+(missingAav?"*":"");
   document.getElementById("stickyMargin").textContent=(margin<0?"−":"")+fmt(Math.abs(margin))+(missingAav?"*":"");
-  document.getElementById("stickyCap").textContent=fmt(cap);\n  document.getElementById("salaryWarning").style.display=missingAav?"block":"none";\n  document.getElementById("marginStat").title=missingAav?missingAav+" joueur(s) sans AAV : marge indicative, à confirmer.":"Marge calculée à partir des AAV des joueurs actifs.";
+  document.getElementById("stickyCap").textContent=fmt(cap);
+  document.getElementById("salaryWarning").style.display=missingAav?"block":"none";
+  document.getElementById("marginStat").title=missingAav?missingAav+" joueur(s) sans AAV : marge indicative, à confirmer.":"Marge calculée à partir des AAV des joueurs actifs.";
   document.getElementById("marginStat").classList.toggle("over",margin<0);
   document.getElementById("teamSelect").value=dg;
 }
