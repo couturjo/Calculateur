@@ -855,11 +855,10 @@
 </style>
 <style id="effectifs-premium-integration">
 /* Vue Effectifs — présentation hockey premium */
-/* Le bandeau est déplacé directement sous body pour éviter qu'un parent sticky
-   ou un conteneur de navigation ne limite son positionnement fixe sur mobile. */
-.sticky-wrap{top:62px!important}
-#stickyBar{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:10000!important;min-height:62px;padding:8px 14px!important;flex-wrap:nowrap!important;gap:12px!important;box-shadow:0 5px 22px rgba(3,18,34,.28)}
-body{padding-top:68px}
+/* Le bandeau salarial et la navigation restent ensemble dans un conteneur sticky.
+   Cette approche évite les limites de position:fixed sur certains navigateurs Android. */
+.sticky-wrap{position:sticky!important;top:0!important;z-index:10000!important}
+#stickyBar{position:relative!important;top:auto!important;left:auto!important;right:auto!important;width:100%;z-index:10000!important;min-height:62px;padding:8px 14px!important;flex-wrap:nowrap!important;gap:12px!important;box-shadow:0 5px 22px rgba(3,18,34,.28)}
 #stickyBar .sb-dg{display:none}
 .sb-dg-picker{display:flex;align-items:center;gap:7px;flex:0 0 auto;padding-right:12px;border-right:1px solid rgba(255,255,255,.24)}
 .sb-dg-label{font-size:.66rem;font-weight:800;letter-spacing:.08em;color:#d8b56d}
@@ -3548,11 +3547,14 @@ document.getElementById('zoomInBtn').addEventListener('click', ()=>{
 applyZoom();
 
 
-// Le bandeau salarial est placé directement sous body : son positionnement fixed
-// reste indépendant du conteneur sticky de navigation, notamment sur Android.
+// Le bandeau salarial est placé avant la navigation dans le conteneur sticky.
+// Les deux restent ainsi visibles ensemble pendant le défilement, y compris sur Android.
 const salaryStickyBar = document.getElementById('stickyBar');
-if(salaryStickyBar && salaryStickyBar.parentElement !== document.body){
-  document.body.appendChild(salaryStickyBar);
+const stickyNavigation = document.getElementById('mainNav');
+if(salaryStickyBar && stickyNavigation && salaryStickyBar.parentElement !== stickyNavigation.parentElement){
+  stickyNavigation.parentElement.insertBefore(salaryStickyBar, stickyNavigation);
+}else if(salaryStickyBar && stickyNavigation && salaryStickyBar.nextElementSibling !== stickyNavigation){
+  stickyNavigation.parentElement.insertBefore(salaryStickyBar, stickyNavigation);
 }
 
 // ===== Connexion et publication Supabase =====
