@@ -822,6 +822,13 @@
     .controls-row{flex-direction:column; align-items:stretch;}
     thead th:nth-child(3), tbody td:nth-child(3){display:none;}
   }
+/* Champs AAV des prospects RFA — indépendants de la masse salariale */
+.prospect-aav-editor{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 6px}
+.prospect-aav-editor .prospect-aav-title{grid-column:1/-1;font-size:.72rem;font-weight:700;color:var(--grey)}
+.prospect-aav-editor label{display:block;font-size:.68rem;color:var(--grey)}
+.prospect-aav-editor .card-aav-row{display:flex;align-items:center;gap:4px;margin-top:3px}
+.prospect-aav-editor input{min-width:0;width:100%;box-sizing:border-box;padding:7px 5px;border:1px solid var(--border);border-radius:7px;background:var(--input-bg, #fff);color:var(--text);font:inherit;font-size:.82rem}
+@media(max-width:480px){.prospect-aav-editor{gap:5px}.prospect-aav-editor input{font-size:.78rem}}
 </style>
 <style id="hide-draftday-tab">.nav-btn[data-tab="draftday"]{display:none!important}</style>
 <style id="effectifs-prospects-integration">
@@ -1383,7 +1390,11 @@ function initProspects(){
   Object.keys(RAW_DATA.prospects).forEach(dg=>{
     state.prospects[dg] = (RAW_DATA.prospects[dg] || []).map(name=>{
       const p = RAW_DATA.players[name] || {};
-      return { name, free: p.free || '—', pos: p.pos || 'F' };
+      return {
+        name, free: p.free || '—', pos: p.pos || 'F',
+        aav26: typeof p.aav2627 === 'number' ? p.aav2627 : undefined,
+        aav27: typeof p.aav2728 === 'number' ? p.aav2728 : undefined
+      };
     });
   });
 }
@@ -2309,11 +2320,30 @@ function renderRfa(){
     const tag = freeTagInfo(p.free);
     const card = document.createElement('div');
     card.className = 'card';
+    const source = RAW_DATA.players[p.name] || {};
+    const aav26 = typeof p.aav26 === 'number' ? p.aav26 : source.aav2627;
+    const aav27 = typeof p.aav27 === 'number' ? p.aav27 : source.aav2728;
+    const salaryValue = value => typeof value === 'number' ? value.toFixed(3) : '';
     card.innerHTML = `
       <button class="rfa-remove" data-idx="${idx}" title="Retirer">✕</button>
       <div class="card-name">${p.name}</div>
       <div class="card-free"><span class="free-tag ${tag.cls}">${tag.text}</span></div>
-      <div style="font-size:0.72rem; color:var(--grey); margin-top:4px;">Ne compte pas sur la masse</div>
+      <div class="prospect-aav-editor">
+        <div class="prospect-aav-title">AAV estimé / contrat</div>
+        <label>2026-2027
+          <div class="card-aav-row">
+            <input type="number" min="0" step="0.001" inputmode="decimal" class="prospect-aav-input" data-idx="${idx}" data-season="aav26" value="${salaryValue(aav26)}" placeholder="À saisir">
+            <span class="unit">$M</span>
+          </div>
+        </label>
+        <label>2027-2028
+          <div class="card-aav-row">
+            <input type="number" min="0" step="0.001" inputmode="decimal" class="prospect-aav-input" data-idx="${idx}" data-season="aav27" value="${salaryValue(aav27)}" placeholder="À saisir">
+            <span class="unit">$M</span>
+          </div>
+        </label>
+      </div>
+      <div style="font-size:0.72rem; color:var(--grey); margin-top:4px;">Hors masse salariale jusqu’à la promotion</div>
       <button type="button" class="promote-prospect" data-idx="${idx}">↑ Promouvoir dans l’alignement</button>
     `;
     board.appendChild(card);
@@ -2326,6 +2356,27 @@ function renderRfa(){
       renderRfa();
       render();
       toast(removed.name + ' retiré des espoirs RFA');
+    });
+  });
+  board.querySelectorAll('.prospect-aav-input').forEach(input=>{
+    input.addEventListener('change', e=>{
+      const idx = parseInt(e.currentTarget.dataset.idx,10);
+      const key = e.currentTarget.dataset.season;
+      const raw = e.currentTarget.value.trim();
+      if(raw === ''){
+        delete state.prospects[dg][idx][key];
+        return;
+      }
+      const value = Number(raw.replace(',', '.'));
+      if(!Number.isFinite(value) || value < 0){
+        toast('AAV invalide — entrez un montant positif ou laissez le champ vide');
+        e.currentTarget.value = '';
+        delete state.prospects[dg][idx][key];
+        return;
+      }
+      state.prospects[dg][idx][key] = value;
+      e.currentTarget.value = value.toFixed(3);
+      toast('AAV de ' + state.prospects[dg][idx].name + ' mis à jour · hors masse salariale');
     });
   });
   board.querySelectorAll('.promote-prospect').forEach(btn=>{
