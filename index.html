@@ -2582,9 +2582,11 @@ document.getElementById('addCustomBtn').addEventListener('click', ()=>{
 function setEffectifCollapsed(section, collapsed){
   const board=section.querySelector('.board');
   const sum=section.querySelector('.pos-sum');
+  const empty=section.querySelector('.board-empty');
   const button=section.querySelector('.pos-collapse');
   if(board) board.hidden=collapsed;
   if(sum) sum.hidden=collapsed;
+  if(empty) empty.hidden=collapsed;
   section.classList.toggle('is-collapsed',collapsed);
   if(button){button.textContent=collapsed?'＋':'−';button.setAttribute('aria-expanded',String(!collapsed));}
 }
