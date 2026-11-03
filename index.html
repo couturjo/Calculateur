@@ -266,48 +266,6 @@
     .pos-columns{grid-template-columns:1fr;}
   }
 
-  /* --- Zoom tool --- */
-  .panel-header-row{
-    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;
-    margin-bottom:12px;
-  }
-  .panel-header-row h2{margin-bottom:0 !important;}
-  .zoom-tool{
-    display:flex; align-items:center; gap:6px;
-    background:var(--ice); border:1px solid var(--line); border-radius:20px;
-    padding:4px 6px;
-  }
-  .zoom-tool .zoom-icon{font-size:0.9rem; padding:0 2px;}
-  .zoom-tool button{
-    width:26px; height:26px; border-radius:50%; border:none; background:white;
-    color:var(--navy2); font-size:1rem; font-weight:800; cursor:pointer;
-    box-shadow:0 1px 2px rgba(11,37,69,0.15);
-    display:flex; align-items:center; justify-content:center; line-height:1;
-  }
-  .zoom-tool button:hover{background:var(--navy2); color:white;}
-  .zoom-tool .zoom-label{font-size:0.72rem; color:var(--grey); font-weight:700; min-width:52px; text-align:center;}
-
-  /* zoom levels: applied via body class, control card grid density + size */
-  body.zoom-compact .pos-column .board{
-    grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
-  }
-  body.zoom-compact .card{padding:8px 9px; gap:5px;}
-  body.zoom-compact .card-name{font-size:0.78rem;}
-  body.zoom-compact .card-aav-row input{font-size:0.85rem; padding:3px 5px;}
-  body.zoom-compact .card-bottom-row select.retain-select{font-size:0.62rem; max-width:44px;}
-  body.zoom-compact .pos-tag{font-size:0.6rem; padding:1px 5px;}
-  body.zoom-compact .free-tag{font-size:0.68rem;}
-
-  body.zoom-normal .pos-column .board{
-    grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
-  }
-
-  body.zoom-large .pos-column .board{
-    grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
-  }
-  body.zoom-large .card{padding:16px 17px; gap:10px;}
-  body.zoom-large .card-name{font-size:1.05rem;}
-  body.zoom-large .card-aav-row input{font-size:1.15rem; padding:7px 9px;}
   .card{
     background:white;
     border:1px solid var(--line);
@@ -1033,7 +991,7 @@ body.login-locked{height:100%;width:100%;}
 }
 </style>
 </head>
-<body class="zoom-normal login-locked">
+<body class="login-locked">
 
 <header>
   <div class="header-inner">
@@ -1123,15 +1081,7 @@ body.login-locked{height:100%;width:100%;}
   </div>
 
   <div class="panel">
-    <div class="panel-header-row">
-      <h2 style="border:none; padding:0; margin:0;">Alignement actif</h2>
-      <div class="zoom-tool">
-        <span class="zoom-icon">🔍</span>
-        <button id="zoomOutBtn" title="Voir plus de cartes (plus petites)">−</button>
-        <span class="zoom-label" id="zoomLabel">Normal</span>
-        <button id="zoomInBtn" title="Voir moins de cartes (plus grandes)">+</button>
-      </div>
-    </div>
+    <h2>Alignement actif</h2>
     <div class="effectifs-toolbar"><div><strong>ALIGNEMENT DE LA FRANCHISE</strong><small>Effectif actif · AAV selon la saison sélectionnée</small></div><div class="toolbar-actions"><button type="button" id="collapseEffectifs">− Tout contracter</button><button type="button" id="expandEffectifs">＋ Tout développer</button></div></div>
     <div class="pos-columns">
       <div class="pos-column effectif-section" data-position="F">
@@ -3649,26 +3599,6 @@ document.getElementById('stTradeTopBtn').addEventListener('click', ()=>{
 });
 
 // Publication officielle gérée exclusivement par Supabase Auth et RLS.
-
-// --- Zoom tool ---
-const zoomLevels = ['zoom-compact', 'zoom-normal', 'zoom-large'];
-const zoomLabels = {'zoom-compact':'Compact', 'zoom-normal':'Normal', 'zoom-large':'Grand'};
-let zoomIdx = 1; // start at normal
-function applyZoom(){
-  zoomLevels.forEach(z => document.body.classList.remove(z));
-  document.body.classList.add(zoomLevels[zoomIdx]);
-  document.getElementById('zoomLabel').textContent = zoomLabels[zoomLevels[zoomIdx]];
-}
-document.getElementById('zoomOutBtn').addEventListener('click', ()=>{
-  zoomIdx = Math.max(0, zoomIdx - 1);
-  applyZoom();
-});
-document.getElementById('zoomInBtn').addEventListener('click', ()=>{
-  zoomIdx = Math.min(zoomLevels.length - 1, zoomIdx + 1);
-  applyZoom();
-});
-applyZoom();
-
 
 // ===== Connexion et publication Supabase =====
 const SB_URL = 'https://hjmqcbnuujknzzhthmwt.supabase.co';
