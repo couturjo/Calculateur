@@ -931,6 +931,107 @@ body.login-locked{height:100%;width:100%;}
 .promote-prospect{display:block;width:100%;margin-top:9px;padding:8px 10px;border:1px solid var(--gold);border-radius:7px;background:linear-gradient(135deg,#fff8e7,#f5e4b8);color:var(--navy);font-size:.78rem;font-weight:800;cursor:pointer}
 .promote-prospect:active{transform:translateY(1px)}
 </style>
+<style id="prototype-effectif-cartes-compactes">
+/* Prototype : cartes de joueurs compactes, sans équipe/âge/position */
+#tabEffectifs .pos-column .board{gap:5px}
+#tabEffectifs .pos-column .card{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  grid-template-areas:"name salary" "badges salary" "bottom salary";
+  align-items:center;
+  column-gap:8px;
+  row-gap:2px;
+  min-height:0;
+  padding:7px 9px;
+  border-left-width:3px;
+  border-radius:8px;
+  box-shadow:0 1px 3px rgba(0,0,0,.09);
+}
+#tabEffectifs .pos-column .card-name{
+  grid-area:name;
+  min-width:0;
+  padding-right:20px;
+  font-size:.84rem;
+  line-height:1.15;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#tabEffectifs .pos-column .card-badges{
+  grid-area:badges;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:3px;
+  min-height:0;
+}
+#tabEffectifs .pos-column .card-badges:empty{display:none}
+#tabEffectifs .pos-column .card-badges .pos-tag{
+  font-size:.58rem;
+  line-height:1.2;
+  padding:1px 5px;
+}
+#tabEffectifs .pos-column .card-aav-row{
+  grid-area:salary;
+  display:flex;
+  align-items:center;
+  gap:3px;
+  padding:0 20px 0 0;
+  border:0;
+  white-space:nowrap;
+}
+#tabEffectifs .pos-column .card-aav-row input{
+  width:66px;
+  max-width:66px;
+  min-width:0;
+  padding:3px 4px;
+  font-size:.82rem;
+  line-height:1.2;
+  text-align:right;
+  border-radius:5px;
+}
+#tabEffectifs .pos-column .card-aav-row .unit{font-size:.65rem}
+#tabEffectifs .pos-column .card-bottom-row{
+  grid-area:bottom;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding:0;
+  border:0;
+  min-height:0;
+}
+#tabEffectifs .pos-column .card-bottom-row .free-tag{
+  font-size:.6rem;
+  line-height:1.2;
+  padding:1px 5px;
+}
+#tabEffectifs .pos-column .card-bottom-row select.retain-select{
+  font-size:.62rem;
+  padding:1px 3px;
+  height:20px;
+  max-width:48px;
+}
+#tabEffectifs .pos-column .card-remove{
+  top:3px;
+  right:3px;
+  font-size:.78rem;
+  padding:1px 3px;
+  z-index:2;
+}
+#tabEffectifs .prospects-board{gap:6px}
+#tabEffectifs .prospect-card{
+  min-height:0;
+  gap:5px;
+  padding:8px 10px;
+  border-radius:8px;
+}
+#tabEffectifs .prospect-card .card-name{font-size:.84rem;line-height:1.15}
+@media(max-width:820px){
+  #tabEffectifs .pos-column{padding:9px}
+  #tabEffectifs .pos-column .board{gap:5px}
+  #tabEffectifs .pos-column .card{padding:7px 8px}
+}
+</style>
 </head>
 <body class="zoom-normal login-locked">
 
