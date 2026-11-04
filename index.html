@@ -802,7 +802,11 @@
 #tabEffectifs .prospect-card{position:relative;min-height:74px;display:flex;flex-direction:column;justify-content:center;gap:7px;padding:12px 14px;background:linear-gradient(145deg,#fff,#f4f7fa);border:1px solid #cfdae4;border-left:4px solid var(--gold);border-radius:10px;box-shadow:0 2px 7px rgba(11,37,69,.07)}
 #tabEffectifs .prospect-card .card-name{font-weight:800;color:var(--navy2);font-size:.92rem;padding-right:0}
 #tabEffectifs .prospect-card .prospect-meta{display:flex;gap:6px;flex-wrap:wrap}
+#tabEffectifs .prospect-card .prospect-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+#tabEffectifs .prospect-card .prospect-status-select{max-width:100%;font-size:.72rem;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--navy2);font-weight:700}
 #tabEffectifs .prospect-card .pos-tag{background:#e8eef4;color:#24445e}
+#tabEffectifs .card-return-prospect{width:100%;border:0;border-radius:7px;padding:8px 10px;background:#8a4b16;color:#fff;font-weight:800;font-size:.76rem;cursor:pointer}
+#tabEffectifs .card-return-prospect:hover{background:#6f3b10}
 #tabEffectifs .prospects-section.is-collapsed .prospects-note{display:none}
 @media(max-width:820px){#tabEffectifs .prospects-board{grid-template-columns:repeat(auto-fill,minmax(145px,1fr))}}
 </style>
@@ -2405,6 +2409,7 @@ function promoteProspect(dg, index){
     free: prospect.free || source.free || '—',
     pos: prospect.pos || source.pos || 'F',
     retainPct: 0,
+    statusTag: prospect.statusTag || undefined,
     _custom: !RAW_DATA.players[prospect.name]
   });
   prospects.splice(index, 1);
@@ -2608,6 +2613,33 @@ function currentAav(p){
   return val;
 }
 
+function returnPlayerToProspect(dg, index){
+  const roster = state.roster[dg] || [];
+  const player = roster[index];
+  if(!player || player.statusTag !== 'essai') return;
+  const prospects = state.prospects[dg] || [];
+  if(prospects.some(p=>p.name===player.name)){
+    toast(player.name + ' est déjà dans les espoirs de ' + dg);
+    return;
+  }
+  const nextProspect = {
+    name: player.name,
+    free: player.free || '—',
+    pos: player.pos || 'F',
+    aav26: typeof player.overrides?.2627 === 'number' ? player.overrides.2627 : player.aav26,
+    aav27: typeof player.overrides?.2728 === 'number' ? player.overrides.2728 : player.aav27,
+    statusTag: 'essai'
+  };
+  if(player._custom) nextProspect._custom = true;
+  prospects.push(nextProspect);
+  roster.splice(index,1);
+  state.roster[dg] = roster;
+  state.prospects[dg] = prospects;
+  render();
+  if(typeof renderRfa === 'function') renderRfa();
+  toast(player.name + ' retourne parmi les espoirs · salaire conservé hors masse');
+}
+
 function render(){
   const roster = state.roster[state.dg] || [];
   const boards = { F: document.getElementById('boardF'), D: document.getElementById('boardD'), G: document.getElementById('boardG') };
@@ -2645,6 +2677,7 @@ function render(){
           <option value="essai" ${p.statusTag==='essai'?'selected':''}>Essai</option>
         </select>
         ${p._custom ? '<span class="pos-tag">perso</span>' : ''}
+        ${p.statusTag==='essai' ? '<button type="button" class="card-return-prospect" data-idx="${idx}">J’ai peur des frites cuites</button>' : ''}
         ${hasOverride ? '<span class="pos-tag" style="background:#fff2cc;color:#8a6d00;">corrigé</span>' : ''}
         ${noRealData ? '<span class="pos-tag" style="background:#fdeceb;color:var(--red);">pas de donnée réelle</span>' : ''}
         ${hasOverride ? `<button data-idx="${idx}" class="card-revert" title="Revenir au AAV d'origine">↺</button>` : ''}
@@ -2737,6 +2770,9 @@ function render(){
     render();
     toast(player.name + (player.statusTag ? ' : tag « ' + label + ' » ajouté' : ' : tag retiré'));
   });
+  bindAll('.card-return-prospect', e=>{
+    returnPlayerToProspect(state.dg, parseInt(e.currentTarget.dataset.idx,10));
+  });
   bindAll('.aav-edit-input', e=>{
     const i = parseInt(e.target.dataset.idx,10);
     const val = parseFloat(e.target.value);
@@ -2769,8 +2805,26 @@ function render(){
     const card = document.createElement('div');
     card.className = 'prospect-card';
     const pos = p.pos || 'F';
-    card.innerHTML = '<div class="card-name">' + p.name + '</div><div class="prospect-meta"><span class="pos-tag">' + posLabel(pos) + '</span><span class="pos-tag">RFA · Hors masse</span><span class="pos-tag">' + (p.free || '—') + '</span></div><button type="button" class="promote-prospect" data-idx="' + idx + '">↑ Promouvoir</button>';
+    const statusOptions = [
+      ['','+ Tag'],['ballotage','Ballotage'],['retenu','Retenu – ballotage'],['essai','Essai']
+    ];
+    const statusSelect = '<select class="prospect-status-select" data-idx="' + idx + '" aria-label="Statut de ' + p.name + '">' +
+      statusOptions.map(([value,label])=>'<option value="' + value + '"' + ((p.statusTag||'')===value?' selected':'') + '>' + label + '</option>').join('') +
+      '</select>';
+    card.innerHTML = '<div class="card-name">' + p.name + '</div><div class="prospect-meta"><span class="pos-tag">' + posLabel(pos) + '</span><span class="pos-tag">RFA · Hors masse</span><span class="pos-tag">' + (p.free || '—') + '</span></div><div class="prospect-actions">' + statusSelect + '<button type="button" class="promote-prospect" data-idx="' + idx + '">↑ Promouvoir</button></div>';
     prospectBoard.appendChild(card);
+  });
+  prospectBoard.querySelectorAll('.prospect-status-select').forEach(select=>{
+    select.addEventListener('change', e=>{
+      const idx = parseInt(e.currentTarget.dataset.idx,10);
+      const prospect = (state.prospects[state.dg] || [])[idx];
+      if(!prospect) return;
+      if(e.currentTarget.value) prospect.statusTag = e.currentTarget.value;
+      else delete prospect.statusTag;
+      const label = e.currentTarget.options[e.currentTarget.selectedIndex].text;
+      render();
+      toast(prospect.name + (prospect.statusTag ? ' : tag « ' + label + ' » ajouté' : ' : tag retiré'));
+    });
   });
   prospectBoard.querySelectorAll('.promote-prospect').forEach(btn=>{
     btn.addEventListener('click', e=>promoteProspect(state.dg, parseInt(e.currentTarget.dataset.idx,10)));
