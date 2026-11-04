@@ -804,6 +804,9 @@
 #tabEffectifs .prospect-card .prospect-meta{display:flex;gap:6px;flex-wrap:wrap}
 #tabEffectifs .prospect-card .prospect-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 #tabEffectifs .prospect-card .prospect-status-select{max-width:100%;font-size:.72rem;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--navy2);font-weight:700}
+#tabEffectifs .prospect-card .prospect-status-select.tag-ballotage{background:#fff1dc;border-color:#e2a23a;color:#855000}
+#tabEffectifs .prospect-card .prospect-status-select.tag-retenu{background:#e5f5eb;border-color:#55a878;color:#17643b}
+#tabEffectifs .prospect-card .prospect-status-select.tag-essai{background:#e8f1ff;border-color:#79a7e8;color:#174c8c}
 #tabEffectifs .prospect-card .pos-tag{background:#e8eef4;color:#24445e}
 #tabEffectifs .card-return-prospect{width:100%;border:0;border-radius:7px;padding:8px 10px;background:#8a4b16;color:#fff;font-weight:800;font-size:.76rem;cursor:pointer}
 #tabEffectifs .card-return-prospect:hover{background:#6f3b10}
@@ -2808,7 +2811,7 @@ function render(){
     const statusOptions = [
       ['','+ Tag'],['ballotage','Ballotage'],['retenu','Retenu – ballotage'],['essai','Essai']
     ];
-    const statusSelect = '<select class="prospect-status-select" data-idx="' + idx + '" aria-label="Statut de ' + p.name + '">' +
+    const statusSelect = '<select class="prospect-status-select tag-' + (p.statusTag || 'none') + '" data-idx="' + idx + '" aria-label="Statut de ' + p.name + '">' +
       statusOptions.map(([value,label])=>'<option value="' + value + '"' + ((p.statusTag||'')===value?' selected':'') + '>' + label + '</option>').join('') +
       '</select>';
     card.innerHTML = '<div class="card-name">' + p.name + '</div><div class="prospect-meta"><span class="pos-tag">' + posLabel(pos) + '</span><span class="pos-tag">RFA · Hors masse</span><span class="pos-tag">' + (p.free || '—') + '</span></div><div class="prospect-actions">' + statusSelect + '<button type="button" class="promote-prospect" data-idx="' + idx + '">↑ Promouvoir</button></div>';
