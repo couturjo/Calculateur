@@ -3731,7 +3731,7 @@ function auditDiff(previous,current){
     const walk=(x,y,path)=>{
       if(auditStable(x)===auditStable(y)) return;
       if(Array.isArray(x)||Array.isArray(y)){
-        if((x||[]).every(v=>v&&typeof v==='object'&&v.name)||(y||[]).every(v=>v&&typeof v==='object'&&v.name)){
+        if((Array.isArray(x)&&x.every(v=>v&&typeof v==='object'&&v.name))||(Array.isArray(y)&&y.every(v=>v&&typeof v==='object'&&v.name))){
           compareNamed(label,'—',x,y);
         } else {
           const ax=Array.isArray(x)?x:[], by=Array.isArray(y)?y:[];
