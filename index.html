@@ -1392,12 +1392,6 @@ body.login-locked{height:100%;width:100%;}
       <div id="journalStatus" class="disclaimer" style="margin-top:8px;">Chargement du journal…</div>
       <div id="journalEntries" style="margin-top:12px;"></div>
     </div>
-    <div class="panel" id="journalDetailPanel" style="display:none;">
-      <h2 id="journalDetailTitle">Détails de la sauvegarde</h2>
-      <div id="journalDetailMeta" class="disclaimer"></div>
-      <div id="journalDiffList" style="margin-top:12px;"></div>
-      <details style="margin-top:14px;"><summary style="cursor:pointer;font-weight:700;">Afficher les données complètes de cette sauvegarde (JSON)</summary><pre id="journalRawState" style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:520px;overflow:auto;background:var(--ice);padding:12px;border-radius:8px;font-size:.72rem;"></pre></details>
-    </div>
   </div>
 
   <footer>Pool des Champions · Coin du Claude · outil généré à partir de fichier_des_champions.xlsx</footer>
@@ -3716,70 +3710,103 @@ function auditDiff(previous,current){
   const add=(category,dg,subject,field,before,after)=>{
     if(auditStable(before)!==auditStable(after)) changes.push({category,dg,subject,field,before,after});
   };
-  const prevRoster=previous?.roster||{}, nextRoster=current?.roster||{};
-  const dgNames=new Set([...Object.keys(prevRoster),...Object.keys(nextRoster)]);
-  dgNames.forEach(dg=>{
-    const a=Array.isArray(prevRoster[dg])?prevRoster[dg]:[], b=Array.isArray(nextRoster[dg])?nextRoster[dg]:[];
-    const am=new Map(a.map(p=>[p.name,p])), bm=new Map(b.map(p=>[p.name,p]));
+  const compareNamed=(category,dg,beforeList,afterList)=>{
+    const a=Array.isArray(beforeList)?beforeList:[], b=Array.isArray(afterList)?afterList:[];
+    const am=new Map(a.filter(x=>x&&x.name).map(x=>[x.name,x]));
+    const bm=new Map(b.filter(x=>x&&x.name).map(x=>[x.name,x]));
     new Set([...am.keys(),...bm.keys()]).forEach(name=>{
-      if(!am.has(name)) changes.push({category:'Effectif',dg,subject:name,field:'Ajout au roster',before:null,after:bm.get(name)});
-      else if(!bm.has(name)) changes.push({category:'Effectif',dg,subject:name,field:'Retrait du roster',before:am.get(name),after:null});
-      else {
-        const pa=am.get(name)||{},pb=bm.get(name)||{};
-        new Set([...Object.keys(pa),...Object.keys(pb)]).forEach(k=>add('Effectif',dg,name,k,pa[k],pb[k]));
-      }
+      if(!am.has(name)) changes.push({category,dg,subject:name,field:'Ajout',before:null,after:bm.get(name)});
+      else if(!bm.has(name)) changes.push({category,dg,subject:name,field:'Retrait',before:am.get(name),after:null});
+      else new Set([...Object.keys(am.get(name)),...Object.keys(bm.get(name))]).forEach(k=>add(category,dg,name,k,am.get(name)[k],bm.get(name)[k]));
     });
-  });
+    if(am.size===0&&bm.size===0&&auditStable(a)!==auditStable(b)) {
+      const max=Math.max(a.length,b.length);
+      for(let i=0;i<max;i++) add(category,dg,'Élément '+(i+1),'Valeur',a[i],b[i]);
+    }
+  };
+  const prevRoster=previous?.roster||{}, nextRoster=current?.roster||{};
+  new Set([...Object.keys(prevRoster),...Object.keys(nextRoster)]).forEach(dg=>compareNamed('Effectif',dg,prevRoster[dg],nextRoster[dg]));
   [['prospects','Prospects'],['picks','Choix UFA'],['rfaPicks','Choix RFA']].forEach(([key,label])=>{
     const a=previous?.[key]||{},b=current?.[key]||{};
     const walk=(x,y,path)=>{
       if(auditStable(x)===auditStable(y)) return;
-      if(x&&y&&typeof x==='object'&&typeof y==='object'&&!Array.isArray(x)&&!Array.isArray(y)){
-        new Set([...Object.keys(x),...Object.keys(y)]).forEach(k=>walk(x[k],y[k],path?path+'.'+k:k));
+      if(Array.isArray(x)||Array.isArray(y)){
+        if((x||[]).every(v=>v&&typeof v==='object'&&v.name)||(y||[]).every(v=>v&&typeof v==='object'&&v.name)){
+          compareNamed(label,'—',x,y);
+        } else {
+          const ax=Array.isArray(x)?x:[], by=Array.isArray(y)?y:[];
+          for(let i=0;i<Math.max(ax.length,by.length);i++) walk(ax[i],by[i],path+' · '+(i+1));
+        }
+      } else if(x&&y&&typeof x==='object'&&typeof y==='object'){
+        new Set([...Object.keys(x),...Object.keys(y)]).forEach(k=>walk(x[k],y[k],path?path+' · '+k:k));
       } else changes.push({category:label,dg:'—',subject:path||label,field:'Valeur',before:x,after:y});
     };
     walk(a,b,'');
   });
   add('Paramètres','—','Plafond','Cap',previous?.cap,current?.cap);
-  add('Paramètres','—','Saison','Season',previous?.season,current?.season);
+  add('Paramètres','—','Saison','Saison',previous?.season,current?.season);
   return changes;
 }
 function auditValue(v){
   if(v===undefined||v===null||v==='') return '—';
-  if(typeof v==='object') return JSON.stringify(v);
+  if(typeof v==='object') {
+    if(v.name) return v.name;
+    return Object.entries(v).map(([k,val])=>k+': '+(val&&typeof val==='object'?JSON.stringify(val):val)).join(' · ');
+  }
   return String(v);
 }
-function renderAuditDetail(row,visibleRows){
-  const panel=document.getElementById('journalDetailPanel');
-  if(!row){panel.style.display='none';return;}
-  panel.style.display='block';
-  document.getElementById('journalDetailTitle').textContent='Version '+row.version+' · '+auditSeasonLabel(row.season);
-  document.getElementById('journalDetailMeta').textContent=(auditMembers[row.saved_by]?.dg_name||'Utilisateur inconnu')+' · '+new Date(row.saved_at).toLocaleString('fr-CA')+' · '+(row.note||'Publication officielle');
-  document.getElementById('journalRawState').textContent=JSON.stringify(auditSnapshot(row),null,2);
-  const candidates=(visibleRows||auditRows).filter(x=>x.season===row.season);
-  const idx=candidates.findIndex(x=>x.id===row.id);
-  const prior=idx>=0?candidates[idx+1]:null;
-  const diff=prior?auditDiff(auditSnapshot(prior),auditSnapshot(row)):[];
-  const list=document.getElementById('journalDiffList');
-  if(!prior) {list.innerHTML='<div class="disclaimer">Première sauvegarde connue pour cette sélection : aucun état antérieur à comparer.</div>';return;}
-  if(!diff.length){list.innerHTML='<div class="disclaimer">Aucune différence détectée avec la sauvegarde précédente.</div>';return;}
-  list.innerHTML='<div style="font-weight:800;margin-bottom:8px;">'+diff.length+' changement(s) détecté(s) depuis la version précédente</div>'+diff.slice(0,250).map(d=>'<div class="version-row" style="display:block;"><div style="font-size:.72rem;color:var(--grey);font-weight:700;">'+auditEsc(d.category)+' · '+auditEsc(d.dg)+'</div><div style="font-weight:800;margin:3px 0;">'+auditEsc(d.subject)+' — '+auditEsc(d.field)+'</div><div style="font-size:.8rem;overflow-wrap:anywhere;"><span style="color:var(--red);">Avant : '+auditEsc(auditValue(d.before))+'</span><br><span style="color:var(--green,#16804a);">Après : '+auditEsc(auditValue(d.after))+'</span></div></div>').join('')+(diff.length>250?'<div class="disclaimer">Affichage limité aux 250 premiers changements.</div>':'');
+function auditFieldLabel(field){
+  return ({pos:'Position',free:'Année de disponibilité',aav26:'Salaire 2026-27',aav27:'Salaire 2027-28',retainPct:'Pourcentage retenu',name:'Nom',statusTag:'Statut'}[field]||field);
+}
+function auditChangeSummary(d){
+  if(d.field==='Ajout au roster') return d.subject+' ajouté à l’effectif';
+  if(d.field==='Retrait du roster') return d.subject+' retiré de l’effectif';
+  if(d.category==='Prospects'&&d.field==='Ajout') return d.subject+' ajouté aux prospects';
+  if(d.category==='Prospects'&&d.field==='Retrait') return d.subject+' retiré des prospects';
+  if(d.field==='Cap') return 'Plafond salarial modifié';
+  if(d.field==='Saison') return 'Saison modifiée';
+  return d.subject+' — '+auditFieldLabel(d.field)+' modifié';
+}
+function auditDiffHtml(diff){
+  if(!diff.length) return '<div class="empty-note">Aucun changement appliqué.</div>';
+  return '<div style="font-weight:800;margin:4px 0 10px;">'+diff.length+' changement(s) appliqué(s)</div>'+
+    diff.slice(0,250).map(d=>'<div class="version-row" style="display:block;margin-bottom:7px;"><div style="font-weight:800;">'+auditEsc(auditChangeSummary(d))+'</div><div style="font-size:.78rem;overflow-wrap:anywhere;margin-top:4px;"><span style="color:var(--red);">Avant : '+auditEsc(auditValue(d.before))+'</span><br><span style="color:var(--green);">Après : '+auditEsc(auditValue(d.after))+'</span></div></div>').join('')+
+    (diff.length>250?'<div class="disclaimer">Affichage limité aux 250 premiers changements.</div>':'');
 }
 function renderAuditJournal(){
   const season=document.getElementById('journalSeasonFilter').value;
   const user=document.getElementById('journalUserFilter').value;
-  const rows=auditRows.filter(r=>(season==='all'||r.season===season)&&(user==='all'||r.saved_by===user));
+  const allByDate=[...auditRows].sort((a,b)=>new Date(b.saved_at)-new Date(a.saved_at));
+  const entries=[];
+  allByDate.forEach(row=>{
+    const previous=allByDate.find(x=>x.season===row.season&&new Date(x.saved_at)<new Date(row.saved_at));
+    if(!previous) return;
+    const diff=auditDiff(auditSnapshot(previous),auditSnapshot(row));
+    if(diff.length) entries.push({row,diff});
+  });
+  const visible=entries.filter(({row})=>(season==='all'||row.season===season)&&(user==='all'||row.saved_by===user));
   const box=document.getElementById('journalEntries');
-  if(!rows.length){box.innerHTML='<div class="empty-note">Aucune publication ne correspond aux filtres.</div>';document.getElementById('journalDetailPanel').style.display='none';return;}
-  box.innerHTML=rows.map(r=>'<button type="button" class="version-row journal-entry" data-id="'+auditEsc(r.id)+'" style="width:100%;text-align:left;cursor:pointer;"><div class="v-info"><div class="v-name">Version '+r.version+' · Saison '+auditEsc(auditSeasonLabel(r.season))+'</div><div class="v-meta">'+auditEsc(auditMembers[r.saved_by]?.dg_name||'Utilisateur inconnu')+' · '+auditEsc(new Date(r.saved_at).toLocaleString('fr-CA'))+'</div><div class="v-meta">'+auditEsc(r.note||'Publication officielle')+'</div></div><span style="font-weight:800;">Détails →</span></button>').join('');
+  if(!visible.length){
+    box.innerHTML='<div class="empty-note">Aucune modification réelle à afficher pour ces filtres.</div>';
+    return;
+  }
+  box.innerHTML=visible.map(({row,diff})=>{
+    const id=auditEsc(row.id);
+    return '<div class="journal-item" style="margin-bottom:9px;">'+
+      '<button type="button" class="version-row journal-entry" data-id="'+id+'" aria-expanded="false" style="width:100%;text-align:left;cursor:pointer;margin:0;">'+
+      '<div class="v-info"><div class="v-name">'+auditEsc(auditMembers[row.saved_by]?.dg_name||'Utilisateur inconnu')+' · Saison '+auditEsc(auditSeasonLabel(row.season))+'</div>'+
+      '<div class="v-meta">'+auditEsc(new Date(row.saved_at).toLocaleString('fr-CA'))+' · '+diff.length+' changement(s)</div></div>'+
+      '<span style="font-weight:800;">Voir le détail ▾</span></button>'+
+      '<div class="journal-inline-detail" data-detail-for="'+id+'" hidden style="background:white;border:1px solid var(--line);border-top:0;border-radius:0 0 8px 8px;padding:12px;">'+auditDiffHtml(diff)+'</div></div>';
+  }).join('');
   box.querySelectorAll('.journal-entry').forEach(btn=>btn.addEventListener('click',()=>{
-    auditSelectedId=btn.dataset.id;
-    renderAuditDetail(auditRows.find(r=>r.id===auditSelectedId),rows);
-    box.querySelectorAll('.journal-entry').forEach(b=>b.style.outline=b===btn?'2px solid var(--gold)':'none');
+    const detail=btn.parentElement.querySelector('.journal-inline-detail');
+    const open=detail.hidden;
+    detail.hidden=!open;
+    btn.setAttribute('aria-expanded',String(open));
+    btn.querySelector('span').textContent=open?'Masquer le détail ▴':'Voir le détail ▾';
+    btn.style.borderRadius=open?'8px 8px 0 0':'8px';
   }));
-  const selected=rows.find(r=>r.id===auditSelectedId)||rows[0];
-  auditSelectedId=selected.id;
-  renderAuditDetail(selected,rows);
 }
 async function loadAuditJournal(){
   if(!sbUser||!sbMember||sbMember.role!=='admin') return;
@@ -3799,7 +3826,7 @@ async function loadAuditJournal(){
     const filter=document.getElementById('journalUserFilter'), old=filter.value;
     filter.innerHTML='<option value="all">Tous les utilisateurs</option>'+Object.entries(auditMembers).map(([id,m])=>'<option value="'+auditEsc(id)+'">'+auditEsc(m.dg_name)+'</option>').join('');
     if(ids.includes(old)) filter.value=old;
-    status.textContent=auditRows.length+' publication(s) chargée(s) · comparaison avec la version précédente de la même liste.';
+    status.textContent='Les sauvegardes sans différence sont masquées. Ouvrez une modification pour voir son détail ici.';
     renderAuditJournal();
   }catch(err){status.textContent='Impossible de charger le journal : '+(err.message||err);document.getElementById('journalEntries').innerHTML='';}
 }
