@@ -1028,6 +1028,7 @@ body.login-locked{height:100%;width:100%;}
   <button class="nav-btn" data-tab="charte">📜 Charte</button>
   <button class="nav-btn" data-tab="draftday">🎬 Jour du repêchage</button>
   <button class="nav-btn" data-tab="versions">💾 Versions</button>
+  <button class="nav-btn" data-tab="journal" id="journalNavBtn" style="display:none;">📜 Journal</button>
 </div>
 
 <div class="sticky-bar" id="stickyBar">
@@ -1377,6 +1378,21 @@ body.login-locked{height:100%;width:100%;}
   </div>
 
     </div><!-- /tabVersions -->
+
+  <div class="tab-page" id="tabJournal">
+    <div class="panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div><h2 style="margin-bottom:4px;">📜 Journal des modifications</h2><div class="disclaimer">Historique des publications officielles enregistrées dans Supabase.</div></div>
+        <button class="primary" id="journalRefreshBtn" type="button">↻ Actualiser</button>
+      </div>
+      <div class="controls-row" style="margin-top:14px;">
+        <div class="field"><label for="journalSeasonFilter">Saison</label><select id="journalSeasonFilter"><option value="all">Toutes</option><option value="2627">2026-27</option><option value="2728">2027-28</option></select></div>
+        <div class="field"><label for="journalUserFilter">Utilisateur</label><select id="journalUserFilter"><option value="all">Tous les utilisateurs</option></select></div>
+      </div>
+      <div id="journalStatus" class="disclaimer" style="margin-top:8px;">Chargement du journal…</div>
+      <div id="journalEntries" style="margin-top:12px;"></div>
+    </div>
+  </div>
 
   <footer>Pool des Champions · Coin du Claude · outil généré à partir de fichier_des_champions.xlsx</footer>
 </div>
@@ -3426,6 +3442,8 @@ document.querySelectorAll('.nav-btn').forEach(btn=>{
     document.getElementById('tabCharte').classList.toggle('active', tab==='charte');
     document.getElementById('tabDraftDay').classList.toggle('active', tab==='draftday');
     document.getElementById('tabVersions').classList.toggle('active', tab==='versions');
+    document.getElementById('tabJournal').classList.toggle('active', tab==='journal');
+    if(tab==='journal') loadAuditJournal();
     if(tab==='transactions') renderTrade();
     if(tab==='versions') renderVersionsList();
     if(tab==='rfa') renderRfa();
@@ -3678,6 +3696,158 @@ async function sbLoadOfficialState(){
   sbMessage('État officiel chargé — version '+data.version+' · mise à jour '+new Date(data.updated_at).toLocaleString('fr-CA'));
 }
 
+
+/* ===== Journal d'audit — prototype admin ===== */
+let auditRows = [];
+let auditMembers = {};
+let auditSelectedId = null;
+const auditEsc = value => String(value ?? '').replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+function auditSeasonLabel(v){return v==='2627'?'2026-27':v==='2728'?'2027-28':v||'—';}
+function auditSnapshot(row){const s=row?.state||{};return s.state||s;}
+function auditStable(v){return JSON.stringify(v===undefined?null:v);}
+function auditDiff(previous,current){
+  const changes=[];
+  const add=(category,dg,subject,field,before,after)=>{
+    if(auditStable(before)!==auditStable(after)) changes.push({category,dg,subject,field,before,after});
+  };
+  const compareNamed=(category,dg,beforeList,afterList)=>{
+    const a=Array.isArray(beforeList)?beforeList:[], b=Array.isArray(afterList)?afterList:[];
+    const am=new Map(a.filter(x=>x&&x.name).map(x=>[x.name,x]));
+    const bm=new Map(b.filter(x=>x&&x.name).map(x=>[x.name,x]));
+    new Set([...am.keys(),...bm.keys()]).forEach(name=>{
+      if(!am.has(name)) changes.push({category,dg,subject:name,field:'Ajout',before:null,after:bm.get(name)});
+      else if(!bm.has(name)) changes.push({category,dg,subject:name,field:'Retrait',before:am.get(name),after:null});
+      else new Set([...Object.keys(am.get(name)),...Object.keys(bm.get(name))]).forEach(k=>add(category,dg,name,k,am.get(name)[k],bm.get(name)[k]));
+    });
+    if(am.size===0&&bm.size===0&&auditStable(a)!==auditStable(b)) {
+      const max=Math.max(a.length,b.length);
+      for(let i=0;i<max;i++) add(category,dg,'Élément '+(i+1),'Valeur',a[i],b[i]);
+    }
+  };
+  const prevRoster=previous?.roster||{}, nextRoster=current?.roster||{};
+  new Set([...Object.keys(prevRoster),...Object.keys(nextRoster)]).forEach(dg=>compareNamed('Effectif',dg,prevRoster[dg],nextRoster[dg]));
+  [['prospects','Prospects'],['picks','Choix UFA'],['rfaPicks','Choix RFA']].forEach(([key,label])=>{
+    const a=previous?.[key]||{},b=current?.[key]||{};
+    const walk=(x,y,path,pickMeta=null)=>{
+      if(auditStable(x)===auditStable(y)) return;
+      if(Array.isArray(x)||Array.isArray(y)){
+        if((Array.isArray(x)&&x.every(v=>v&&typeof v==='object'&&v.name))||(Array.isArray(y)&&y.every(v=>v&&typeof v==='object'&&v.name))){
+          compareNamed(label,'—',x,y);
+        } else {
+          const ax=Array.isArray(x)?x:[], by=Array.isArray(y)?y:[];
+          for(let i=0;i<Math.max(ax.length,by.length);i++){
+            const beforeItem=ax[i], afterItem=by[i];
+            const item=afterItem||beforeItem;
+            const meta=item&&typeof item==='object'&&Number.isFinite(Number(item.round))
+              ? {year:path,round:item.round,originalOwner:item.originalOwner||'',pickId:item.id||''}
+              : pickMeta;
+            walk(beforeItem,afterItem,path+' · '+(i+1),meta);
+          }
+        }
+      } else if(x&&y&&typeof x==='object'&&typeof y==='object'){
+        new Set([...Object.keys(x),...Object.keys(y)]).forEach(k=>walk(x[k],y[k],path?path+' · '+k:k,pickMeta));
+      } else changes.push({category:label,dg:'—',subject:path||label,field:'Valeur',before:x,after:y,pickMeta});
+    };
+    walk(a,b,'');
+  });
+  add('Paramètres','—','Plafond','Cap',previous?.cap,current?.cap);
+  add('Paramètres','—','Saison','Saison',previous?.season,current?.season);
+  return changes;
+}
+function auditValue(v){
+  if(v===undefined||v===null||v==='') return '—';
+  if(typeof v==='object') {
+    if(v.name) return v.name;
+    return Object.entries(v).map(([k,val])=>k+': '+(val&&typeof val==='object'?JSON.stringify(val):val)).join(' · ');
+  }
+  return String(v);
+}
+function auditFieldLabel(field){
+  return ({pos:'Position',free:'Année de disponibilité',aav26:'Salaire 2026-27',aav27:'Salaire 2027-28',retainPct:'Pourcentage retenu',name:'Nom',statusTag:'Statut'}[field]||field);
+}
+function auditChangeSummary(d){
+  if(d.field==='Ajout au roster') return d.subject+' ajouté à l’effectif';
+  if(d.field==='Retrait du roster') return d.subject+' retiré de l’effectif';
+  if(d.category==='Prospects'&&d.field==='Ajout') return d.subject+' ajouté aux prospects';
+  if(d.category==='Prospects'&&d.field==='Retrait') return d.subject+' retiré des prospects';
+  if(d.field==='Cap') return 'Plafond salarial modifié';
+  if(d.field==='Saison') return 'Saison modifiée';
+  if((d.category==='Choix UFA'||d.category==='Choix RFA')&&d.pickMeta){
+    const p=d.pickMeta;
+    const owner=p.originalOwner?' · choix initial de '+p.originalOwner:'';
+    const type=d.category==='Choix UFA'?'Choix UFA':'Choix RFA';
+    const field=d.subject.endsWith('currentOwner')?'Propriétaire du choix':auditFieldLabel(d.field);
+    return type+' '+p.year+' · ronde '+p.round+owner+' — '+field.toLowerCase()+' modifié';
+  }
+  return d.subject+' — '+auditFieldLabel(d.field)+' modifié';
+}
+function auditDiffHtml(diff){
+  if(!diff.length) return '<div class="empty-note">Aucun changement appliqué.</div>';
+  return '<div style="font-weight:800;margin:4px 0 10px;">'+diff.length+' changement(s) appliqué(s)</div>'+
+    diff.slice(0,250).map(d=>'<div class="version-row" style="display:block;margin-bottom:7px;"><div style="font-weight:800;">'+auditEsc(auditChangeSummary(d))+'</div><div style="font-size:.78rem;overflow-wrap:anywhere;margin-top:4px;"><span style="color:var(--red);">Avant : '+auditEsc(auditValue(d.before))+'</span><br><span style="color:var(--green);">Après : '+auditEsc(auditValue(d.after))+'</span></div></div>').join('')+
+    (diff.length>250?'<div class="disclaimer">Affichage limité aux 250 premiers changements.</div>':'');
+}
+function renderAuditJournal(){
+  const season=document.getElementById('journalSeasonFilter').value;
+  const user=document.getElementById('journalUserFilter').value;
+  const allByDate=[...auditRows].sort((a,b)=>new Date(b.saved_at)-new Date(a.saved_at));
+  const entries=[];
+  allByDate.forEach(row=>{
+    const previous=allByDate.find(x=>x.season===row.season&&new Date(x.saved_at)<new Date(row.saved_at));
+    if(!previous) return;
+    const diff=auditDiff(auditSnapshot(previous),auditSnapshot(row));
+    if(diff.length) entries.push({row,diff});
+  });
+  const visible=entries.filter(({row})=>(season==='all'||row.season===season)&&(user==='all'||row.saved_by===user));
+  const box=document.getElementById('journalEntries');
+  if(!visible.length){
+    box.innerHTML='<div class="empty-note">Aucune modification réelle à afficher pour ces filtres.</div>';
+    return;
+  }
+  box.innerHTML=visible.map(({row,diff})=>{
+    const id=auditEsc(row.id);
+    return '<div class="journal-item" style="margin-bottom:9px;">'+
+      '<button type="button" class="version-row journal-entry" data-id="'+id+'" aria-expanded="false" style="width:100%;text-align:left;cursor:pointer;margin:0;">'+
+      '<div class="v-info"><div class="v-name">'+auditEsc(auditMembers[row.saved_by]?.dg_name||'Utilisateur inconnu')+' · Saison '+auditEsc(auditSeasonLabel(row.season))+'</div>'+
+      '<div class="v-meta">'+auditEsc(new Date(row.saved_at).toLocaleString('fr-CA'))+' · '+diff.length+' changement(s)</div></div>'+
+      '<span style="font-weight:800;">Voir le détail ▾</span></button>'+
+      '<div class="journal-inline-detail" data-detail-for="'+id+'" hidden style="background:white;border:1px solid var(--line);border-top:0;border-radius:0 0 8px 8px;padding:12px;">'+auditDiffHtml(diff)+'</div></div>';
+  }).join('');
+  box.querySelectorAll('.journal-entry').forEach(btn=>btn.addEventListener('click',()=>{
+    const detail=btn.parentElement.querySelector('.journal-inline-detail');
+    const open=detail.hidden;
+    detail.hidden=!open;
+    btn.setAttribute('aria-expanded',String(open));
+    btn.querySelector('span').textContent=open?'Masquer le détail ▴':'Voir le détail ▾';
+    btn.style.borderRadius=open?'8px 8px 0 0':'8px';
+  }));
+}
+async function loadAuditJournal(){
+  if(!sbUser||!sbMember||sbMember.role!=='admin') return;
+  const status=document.getElementById('journalStatus');
+  status.textContent='Chargement des publications…';
+  try{
+    const {data,error}=await sb.from('pool_state_history').select('id,season,version,state,saved_at,saved_by,note').order('saved_at',{ascending:false}).limit(150);
+    if(error) throw error;
+    auditRows=data||[];
+    const ids=[...new Set(auditRows.map(r=>r.saved_by).filter(Boolean))];
+    auditMembers={};
+    if(ids.length){
+      const {data:members,error:memberError}=await sb.from('pool_members').select('user_id,dg_name,role').in('user_id',ids);
+      if(memberError) throw memberError;
+      (members||[]).forEach(m=>auditMembers[m.user_id]=m);
+    }
+    const filter=document.getElementById('journalUserFilter'), old=filter.value;
+    filter.innerHTML='<option value="all">Tous les utilisateurs</option>'+Object.entries(auditMembers).map(([id,m])=>'<option value="'+auditEsc(id)+'">'+auditEsc(m.dg_name)+'</option>').join('');
+    if(ids.includes(old)) filter.value=old;
+    status.textContent='Les sauvegardes sans différence sont masquées. Ouvrez une modification pour voir son détail ici.';
+    renderAuditJournal();
+  }catch(err){status.textContent='Impossible de charger le journal : '+(err.message||err);document.getElementById('journalEntries').innerHTML='';}
+}
+document.getElementById('journalRefreshBtn').addEventListener('click',loadAuditJournal);
+document.getElementById('journalSeasonFilter').addEventListener('change',renderAuditJournal);
+document.getElementById('journalUserFilter').addEventListener('change',renderAuditJournal);
+
 async function sbStartSession(user){
   sbUser=user;
   const {data:member,error}=await sb.from('pool_members').select('dg_name,role,active').eq('user_id',user.id).maybeSingle();
@@ -3693,6 +3863,7 @@ async function sbStartSession(user){
   document.getElementById('sbUserBar').style.display='flex';
   document.getElementById('sbUserLabel').textContent='Connecté : '+member.dg_name+(member.role==='admin'?' · Administrateur':'');
   document.getElementById('sbPublishBtn').style.display=member.role==='admin'?'inline-block':'none';
+  document.getElementById('journalNavBtn').style.display=member.role==='admin'?'inline-block':'none';
   try { await sbLoadOfficialState(); }
   catch(err) { sbMessage('Connexion réussie, mais chargement officiel impossible : '+err.message,true); }
 }
@@ -3716,6 +3887,8 @@ document.getElementById('sbLoginForm').addEventListener('submit',async e=>{
 document.getElementById('sbLogoutBtn').addEventListener('click',async()=>{
   await sb.auth.signOut();
   sbUser=null; sbMember=null;
+  document.getElementById('journalNavBtn').style.display='none';
+  document.getElementById('tabJournal').classList.remove('active');
   document.getElementById('sbUserBar').style.display='none';
   document.getElementById('supabaseGate').style.display='flex';
   document.documentElement.classList.add('login-locked');
