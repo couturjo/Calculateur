@@ -3728,18 +3728,25 @@ function auditDiff(previous,current){
   new Set([...Object.keys(prevRoster),...Object.keys(nextRoster)]).forEach(dg=>compareNamed('Effectif',dg,prevRoster[dg],nextRoster[dg]));
   [['prospects','Prospects'],['picks','Choix UFA'],['rfaPicks','Choix RFA']].forEach(([key,label])=>{
     const a=previous?.[key]||{},b=current?.[key]||{};
-    const walk=(x,y,path)=>{
+    const walk=(x,y,path,pickMeta=null)=>{
       if(auditStable(x)===auditStable(y)) return;
       if(Array.isArray(x)||Array.isArray(y)){
         if((Array.isArray(x)&&x.every(v=>v&&typeof v==='object'&&v.name))||(Array.isArray(y)&&y.every(v=>v&&typeof v==='object'&&v.name))){
           compareNamed(label,'—',x,y);
         } else {
           const ax=Array.isArray(x)?x:[], by=Array.isArray(y)?y:[];
-          for(let i=0;i<Math.max(ax.length,by.length);i++) walk(ax[i],by[i],path+' · '+(i+1));
+          for(let i=0;i<Math.max(ax.length,by.length);i++){
+            const beforeItem=ax[i], afterItem=by[i];
+            const item=afterItem||beforeItem;
+            const meta=item&&typeof item==='object'&&Number.isFinite(Number(item.round))
+              ? {year:path,round:item.round,originalOwner:item.originalOwner||'',pickId:item.id||''}
+              : pickMeta;
+            walk(beforeItem,afterItem,path+' · '+(i+1),meta);
+          }
         }
       } else if(x&&y&&typeof x==='object'&&typeof y==='object'){
-        new Set([...Object.keys(x),...Object.keys(y)]).forEach(k=>walk(x[k],y[k],path?path+' · '+k:k));
-      } else changes.push({category:label,dg:'—',subject:path||label,field:'Valeur',before:x,after:y});
+        new Set([...Object.keys(x),...Object.keys(y)]).forEach(k=>walk(x[k],y[k],path?path+' · '+k:k,pickMeta));
+      } else changes.push({category:label,dg:'—',subject:path||label,field:'Valeur',before:x,after:y,pickMeta});
     };
     walk(a,b,'');
   });
@@ -3765,6 +3772,13 @@ function auditChangeSummary(d){
   if(d.category==='Prospects'&&d.field==='Retrait') return d.subject+' retiré des prospects';
   if(d.field==='Cap') return 'Plafond salarial modifié';
   if(d.field==='Saison') return 'Saison modifiée';
+  if((d.category==='Choix UFA'||d.category==='Choix RFA')&&d.pickMeta){
+    const p=d.pickMeta;
+    const owner=p.originalOwner?' · choix initial de '+p.originalOwner:'';
+    const type=d.category==='Choix UFA'?'Choix UFA':'Choix RFA';
+    const field=d.subject.endsWith('currentOwner')?'Propriétaire du choix':auditFieldLabel(d.field);
+    return type+' '+p.year+' · ronde '+p.round+owner+' — '+field.toLowerCase()+' modifié';
+  }
   return d.subject+' — '+auditFieldLabel(d.field)+' modifié';
 }
 function auditDiffHtml(diff){
