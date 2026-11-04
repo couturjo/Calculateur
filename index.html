@@ -2626,8 +2626,8 @@ function returnPlayerToProspect(dg, index){
     name: player.name,
     free: player.free || '—',
     pos: player.pos || 'F',
-    aav26: typeof player.overrides?.2627 === 'number' ? player.overrides.2627 : player.aav26,
-    aav27: typeof player.overrides?.2728 === 'number' ? player.overrides.2728 : player.aav27,
+    aav26: player.overrides && typeof player.overrides['2627'] === 'number' ? player.overrides['2627'] : player.aav26,
+    aav27: player.overrides && typeof player.overrides['2728'] === 'number' ? player.overrides['2728'] : player.aav27,
     statusTag: 'essai'
   };
   if(player._custom) nextProspect._custom = true;
