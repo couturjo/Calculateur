@@ -3749,15 +3749,16 @@ function auditValue(v){
   if(typeof v==='object') return JSON.stringify(v);
   return String(v);
 }
-function renderAuditDetail(row){
+function renderAuditDetail(row,visibleRows){
   const panel=document.getElementById('journalDetailPanel');
   if(!row){panel.style.display='none';return;}
   panel.style.display='block';
   document.getElementById('journalDetailTitle').textContent='Version '+row.version+' · '+auditSeasonLabel(row.season);
   document.getElementById('journalDetailMeta').textContent=(auditMembers[row.saved_by]?.dg_name||'Utilisateur inconnu')+' · '+new Date(row.saved_at).toLocaleString('fr-CA')+' · '+(row.note||'Publication officielle');
   document.getElementById('journalRawState').textContent=JSON.stringify(auditSnapshot(row),null,2);
-  const idx=auditRows.findIndex(x=>x.id===row.id);
-  const prior=idx>=0?auditRows[idx+1]:null;
+  const candidates=(visibleRows||auditRows).filter(x=>x.season===row.season);
+  const idx=candidates.findIndex(x=>x.id===row.id);
+  const prior=idx>=0?candidates[idx+1]:null;
   const diff=prior?auditDiff(auditSnapshot(prior),auditSnapshot(row)):[];
   const list=document.getElementById('journalDiffList');
   if(!prior) {list.innerHTML='<div class="disclaimer">Première sauvegarde connue pour cette sélection : aucun état antérieur à comparer.</div>';return;}
@@ -3773,12 +3774,12 @@ function renderAuditJournal(){
   box.innerHTML=rows.map(r=>'<button type="button" class="version-row journal-entry" data-id="'+auditEsc(r.id)+'" style="width:100%;text-align:left;cursor:pointer;"><div class="v-info"><div class="v-name">Version '+r.version+' · Saison '+auditEsc(auditSeasonLabel(r.season))+'</div><div class="v-meta">'+auditEsc(auditMembers[r.saved_by]?.dg_name||'Utilisateur inconnu')+' · '+auditEsc(new Date(r.saved_at).toLocaleString('fr-CA'))+'</div><div class="v-meta">'+auditEsc(r.note||'Publication officielle')+'</div></div><span style="font-weight:800;">Détails →</span></button>').join('');
   box.querySelectorAll('.journal-entry').forEach(btn=>btn.addEventListener('click',()=>{
     auditSelectedId=btn.dataset.id;
-    renderAuditDetail(auditRows.find(r=>r.id===auditSelectedId));
+    renderAuditDetail(auditRows.find(r=>r.id===auditSelectedId),rows);
     box.querySelectorAll('.journal-entry').forEach(b=>b.style.outline=b===btn?'2px solid var(--gold)':'none');
   }));
   const selected=rows.find(r=>r.id===auditSelectedId)||rows[0];
   auditSelectedId=selected.id;
-  renderAuditDetail(selected);
+  renderAuditDetail(selected,rows);
 }
 async function loadAuditJournal(){
   if(!sbUser||!sbMember||sbMember.role!=='admin') return;
