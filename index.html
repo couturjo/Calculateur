@@ -2600,7 +2600,7 @@ function currentAav(p){
   if(state.season === '2627') base = p.aav26;
   else base = p.aav27; // 2027-28
   let val = (typeof base === 'number') ? base : 0;
-  if(p.retainPct > 0) val = val * (1 - p.retainPct/100);
+  if(p.retainPct > 0) val = val * (p.retainPct/100); // Le pourcentage représente la part conservée par le DG.
   return val;
 }
 
