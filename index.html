@@ -1717,9 +1717,7 @@ function renderTradeList(containerEl, dg, outMap, otherOutMap){
 }
 
 function tradeMetricRow(label, before, after, unit, illegal, fullyCompliant){
-  const improved = (after < before && (label === 'Masse salariale' || label === 'Effectif'))
-    || (after > before && label === 'Marge');
-  const valueClass = illegal ? 'illegal' : (fullyCompliant && improved ? 'pos' : '');
+  const valueClass = illegal ? 'illegal' : (fullyCompliant ? 'pos' : '');
   return `<div class="trade-metric">
     <span class="tm-label">${label}</span>
     <span><span class="tm-value">${before.toFixed(3)}${unit}</span><span class="tm-arrow">→</span><span class="tm-value ${valueClass}">${after.toFixed(3)}${unit}</span></span>
