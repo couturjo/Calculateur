@@ -2699,6 +2699,14 @@ function render(){
       </div>
     `;
     boards[posKey].appendChild(card);
+    const returnButton = card.querySelector('.card-return-prospect');
+    if(returnButton){
+      returnButton.addEventListener('click', event=>{
+        event.preventDefault();
+        event.stopPropagation();
+        returnPlayerToProspect(state.dg, Number(returnButton.dataset.idx));
+      });
+    }
   });
 
   ['F','D','G'].forEach(k=>{
@@ -2773,9 +2781,9 @@ function render(){
     render();
     toast(player.name + (player.statusTag ? ' : tag « ' + label + ' » ajouté' : ' : tag retiré'));
   });
-  bindAll('.card-return-prospect', e=>{
-    returnPlayerToProspect(state.dg, parseInt(e.currentTarget.dataset.idx,10));
-  });
+  // Le bouton de retour est lié directement à sa carte après son rendu.
+  // Il n'est pas confié au helper générique bindAll, qui ne parcourt que les cartes
+  // déjà présentes dans les colonnes au moment de l'appel.
   bindAll('.aav-edit-input', e=>{
     const i = parseInt(e.target.dataset.idx,10);
     const val = parseFloat(e.target.value);
