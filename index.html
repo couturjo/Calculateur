@@ -929,6 +929,14 @@ body.login-locked{height:100%;width:100%;}
   line-height:1.2;
   padding:1px 5px;
 }
+#tabEffectifs .pos-column .player-status-select{
+  width:max-content;max-width:100%;min-height:19px;padding:1px 17px 1px 5px;
+  border-radius:5px;font-size:.62rem;line-height:1.2;font-weight:800;
+  border:1px solid var(--line);background:#f4f7fa;color:var(--grey);
+}
+#tabEffectifs .pos-column .player-status-select.tag-ballotage{background:#fff1dc;border-color:#e2a23a;color:#855000}
+#tabEffectifs .pos-column .player-status-select.tag-retenu{background:#e5f5eb;border-color:#55a878;color:#17643b}
+#tabEffectifs .pos-column .player-status-select.tag-essai{background:#e8f1ff;border-color:#79a7e8;color:#174c8c}
 #tabEffectifs .pos-column .card-aav-row{
   grid-area:salary;
   display:flex;
@@ -2605,6 +2613,12 @@ function render(){
       <button class="card-remove" data-idx="${idx}" title="Retirer">✕</button>
       <div class="card-name">${p.name}</div>
       <div class="card-badges">
+        <select class="player-status-select tag-${p.statusTag || 'none'}" data-idx="${idx}" aria-label="Statut de ${p.name}" title="Ajouter ou modifier un tag">
+          <option value="" ${!p.statusTag?'selected':''}>+ Tag</option>
+          <option value="ballotage" ${p.statusTag==='ballotage'?'selected':''}>Ballotage</option>
+          <option value="retenu" ${p.statusTag==='retenu'?'selected':''}>Retenu – ballotage</option>
+          <option value="essai" ${p.statusTag==='essai'?'selected':''}>Essai</option>
+        </select>
         ${p._custom ? '<span class="pos-tag">perso</span>' : ''}
         ${hasOverride ? '<span class="pos-tag" style="background:#fff2cc;color:#8a6d00;">corrigé</span>' : ''}
         ${noRealData ? '<span class="pos-tag" style="background:#fdeceb;color:var(--red);">pas de donnée réelle</span>' : ''}
@@ -2687,6 +2701,16 @@ function render(){
     const i = parseInt(e.target.dataset.idx,10);
     state.roster[state.dg][i].retainPct = parseInt(e.target.value,10);
     render();
+  });
+  bindAll('.player-status-select', e=>{
+    const i = parseInt(e.currentTarget.dataset.idx,10);
+    const player = state.roster[state.dg][i];
+    if(!player) return;
+    if(e.currentTarget.value) player.statusTag = e.currentTarget.value;
+    else delete player.statusTag;
+    const label = e.currentTarget.options[e.currentTarget.selectedIndex].text;
+    render();
+    toast(player.name + (player.statusTag ? ' : tag « ' + label + ' » ajouté' : ' : tag retiré'));
   });
   bindAll('.aav-edit-input', e=>{
     const i = parseInt(e.target.dataset.idx,10);
