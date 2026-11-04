@@ -675,6 +675,7 @@
   .trade-metric .tm-value{font-weight:700; color:var(--navy);}
   .trade-metric .tm-arrow{color:var(--grey); font-weight:400; margin:0 4px;}
   .trade-metric .tm-value.neg{color:var(--red);}
+  .trade-metric .tm-value.illegal{color:var(--red)!important;font-weight:800;}
   .trade-metric .tm-value.pos{color:var(--green);}
   @media (max-width:700px){
     .trade-columns{grid-template-columns:1fr;}
@@ -1715,11 +1716,13 @@ function renderTradeList(containerEl, dg, outMap, otherOutMap){
   });
 }
 
-function tradeMetricRow(label, before, after, unit){
-  const arrowClass = after > before ? 'neg' : (after < before ? 'pos' : '');
+function tradeMetricRow(label, before, after, unit, illegal, fullyCompliant){
+  const improved = (after < before && (label === 'Masse salariale' || label === 'Effectif'))
+    || (after > before && label === 'Marge');
+  const valueClass = illegal ? 'illegal' : (fullyCompliant && improved ? 'pos' : '');
   return `<div class="trade-metric">
     <span class="tm-label">${label}</span>
-    <span><span class="tm-value">${before.toFixed(3)}${unit}</span><span class="tm-arrow">→</span><span class="tm-value ${arrowClass}">${after.toFixed(3)}${unit}</span></span>
+    <span><span class="tm-value">${before.toFixed(3)}${unit}</span><span class="tm-arrow">→</span><span class="tm-value ${valueClass}">${after.toFixed(3)}${unit}</span></span>
   </div>`;
 }
 
@@ -1907,6 +1910,10 @@ function renderTrade(){
       🏖️ <b>Hors-saison</b> — effectif illimité et marge de 10% sur le plafond (${effectiveCap.toFixed(3)} $M) actifs jusqu'au repêchage UFA du 19 septembre 2026.
     </div>` : '';
 
+  const illegalA = massAfterA > effectiveCap + 1e-9 || marginAfterA < -1e-9 || (!offSeason && countAfterA > MAX_ROSTER_SIZE);
+  const illegalB = massAfterB > effectiveCap + 1e-9 || marginAfterB < -1e-9 || (!offSeason && countAfterB > MAX_ROSTER_SIZE);
+  const fullyCompliant = !illegalA && !illegalB;
+
   const violationHtml = violations.length ? `
     <div class="trade-violation-banner">
       <b>⚠️ Cette transaction ne respecte pas les règlements et ne peut pas être complétée :</b>
@@ -1918,17 +1925,17 @@ function renderTrade(){
     ${violationHtml}
     <div class="trade-dg-box">
       <h4>${dgA}</h4>
-      ${tradeMetricRow('Effectif', countBeforeA, countAfterA, '')}
-      ${tradeMetricRow('Masse salariale', massBeforeA, massAfterA, ' $M')}
-      ${tradeMetricRow('Marge', marginBeforeA, marginAfterA, ' $M')}
+      ${tradeMetricRow('Effectif', countBeforeA, countAfterA, '', !offSeason && countAfterA > MAX_ROSTER_SIZE, fullyCompliant)}
+      ${tradeMetricRow('Masse salariale', massBeforeA, massAfterA, ' $M', massAfterA > effectiveCap + 1e-9, fullyCompliant)}
+      ${tradeMetricRow('Marge', marginBeforeA, marginAfterA, ' $M', marginAfterA < -1e-9, fullyCompliant)}
       <div class="trade-metric"><span class="tm-label">Salaire donné (net)</span><span class="tm-value">${sentA.net.toFixed(3)} $M</span></div>
       <div class="trade-metric"><span class="tm-label">Salaire reçu (net)</span><span class="tm-value">${sentB.net.toFixed(3)} $M</span></div>
     </div>
     <div class="trade-dg-box">
       <h4>${dgB}</h4>
-      ${tradeMetricRow('Effectif', countBeforeB, countAfterB, '')}
-      ${tradeMetricRow('Masse salariale', massBeforeB, massAfterB, ' $M')}
-      ${tradeMetricRow('Marge', marginBeforeB, marginAfterB, ' $M')}
+      ${tradeMetricRow('Effectif', countBeforeB, countAfterB, '', !offSeason && countAfterB > MAX_ROSTER_SIZE, fullyCompliant)}
+      ${tradeMetricRow('Masse salariale', massBeforeB, massAfterB, ' $M', massAfterB > effectiveCap + 1e-9, fullyCompliant)}
+      ${tradeMetricRow('Marge', marginBeforeB, marginAfterB, ' $M', marginAfterB < -1e-9, fullyCompliant)}
       <div class="trade-metric"><span class="tm-label">Salaire donné (net)</span><span class="tm-value">${sentB.net.toFixed(3)} $M</span></div>
       <div class="trade-metric"><span class="tm-label">Salaire reçu (net)</span><span class="tm-value">${sentA.net.toFixed(3)} $M</span></div>
     </div>
