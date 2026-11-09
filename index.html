@@ -1245,7 +1245,7 @@ body.login-locked{height:100%;width:100%;}
       <h2>🌱 Choix RFA</h2>
       <div class="disclaimer" style="margin-top:6px;">
         3 rondes par DG, par année. Années fixes : 2027 et 2028. Utilise le même DG que ci-dessus.
-        <br>⚠️ Les choix RFA et UFA 2028-2029 ne seront échangeables dans le module Transaction qu'après le repêchage UFA, le 20 septembre 2026.
+        <br>⚠️ Les choix RFA et UFA 2028 ne seront échangeables dans le module Transaction qu'après le repêchage UFA, le 20 septembre 2026.
       </div>
     </div>
     <div class="picks-columns">
@@ -3790,7 +3790,7 @@ function auditChangeSummary(d){
     const owner=p.originalOwner?' · choix initial de '+p.originalOwner:'';
     const type=d.category==='Choix UFA'?'Choix UFA':'Choix RFA';
     const field=d.subject.endsWith('currentOwner')?'Propriétaire du choix':auditFieldLabel(d.field);
-    return type+' '+p.year+' · ronde '+p.round+owner+' — '+field.toLowerCase()+' modifié';
+    return type+' '+pickYearLabel(p.year)+' · ronde '+p.round+owner+' — '+field.toLowerCase()+' modifié';
   }
   return d.subject+' — '+auditFieldLabel(d.field)+' modifié';
 }
