@@ -3145,7 +3145,7 @@ function renderKanban(){
     // Choix UFA
     state.pickYears.forEach(year=>{
       const picks = (state.picks[year] || []).filter(p=>p.currentOwner===dg).sort((a,b)=>a.round-b.round);
-      addGroup('UFA_'+year, '🎯 Choix UFA ' + pickYearLabel(year),) picks, p=>{
+      addGroup('UFA_'+year, '🎯 Choix UFA ' + pickYearLabel(year), picks, p=>{
         const isSelected = !!(kanbanSelected && kanbanSelected.type==='ufapick' && kanbanSelected.key===p.id && kanbanSelected.fromDg===dg);
         return makeCard(
           `<span class="kc-name">${pickLabel(p, 'ufa', year)}</span>`,
@@ -3158,7 +3158,7 @@ function renderKanban(){
     // Choix RFA
     state.rfaPickYears.forEach(year=>{
       const picks = (state.rfaPicks[year] || []).filter(p=>p.currentOwner===dg).sort((a,b)=>a.round-b.round);
-      addGroup('RFAPICKS_'+year, '🌱 Choix RFA ' + pickYearLabel(year),) picks, p=>{
+      addGroup('RFAPICKS_'+year, '🌱 Choix RFA ' + pickYearLabel(year), picks, p=>{
         const isSelected = !!(kanbanSelected && kanbanSelected.type==='rfapick' && kanbanSelected.key===p.id && kanbanSelected.fromDg===dg);
         return makeCard(
           `<span class="kc-name">${pickLabel(p, 'rfa', year)}</span>`,
