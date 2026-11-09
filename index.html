@@ -1218,11 +1218,11 @@ body.login-locked{height:100%;width:100%;}
         </div>
         <div class="field" style="max-width:120px;">
           <label for="pickYearAInput">Année A</label>
-          <input type="text" id="pickYearAInput" value="2027-2028">
+          <input type="text" id="pickYearAInput" value="2027">
         </div>
         <div class="field" style="max-width:120px;">
           <label for="pickYearBInput">Année B</label>
-          <input type="text" id="pickYearBInput" value="2028-2029">
+          <input type="text" id="pickYearBInput" value="2028">
         </div>
       </div>
       <div class="disclaimer" style="margin-top:10px;">
@@ -1232,11 +1232,11 @@ body.login-locked{height:100%;width:100%;}
 
     <div class="picks-columns">
       <div class="picks-col">
-        <h3 id="picksYearALabel">Repêchage 2027-2028</h3>
+        <h3 id="picksYearALabel">Repêchage 2027</h3>
         <div id="picksListA"></div>
       </div>
       <div class="picks-col">
-        <h3 id="picksYearBLabel">Repêchage 2028-2029</h3>
+        <h3 id="picksYearBLabel">Repêchage 2028</h3>
         <div id="picksListB"></div>
       </div>
     </div>
@@ -1244,17 +1244,17 @@ body.login-locked{height:100%;width:100%;}
     <div class="panel">
       <h2>🌱 Choix RFA</h2>
       <div class="disclaimer" style="margin-top:6px;">
-        3 rondes par DG, par année. Années fixes : 2027-2028 et 2028-2029. Utilise le même DG que ci-dessus.
+        3 rondes par DG, par année. Années fixes : 2027 et 2028. Utilise le même DG que ci-dessus.
         <br>⚠️ Les choix RFA et UFA 2028-2029 ne seront échangeables dans le module Transaction qu'après le repêchage UFA, le 20 septembre 2026.
       </div>
     </div>
     <div class="picks-columns">
       <div class="picks-col">
-        <h3>Choix RFA 2027-2028</h3>
+        <h3>Choix RFA 2027</h3>
         <div id="rfaPicksListA"></div>
       </div>
       <div class="picks-col">
-        <h3>Choix RFA 2028-2029</h3>
+        <h3>Choix RFA 2028</h3>
         <div id="rfaPicksListB"></div>
       </div>
     </div>
@@ -1767,7 +1767,7 @@ function renderTradeExtra(containerEl, dg, outProspects, outPicks, outRfaPicks){
     const picks = (state.picks[year] || []).filter(p=>p.currentOwner===dg).sort((a,b)=>a.round-b.round);
     if(!picks.length) return;
     const locked = isPickYearLocked(year);
-    const label = '🎯 Choix UFA ' + year + ' (' + picks.length + ')' + (locked ? ' 🔒' : '');
+    const label = '🎯 Choix UFA ' + pickYearLabel(year) + ' (' + picks.length + ')' + (locked ? ' 🔒' : '');
     appendCollapsibleGroup(containerEl, 'UFA_'+year, label, (body)=>{
       if(locked){
         const note = document.createElement('div');
@@ -1798,7 +1798,7 @@ function renderTradeExtra(containerEl, dg, outProspects, outPicks, outRfaPicks){
     const picks = (state.rfaPicks[year] || []).filter(p=>p.currentOwner===dg).sort((a,b)=>a.round-b.round);
     if(!picks.length) return;
     const locked = isPickYearLocked(year);
-    const label = '🌱 Choix RFA ' + year + ' (' + picks.length + ')' + (locked ? ' 🔒' : '');
+    const label = '🌱 Choix RFA ' + pickYearLabel(year) + ' (' + picks.length + ')' + (locked ? ' 🔒' : '');
     appendCollapsibleGroup(containerEl, 'RFAPICKS_'+year, label, (body)=>{
       if(locked){
         const note = document.createElement('div');
@@ -2528,8 +2528,17 @@ document.getElementById('rfaAddCustomBtn').addEventListener('click', ()=>{
 const pickYearAInput = document.getElementById('pickYearAInput');
 const pickYearBInput = document.getElementById('pickYearBInput');
 
+function pickYearLabel(year){
+  return String(year).split('-')[0];
+}
+function pickYearKey(value){
+  const year = String(value || '').trim();
+  if(year === '2027') return '2027-2028';
+  if(year === '2028') return '2028-2029';
+  return year;
+}
 function pickLabel(p, typeAbbrev, year){
-  const base = `${p.round}${typeAbbrev} ${year} - DG ${p.originalOwner}`;
+  const base = `${p.round}${typeAbbrev} ${pickYearLabel(year)} - DG ${p.originalOwner}`;
   const posSuffix = (typeof p.draftPosition === 'number') ? ` · #${p.draftPosition} au total` : '';
   const noteSuffix = p.note ? ` 🔒 ${p.note}` : '';
   return `${base}${posSuffix}${noteSuffix}`;
@@ -2559,10 +2568,10 @@ function renderPickColumn(containerEl, year, dg, picksStore, typeAbbrev){
 
 function renderPicks(){
   const dg = picksDgSelect.value;
-  const yearA = pickYearAInput.value.trim() || state.pickYears[0];
-  const yearB = pickYearBInput.value.trim() || state.pickYears[1];
-  document.getElementById('picksYearALabel').textContent = 'Repêchage ' + yearA;
-  document.getElementById('picksYearBLabel').textContent = 'Repêchage ' + yearB;
+  const yearA = pickYearKey(pickYearAInput.value) || state.pickYears[0];
+  const yearB = pickYearKey(pickYearBInput.value) || state.pickYears[1];
+  document.getElementById('picksYearALabel').textContent = 'Repêchage ' + pickYearLabel(yearA);
+  document.getElementById('picksYearBLabel').textContent = 'Repêchage ' + pickYearLabel(yearB);
   if(!state.picks[yearA]) ensureUfaPicksYear(yearA);
   if(!state.picks[yearB]) ensureUfaPicksYear(yearB);
   renderPickColumn(document.getElementById('picksListA'), yearA, dg, state.picks, 'ufa');
@@ -2570,8 +2579,8 @@ function renderPicks(){
   renderRfaPicks();
 }
 picksDgSelect.addEventListener('change', renderPicks);
-pickYearAInput.addEventListener('change', ()=>{ state.pickYears[0] = pickYearAInput.value.trim(); renderPicks(); });
-pickYearBInput.addEventListener('change', ()=>{ state.pickYears[1] = pickYearBInput.value.trim(); renderPicks(); });
+pickYearAInput.addEventListener('change', ()=>{ state.pickYears[0] = pickYearKey(pickYearAInput.value); renderPicks(); });
+pickYearBInput.addEventListener('change', ()=>{ state.pickYears[1] = pickYearKey(pickYearBInput.value); renderPicks(); });
 
 function renderRfaPicks(){
   const dg = picksDgSelect.value;
@@ -3136,7 +3145,7 @@ function renderKanban(){
     // Choix UFA
     state.pickYears.forEach(year=>{
       const picks = (state.picks[year] || []).filter(p=>p.currentOwner===dg).sort((a,b)=>a.round-b.round);
-      addGroup('UFA_'+year, '🎯 Choix UFA ' + year, picks, p=>{
+      addGroup('UFA_'+year, '🎯 Choix UFA ' + pickYearLabel(year),) picks, p=>{
         const isSelected = !!(kanbanSelected && kanbanSelected.type==='ufapick' && kanbanSelected.key===p.id && kanbanSelected.fromDg===dg);
         return makeCard(
           `<span class="kc-name">${pickLabel(p, 'ufa', year)}</span>`,
@@ -3149,7 +3158,7 @@ function renderKanban(){
     // Choix RFA
     state.rfaPickYears.forEach(year=>{
       const picks = (state.rfaPicks[year] || []).filter(p=>p.currentOwner===dg).sort((a,b)=>a.round-b.round);
-      addGroup('RFAPICKS_'+year, '🌱 Choix RFA ' + year, picks, p=>{
+      addGroup('RFAPICKS_'+year, '🌱 Choix RFA ' + pickYearLabel(year),) picks, p=>{
         const isSelected = !!(kanbanSelected && kanbanSelected.type==='rfapick' && kanbanSelected.key===p.id && kanbanSelected.fromDg===dg);
         return makeCard(
           `<span class="kc-name">${pickLabel(p, 'rfa', year)}</span>`,
