@@ -1066,6 +1066,74 @@ body.login-locked{height:100%;width:100%;}
 #tabRadar .radar-method p,#tabRadar .radar-method li{font-size:.74rem;color:#526675;line-height:1.5}
 @media(max-width:850px){#tabRadar .radar-grid{grid-template-columns:1fr}#tabRadar .radar-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:480px){#tabRadar .radar-summary{gap:7px}#tabRadar .radar-stat{padding:10px}#tabRadar .radar-stat .value{font-size:1.1rem}#tabRadar .radar-rank-row{grid-template-columns:23px minmax(75px,1fr) minmax(45px,.8fr) 38px;gap:6px;padding:9px 7px}#tabRadar .radar-rank-name{font-size:.75rem}#tabRadar .radar-rank-score{font-size:.8rem}#tabRadar .radar-metric-grid{gap:7px}}
+ 
+/* ===== Refonte visuelle prototype : navigation, palette et thèmes ===== */
+:root{--ice:#f3f5f8;--ice2:#e6ebf1;--line:#d8e0e8;--navy:#172536;--navy2:#263f59;--red:#c84a4a;--gold:#c99735;--green:#25845b;--grey:#657383;--white:#fff;--surface:#fff;--page:#f3f5f8;--shadow:0 5px 18px rgba(23,37,54,.06)}
+body{background:var(--page);color:var(--navy)}
+header{padding:14px 22px;border-bottom:3px solid var(--red);background:linear-gradient(125deg,#142438,#203c59 72%,#315675)}
+header::after{opacity:.5}
+header .header-logo{height:54px}
+.wrap{max-width:1320px;padding:22px 26px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:20px 22px;margin-bottom:18px;box-shadow:var(--shadow)}
+.panel h2{border-left-color:var(--gold);color:var(--navy2);font-size:1.02rem}
+.stat,.trs-side,.pos-column,.prospects-box{background:var(--ice);border-color:var(--line)}
+.card{border-radius:11px;box-shadow:0 2px 7px rgba(23,37,54,.05)}
+button.primary{background:var(--navy2);border-radius:8px}
+button.ghost{border-radius:8px}
+.app-toolbar{height:58px;background:#fff;border-bottom:1px solid #e2e7ed;display:flex;align-items:center;gap:14px;padding:0 max(18px,calc((100vw - 1320px)/2));position:relative;z-index:205;box-shadow:0 2px 8px rgba(23,37,54,.04)}
+.menu-toggle{width:40px;height:40px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;border:1px solid #dce3ea;border-radius:10px;background:#fff;cursor:pointer;flex:0 0 auto}
+.menu-toggle span{width:18px;height:2px;background:#20364d;border-radius:2px}
+.toolbar-current{display:flex;flex-direction:column;gap:1px;min-width:0}
+.toolbar-kicker{font-size:.59rem;letter-spacing:1.1px;color:#8793a0;font-weight:800}
+.toolbar-current strong{font-size:.94rem;color:#172536}
+.theme-control{margin-left:auto;display:flex;align-items:center;gap:7px;color:#526274;font-size:.8rem;font-weight:700}
+.theme-control select{border:1px solid #dce3ea;border-radius:8px;padding:7px 26px 7px 9px;background:#fff;color:#26394d;font-size:.78rem}
+.drawer-scrim{position:fixed;inset:0;background:rgba(12,25,40,.48);z-index:500;opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s}
+.app-drawer{position:fixed;z-index:501;left:0;top:0;bottom:0;width:min(300px,86vw);background:#172536;color:#eaf0f6;box-shadow:12px 0 35px rgba(0,0,0,.22);transform:translateX(-105%);transition:transform .23s ease;padding:18px 14px;display:flex;flex-direction:column}
+body.drawer-open .drawer-scrim{opacity:1;visibility:visible}
+body.drawer-open .app-drawer{transform:translateX(0)}
+.drawer-heading{display:flex;align-items:center;justify-content:space-between;padding:5px 8px 20px;border-bottom:1px solid rgba(255,255,255,.12);font-size:1.05rem}
+.drawer-heading button{border:0;background:rgba(255,255,255,.1);color:white;border-radius:8px;width:32px;height:32px;font-size:1.4rem;cursor:pointer}
+.drawer-caption{font-size:.62rem;letter-spacing:1.2px;color:#9eb0c2;font-weight:800;padding:20px 10px 9px}
+.app-drawer .main-nav{display:flex;flex-direction:column;gap:5px;background:transparent;padding:0;overflow:visible}
+.app-drawer .nav-btn{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;background:transparent;color:#d5dfeb;padding:11px 12px;border-radius:9px;font-size:.88rem;font-weight:650;cursor:pointer;white-space:normal}
+.app-drawer .nav-btn span{width:22px;text-align:center;font-size:1rem}
+.app-drawer .nav-btn:hover{background:rgba(255,255,255,.08)}
+.app-drawer .nav-btn.active{background:#29445f;color:#fff;box-shadow:inset 3px 0 #d0a04a}
+.drawer-foot{margin-top:auto;padding:16px 10px 5px;color:#8fa1b4;font-size:.7rem;border-top:1px solid rgba(255,255,255,.12)}
+.sticky-wrap{position:sticky;top:0;z-index:200;box-shadow:none}
+.sticky-bar{border-bottom:2px solid var(--gold);background:linear-gradient(120deg,#172536,#263f59);padding:9px 22px}
+.main-nav .nav-btn{border-radius:8px}
+#sbUserBar{background:#20364d!important}
+@media(max-width:700px){header{padding:11px 14px}header .header-logo{height:43px}.wrap{padding:13px 11px}.panel{padding:15px 13px;border-radius:11px}.app-toolbar{height:54px;padding:0 12px}.theme-control{font-size:.72rem}.theme-control select{max-width:116px}.sticky-bar{padding:8px 10px;gap:8px 12px}}
+:root[data-theme="dark"]{color-scheme:dark;--ice:#202d3b;--ice2:#2b3a4a;--line:#3b4b5d;--navy:#e6edf5;--navy2:#c8d7e7;--grey:#a6b4c3;--white:#1b2836;--surface:#1b2836;--page:#111c28;--shadow:0 5px 18px rgba(0,0,0,.18)}
+:root[data-theme="dark"] body{background:var(--page);color:var(--navy)}
+:root[data-theme="dark"] .app-toolbar{background:#172536;border-color:#344658}
+:root[data-theme="dark"] .toolbar-current strong{color:#f0f4f8}
+:root[data-theme="dark"] .toolbar-kicker{color:#a9bacb}
+:root[data-theme="dark"] .menu-toggle{background:#223447;border-color:#405469}
+:root[data-theme="dark"] .menu-toggle span{background:#edf3f8}
+:root[data-theme="dark"] .theme-control{color:#d4e0eb}
+:root[data-theme="dark"] .theme-control select, :root[data-theme="dark"] select, :root[data-theme="dark"] input[type="text"], :root[data-theme="dark"] input[type="number"], :root[data-theme="dark"] textarea{background:#223243;color:#edf3f8;border-color:#46596c}
+:root[data-theme="dark"] .panel,:root[data-theme="dark"] .card,:root[data-theme="dark"] .pick-row,:root[data-theme="dark"] .version-row{background:var(--surface);border-color:var(--line);color:var(--navy)}
+:root[data-theme="dark"] .stat,:root[data-theme="dark"] .trs-side,:root[data-theme="dark"] .pos-column,:root[data-theme="dark"] .prospects-box,:root[data-theme="dark"] .picks-col h3{background:#223243;border-color:var(--line);color:var(--navy)}
+:root[data-theme="dark"] tbody td{border-color:#344658}
+:root[data-theme="dark"] tbody tr:hover,:root[data-theme="dark"] .suggest-item:hover,:root[data-theme="dark"] .suggest-item.active{background:#2a3c4e}
+:root[data-theme="dark"] .suggest-box{background:#1b2836;border-color:var(--line)}
+:root[data-theme="dark"] .suggest-item{border-color:#344658}
+:root[data-theme="dark"] .season-toggle button{background:#223243;color:#e6edf5}
+:root[data-theme="dark"] .season-toggle button.active{background:#3a5876;color:#fff}
+:root[data-theme="dark"] .pos-column-header .pos-count,:root[data-theme="dark"] .chip{background:#2b3a4a;border-color:var(--line);color:#dbe5ef}
+:root[data-theme="dark"] .card-aav-row input,:root[data-theme="dark"] .aav-edit-input{background:#223243;color:#f1f5f9;border-color:#46596c}
+:root[data-theme="dark"] .card.retained{background:#20354a}
+:root[data-theme="dark"] .pick-row.acquired{background:#3a3322}
+:root[data-theme="dark"] .disclaimer{background:#3b321e;border-color:#74602c;color:#f3d995}
+:root[data-theme="dark"] .trade-violation-banner{background:#472727;color:#ffd8d5}
+:root[data-theme="dark"] .trade-offseason-banner{background:#20394d;color:#d6e9f7}
+:root[data-theme="dark"] .radar-method{background:#223243!important;border-color:var(--line)!important}
+:root[data-theme="dark"] footer{color:#a6b4c3}
+:root[data-theme="dark"] .app-drawer{background:#101a25}
+
 </style>
 
 </head>
@@ -1088,18 +1156,29 @@ body.login-locked{height:100%;width:100%;}
   <span id="sbStatus" style="width:100%;font-size:12px;color:#c4d2e0;"></span>
 </div>
 <div class="sticky-wrap">
-<div class="main-nav" id="mainNav">
-  <button class="nav-btn active" data-tab="effectifs">📋 Effectifs</button>
-  <button class="nav-btn" data-tab="radar">📊 Radar des DG</button>
-  <button class="nav-btn" data-tab="rfa">🌱 RFA</button>
-  <button class="nav-btn" data-tab="repechage">🎯 Repêchage</button>
-  <button class="nav-btn" data-tab="transactions">🔁 Transactions</button>
-  <button class="nav-btn" data-tab="kanban">🗂️ Mur</button>
-  <button class="nav-btn" data-tab="charte">📜 Charte</button>
-  <button class="nav-btn" data-tab="draftday">🎬 Jour du repêchage</button>
-  <button class="nav-btn" data-tab="versions">💾 Versions</button>
-  <button class="nav-btn" data-tab="journal" id="journalNavBtn" style="display:none;">📜 Journal</button>
+<div class="app-toolbar">
+  <button class="menu-toggle" id="menuToggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <div class="toolbar-current"><span class="toolbar-kicker">POOL DES CHAMPIONS</span><strong id="currentSectionLabel">Effectifs</strong></div>
+  <label class="theme-control" title="Apparence"><span aria-hidden="true">◐</span><select id="themeSelect" aria-label="Choisir le thème"><option value="auto">Automatique</option><option value="light">Clair</option><option value="dark">Sombre</option></select></label>
 </div>
+<div class="drawer-scrim" id="drawerScrim"></div>
+<aside class="app-drawer" id="appDrawer" aria-label="Navigation principale" aria-hidden="true">
+  <div class="drawer-heading"><strong>Navigation</strong><button type="button" id="drawerClose" aria-label="Fermer le menu">×</button></div>
+  <div class="drawer-caption">GESTION DU POOL</div>
+  <div class="main-nav" id="mainNav">
+    <button class="nav-btn active" data-tab="effectifs"><span>📋</span> Effectifs</button>
+    <button class="nav-btn" data-tab="radar"><span>📊</span> Radar des DG</button>
+    <button class="nav-btn" data-tab="rfa"><span>🌱</span> RFA</button>
+    <button class="nav-btn" data-tab="repechage"><span>🎯</span> Repêchage</button>
+    <button class="nav-btn" data-tab="transactions"><span>🔁</span> Transactions</button>
+    <button class="nav-btn" data-tab="kanban"><span>🗂️</span> Mur</button>
+    <button class="nav-btn" data-tab="charte"><span>📜</span> Charte</button>
+    <button class="nav-btn" data-tab="draftday"><span>🎬</span> Jour du repêchage</button>
+    <button class="nav-btn" data-tab="versions"><span>💾</span> Versions</button>
+    <button class="nav-btn" data-tab="journal" id="journalNavBtn" style="display:none;"><span>📜</span> Journal</button>
+  </div>
+  <div class="drawer-foot">Le Pool des champions · Depuis 2013</div>
+</aside>
 
 <div class="sticky-bar" id="stickyBar">
   <label class="sb-dg-picker" for="stickyDgSelect"><span class="sb-dg-label">DG</span><select id="stickyDgSelect" aria-label="Changer de directeur général"></select></label>
@@ -3701,10 +3780,47 @@ document.getElementById('radarRefreshBtn')?.addEventListener('click',radarLoadOf
 document.getElementById('radarSeason')?.addEventListener('change',radarLoadOfficialState);
 
 // --- Main navigation (tabs) ---
+function closeAppDrawer(){
+  document.body.classList.remove('drawer-open');
+  document.getElementById('menuToggle')?.setAttribute('aria-expanded','false');
+  document.getElementById('appDrawer')?.setAttribute('aria-hidden','true');
+}
+document.getElementById('menuToggle')?.addEventListener('click',()=>{
+  const opened=document.body.classList.toggle('drawer-open');
+  document.getElementById('menuToggle').setAttribute('aria-expanded',String(opened));
+  document.getElementById('appDrawer').setAttribute('aria-hidden',String(!opened));
+});
+document.getElementById('drawerClose')?.addEventListener('click',closeAppDrawer);
+document.getElementById('drawerScrim')?.addEventListener('click',closeAppDrawer);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAppDrawer();});
+
+const themeSelect=document.getElementById('themeSelect');
+function applyAppTheme(mode){
+  const effective=mode==='auto'?(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):mode;
+  document.documentElement.dataset.theme=effective;
+  if(themeSelect)themeSelect.value=mode;
+}
+let savedTheme='auto';
+try{savedTheme=localStorage.getItem('poolChampionsTheme')||'auto';}catch(e){}
+applyAppTheme(savedTheme);
+themeSelect?.addEventListener('change',()=>{
+  const mode=themeSelect.value;
+  try{localStorage.setItem('poolChampionsTheme',mode);}catch(e){}
+  applyAppTheme(mode);
+});
+if(window.matchMedia){
+  const colorPreference=window.matchMedia('(prefers-color-scheme: dark)');
+  colorPreference.addEventListener?.('change',()=>{let mode='auto';try{mode=localStorage.getItem('poolChampionsTheme')||'auto';}catch(e){}if(mode==='auto')applyAppTheme('auto');});
+}
+
 document.querySelectorAll('.nav-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
+    const labels={effectifs:'Effectifs',radar:'Radar des DG',rfa:'RFA',repechage:'Repêchage',transactions:'Transactions',kanban:'Mur',charte:'Charte',draftday:'Jour du repêchage',versions:'Versions',journal:'Journal'};
+    const currentLabel=document.getElementById('currentSectionLabel');
+    if(currentLabel)currentLabel.textContent=labels[btn.dataset.tab]||'Pool des champions';
+    closeAppDrawer();
     const tab = btn.dataset.tab;
     document.getElementById('tabEffectifs').classList.toggle('active', tab==='effectifs');
     document.getElementById('tabRadar').classList.toggle('active', tab==='radar');
