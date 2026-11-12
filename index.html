@@ -3583,7 +3583,7 @@ function radarPlayerStats(player){
  const actual=known?(pos==='G'?2*raw.wins+2*raw.shutouts:(pos==='D'?2*raw.g+raw.a+3*raw.hatTricks:raw.g+raw.a+3*raw.hatTricks)):null;
  const projectionKnown=pos==='G'?(raw.projWins!==null&&raw.projShutouts!==null):(raw.projG!==null&&raw.projA!==null);
  let remaining=null,final=null;
- if(projectionKnown){const pGP=raw.projGP||82,gLeft=raw.remainingGames!==null?raw.remainingGames:Math.max(0,82-(gp||0));
+ if(projectionKnown){const pGP=raw.projGP||(pos==='G'?60:82),gLeft=raw.remainingGames!==null?raw.remainingGames:Math.max(0,(pos==='G'?pGP:82)-(gp||0));
   const full=pos==='G'?2*raw.projWins+2*raw.projShutouts:(pos==='D'?2*raw.projG+raw.projA+3*raw.projHatTricks:raw.projG+raw.projA+3*raw.projHatTricks);
   remaining=pGP>0?full/pGP*gLeft:null;if(remaining!==null&&actual!==null)final=actual+remaining;
  }
