@@ -1043,6 +1043,23 @@ body.login-locked{height:100%;width:100%;}
 #tabRadar .radar-player-row{display:flex;justify-content:space-between;gap:10px;padding:7px 9px;background:#f7f9fb;border-radius:7px;font-size:.76rem}
 #tabRadar .radar-player-row strong{font-variant-numeric:tabular-nums;white-space:nowrap}
 #tabRadar .radar-note{font-size:.72rem;color:var(--grey);line-height:1.5}
+
+#tabRadar .radar-import{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:12px}
+#tabRadar .radar-import input{max-width:100%;font-size:.78rem}
+#tabRadar .radar-import-note{font-size:.72rem;color:#d4e2ee;line-height:1.45}
+#tabRadar .radar-score-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}
+#tabRadar .radar-score-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px}
+#tabRadar .radar-score-card .label{font-size:.66rem;color:var(--grey);font-weight:800;text-transform:uppercase}
+#tabRadar .radar-score-card .value{font-size:1.2rem;font-weight:900;color:var(--navy);margin-top:3px}
+#tabRadar .radar-score-card .hint{font-size:.68rem;color:var(--grey);margin-top:3px}
+#tabRadar .radar-data-table{overflow-x:auto}
+#tabRadar .radar-data-table table{min-width:620px;margin-top:8px}
+#tabRadar .radar-data-table th,#tabRadar .radar-data-table td{padding:7px 8px;font-size:.73rem}
+#tabRadar .radar-player-row .radar-player-main{min-width:0;flex:1}
+#tabRadar .radar-player-row .radar-player-meta{display:block;color:var(--grey);font-size:.66rem;margin-top:2px}
+#tabRadar .radar-subsection{margin-top:16px}
+@media(max-width:650px){#tabRadar .radar-score-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 #tabRadar .radar-empty{padding:22px;text-align:center;color:var(--grey);font-size:.85rem}
 #tabRadar .radar-method{margin-top:16px;background:#f6f8fa;border:1px solid var(--line);border-radius:10px;padding:13px 15px}
 #tabRadar .radar-method summary{cursor:pointer;font-weight:800;color:var(--navy2);font-size:.82rem}
@@ -1452,6 +1469,11 @@ body.login-locked{height:100%;width:100%;}
         </div>
       </div>
       <div class="radar-status" id="radarStatus" role="status">Les données seront chargées à l'ouverture de cet onglet.</div>
+      <div class="radar-import">
+        <input id="radarDataFile" type="file" accept=".csv,.json,application/json,text/csv" aria-label="Importer les statistiques et projections des joueurs">
+        <button class="ghost" id="radarTemplateBtn" type="button">Télécharger le modèle CSV</button>
+        <span class="radar-import-note" id="radarDataStatus">Importe un fichier contenant les statistiques réelles et les projections pour activer les analyses hockey.</span>
+      </div>
     </section>
     <div id="radarContent"><div class="radar-empty panel">Chargement des données officielles requis.</div></div>
   </div>
@@ -3520,184 +3542,156 @@ renderCharte();
 
 
 /* ===== Radar stratégique — prototype en lecture seule =====
-   Source exclusive : dernière publication officielle de pool_states.
-   N'utilise jamais state.roster (qui peut contenir des modifications locales
-   ou une simulation de transaction) et n'écrit aucune donnée.
+   Effectifs: dernière publication officielle. Statistiques/projections: import local CSV/JSON.
+   N'utilise aucune simulation privée, négociation ou modification locale d'effectif.
 */
-let radarOfficialSnapshot = null;
-let radarSelectedDg = null;
-let radarMetricsCache = [];
-
-function radarEsc(value){
-  return String(value ?? '').replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+let radarOfficialSnapshot=null,radarSelectedDg=null,radarMetricsCache=[],radarPlayerData=new Map(),radarDataFileLabel='';
+function radarEsc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function radarClamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function radarFmt(v,d=1){return Number(v||0).toLocaleString('fr-CA',{minimumFractionDigits:d,maximumFractionDigits:d});}
+function radarNormName(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');}
+function radarNum(v){if(v===undefined||v===null||v==='')return null;const n=Number(String(v).replace(',','.'));return Number.isFinite(n)?n:null;}
+function radarParseCsv(text){
+ const rows=[];let row=[],field='',quoted=false;
+ for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];if(c==='"'&&quoted&&n==='"'){field+='"';i++;}else if(c==='"')quoted=!quoted;else if(c===','&&!quoted){row.push(field);field='';}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&n==='\n')i++;row.push(field);if(row.some(x=>String(x).trim()))rows.push(row);row=[];field='';}else field+=c;}
+ if(field!==''||row.length){row.push(field);rows.push(row);}if(!rows.length)return [];
+ const headers=rows.shift().map(x=>String(x).trim());
+ return rows.map(vals=>Object.fromEntries(headers.map((h,i)=>[h,String(vals[i]??'').trim()])));
 }
-function radarClamp(value,min,max){return Math.max(min,Math.min(max,value));}
-function radarFmt(value,digits=3){
-  return Number(value||0).toLocaleString('fr-CA',{minimumFractionDigits:digits,maximumFractionDigits:digits});
+function radarImportRows(rows,label){
+ if(!Array.isArray(rows))throw new Error('Le fichier doit contenir une liste de joueurs.');
+ const map=new Map();
+ rows.forEach(r=>{
+  const name=r.name||r.player||r.playerName||r.nom,key=radarNormName(name);if(!key)return;
+  const pos=String(r.pos||r.position||'').toUpperCase();
+  map.set(key,{name:String(name),pos:pos.startsWith('G')?'G':(pos==='D'||pos==='DEFENSE'?'D':(pos?'F':null)),
+   gp:radarNum(r.gp??r.gamesPlayed),g:radarNum(r.g??r.goals),a:radarNum(r.a??r.assists),
+   hatTricks:radarNum(r.hatTricks??r.hattricks??r.ht)??0,wins:radarNum(r.wins??r.w),shutouts:radarNum(r.shutouts??r.so),
+   projGP:radarNum(r.projGP??r.projectedGames),projG:radarNum(r.projG??r.projectedGoals),projA:radarNum(r.projA??r.projectedAssists),
+   projHatTricks:radarNum(r.projHatTricks??r.projectedHatTricks)??0,projWins:radarNum(r.projWins??r.projectedWins),
+   projShutouts:radarNum(r.projShutouts??r.projectedShutouts),remainingGames:radarNum(r.remainingGames??r.remainingGP)});
+ });
+ if(!map.size)throw new Error('Aucun joueur reconnu. Vérifie la colonne name/playerName.');
+ radarPlayerData=map;radarDataFileLabel=label||'Données importées';
+ const status=document.getElementById('radarDataStatus');if(status)status.textContent=map.size+' joueurs importés · '+radarDataFileLabel+' · données locales à cette session.';
+ if(radarOfficialSnapshot)radarRender();
 }
-function radarSalary(player,season){
-  let base;
-  if(player && player.overrides && Object.prototype.hasOwnProperty.call(player.overrides,season)) base=player.overrides[season];
-  else base=season==='2627'?player?.aav26:player?.aav27;
-  let value=typeof base==='number'&&Number.isFinite(base)?base:0;
-  if(player?.retainPct>0) value*=player.retainPct===33?(1/3):player.retainPct/100;
-  return value;
+function radarPlayerStats(player){
+ const raw=radarPlayerData.get(radarNormName(player?.name));if(!raw)return {name:player?.name||'Joueur',pos:player?.pos||'F',known:false,actual:null,remaining:null,final:null,gp:null,projectionKnown:false};
+ const pos=['F','D','G'].includes(player?.pos)?player.pos:(raw.pos||'F'),gp=raw.gp;
+ const known=gp!==null&&(pos==='G'?(raw.wins!==null&&raw.shutouts!==null):(raw.g!==null&&raw.a!==null));
+ const actual=known?(pos==='G'?2*raw.wins+2*raw.shutouts:(pos==='D'?2*raw.g+raw.a+3*raw.hatTricks:raw.g+raw.a+3*raw.hatTricks)):null;
+ const projectionKnown=pos==='G'?(raw.projWins!==null&&raw.projShutouts!==null):(raw.projG!==null&&raw.projA!==null);
+ let remaining=null,final=null;
+ if(projectionKnown){const pGP=raw.projGP||82,gLeft=raw.remainingGames!==null?raw.remainingGames:Math.max(0,82-(gp||0));
+  const full=pos==='G'?2*raw.projWins+2*raw.projShutouts:(pos==='D'?2*raw.projG+raw.projA+3*raw.projHatTricks:raw.projG+raw.projA+3*raw.projHatTricks);
+  remaining=pGP>0?full/pGP*gLeft:null;if(remaining!==null&&actual!==null)final=actual+remaining;
+ }
+ return {name:player?.name||raw.name,pos,known,actual,remaining,final,gp,projectionKnown};
 }
+function radarSalary(p,season){
+ let base=p?.overrides&&Object.prototype.hasOwnProperty.call(p.overrides,season)?p.overrides[season]:(season==='2627'?p?.aav26:p?.aav27);
+ let v=typeof base==='number'&&Number.isFinite(base)?base:0;if(p?.retainPct>0)v*=p.retainPct===33?1/3:p.retainPct/100;return v;
+}
+function radarMedian(values){const a=values.slice().sort((x,y)=>x-y);return !a.length?0:(a.length%2?a[(a.length-1)/2]:(a[a.length/2-1]+a[a.length/2])/2);}
 function radarMetrics(snapshot,season){
-  const rosterByDg=snapshot?.roster||{};
-  const names=Object.keys(RAW_DATA.rosters||{});
-  const cap=Number(snapshot?.cap)||160;
-  const year=season==='2627'?2026:2027;
-  const teams=names.map(dg=>{
-    const all=Array.isArray(rosterByDg[dg])?rosterByDg[dg]:[];
-    const active=all.filter(p=>p&&!p._retainedPlaceholder);
-    const retained=all.filter(p=>p&&p._retainedPlaceholder);
-    const mass=all.reduce((sum,p)=>sum+radarSalary(p,season),0);
-    const activeMass=active.reduce((sum,p)=>sum+radarSalary(p,season),0);
-    const positions={F:0,D:0,G:0};
-    active.forEach(p=>{const pos=['F','D','G'].includes(p.pos)?p.pos:'F';positions[pos]++;});
-    const salaries=active.map(p=>({name:p.name||'Joueur',salary:radarSalary(p,season),pos:p.pos||'F'})).filter(p=>p.salary>0).sort((a,b)=>b.salary-a.salary);
-    const top3=salaries.slice(0,3).reduce((sum,p)=>sum+p.salary,0);
-    const expiring=active.filter(p=>typeof p.free==='number'&&p.free<=year+1).length;
-    const salaryUnknown=active.filter(p=>{
-      const base=p?.overrides&&Object.prototype.hasOwnProperty.call(p.overrides,season)?p.overrides[season]:(season==='2627'?p?.aav26:p?.aav27);
-      return base!==undefined&&base!==null&&base!==''&&typeof base!=='number';
-    }).length;
-    const prospectCount=Array.isArray(snapshot?.prospects?.[dg])?snapshot.prospects[dg].length:0;
-    const margin=cap-mass;
-    const flexibility=radarClamp(((margin+5)/25)*100,0,100);
-    const concentration=activeMass>0?radarClamp(100-(top3/activeMass*100),0,100):100;
-    const stability=active.length?radarClamp(100-(expiring/active.length*100),0,100):0;
-    return {dg,all,active,retained,mass,activeMass,margin,positions,salaries,top3Share:activeMass>0?top3/activeMass:0,expiring,salaryUnknown,prospectCount,flexibility,concentration,stability,index:0,coverage:0};
-  });
-  const medians={};
-  ['F','D','G'].forEach(pos=>{
-    const sorted=teams.map(t=>t.positions[pos]).sort((a,b)=>a-b);
-    medians[pos]=sorted.length%2?sorted[(sorted.length-1)/2]:(sorted[sorted.length/2-1]+sorted[sorted.length/2])/2;
-  });
-  teams.forEach(t=>{
-    const coverage=['F','D','G'].reduce((sum,pos)=>{
-      const median=medians[pos];
-      return sum+(median>0?Math.min(1,t.positions[pos]/median)*100:100);
-    },0)/3;
-    t.coverage=coverage;
-    // Indice structurel, pas une cote de talent ni une projection de points.
-    t.index=0.30*t.flexibility+0.25*t.coverage+0.25*t.concentration+0.20*t.stability;
-  });
-  return teams.sort((a,b)=>b.index-a.index);
+ const rosters=snapshot?.roster||{},names=Object.keys(RAW_DATA.rosters||{}),cap=Number(snapshot?.cap)||160,year=season==='2627'?2026:2027;
+ const teams=names.map(dg=>{
+  const all=Array.isArray(rosters[dg])?rosters[dg]:[],active=all.filter(p=>p&&!p._retainedPlaceholder),mass=all.reduce((s,p)=>s+radarSalary(p,season),0);
+  const positions={F:0,D:0,G:0};
+  const players=active.map(p=>{const st=radarPlayerStats(p),salary=radarSalary(p,season);positions[st.pos]=(positions[st.pos]||0)+1;return {...st,player:p,salary,pointsPerMillion:salary>0&&st.final!==null?st.final/salary:null,free:typeof p.free==='number'?p.free:null};});
+  const known=players.filter(p=>p.known),projected=players.filter(p=>p.final!==null).sort((a,b)=>b.final-a.final),top12=projected.slice(0,12);
+  const topNames=new Set(top12.map(p=>radarNormName(p.name))),depth=projected.filter(p=>!topNames.has(radarNormName(p.name)));
+  const actualPoints=known.reduce((s,p)=>s+p.actual,0),remainingPoints=projected.reduce((s,p)=>s+(p.remaining||0),0),projectedFinal=actualPoints+remainingPoints;
+  const top12Points=top12.reduce((s,p)=>s+(p.final||0),0),depthPoints=depth.reduce((s,p)=>s+(p.final||0),0),depthCounts={F:0,D:0,G:0};
+  depth.forEach(p=>depthCounts[p.pos]=(depthCounts[p.pos]||0)+1);
+  const longTerm=players.filter(p=>p.final!==null&&p.salary>0&&p.free!==null&&p.free>=year+3),longTermPoints=longTerm.reduce((s,p)=>s+p.final,0),longTermSalary=longTerm.reduce((s,p)=>s+p.salary,0);
+  const margin=cap-mass,prospectCount=Array.isArray(snapshot?.prospects?.[dg])?snapshot.prospects[dg].length:0;
+  return {dg,all,active,mass,margin,positions,players,known,projected,top12,depth,actualPoints,remainingPoints,projectedFinal,top12Points,depthPoints,depthCounts,longTerm,longTermEfficiency:longTermSalary>0?longTermPoints/longTermSalary:0,prospectCount,coverage:active.length?projected.length/active.length:0,index:0,components:{}};
+ });
+ const maxEff=Math.max(1,...teams.map(t=>t.projectedFinal)),maxTop=Math.max(1,...teams.map(t=>t.top12Points)),maxLong=Math.max(1,...teams.map(t=>t.longTermEfficiency)),maxDepth=Math.max(1,...teams.map(t=>t.depthPoints));
+ const med={F:radarMedian(teams.map(t=>t.depthCounts.F)),D:radarMedian(teams.map(t=>t.depthCounts.D)),G:radarMedian(teams.map(t=>t.depthCounts.G))};
+ teams.forEach(t=>{const balance=['F','D','G'].reduce((s,p)=>s+(med[p]>0?Math.min(1,t.depthCounts[p]/med[p])*100:(t.depthCounts[p]>0?100:0)),0)/3;
+  t.components={effectif:100*t.projectedFinal/maxEff,top12:100*t.top12Points/maxTop,contrats:100*t.longTermEfficiency/maxLong,profondeur:.5*(100*t.depthPoints/maxDepth)+.5*balance};
+  t.index=.50*t.components.effectif+.25*t.components.top12+.10*t.components.contrats+.15*t.components.profondeur;
+ });
+ return teams.sort((a,b)=>b.index-a.index);
 }
-function radarSetStatus(message,error=false){
-  const el=document.getElementById('radarStatus');
-  if(!el)return;
-  el.textContent=message;
-  el.classList.toggle('error',!!error);
+function radarSetStatus(message,error=false){const el=document.getElementById('radarStatus');if(el){el.textContent=message;el.classList.toggle('error',!!error);}}
+function radarPlayerRows(players){
+ if(!players.length)return '<div class="radar-note">Aucune donnée joueur disponible pour cette section.</div>';
+ return '<div class="radar-player-list">'+players.map(p=>'<div class="radar-player-row"><div class="radar-player-main"><strong>'+radarEsc(p.name)+'</strong><span class="radar-player-meta">'+radarEsc(p.pos)+' · Réel : '+(p.actual===null?'—':radarFmt(p.actual,1)+' pts')+' · Final estimé : '+(p.final===null?'Projection manquante':radarFmt(p.final,1)+' pts')+'</span></div><strong>'+(p.salary>0?radarFmt(p.salary,3)+' M$':'AAV manquant')+'</strong></div>').join('')+'</div>';
 }
 function radarRenderDetail(team,teams){
-  const root=document.getElementById('radarTeamDetail');
-  if(!root||!team)return;
-  const median={};
-  ['F','D','G'].forEach(pos=>{
-    const vals=teams.map(t=>t.positions[pos]).sort((a,b)=>a-b);
-    median[pos]=vals.length%2?vals[(vals.length-1)/2]:(vals[vals.length/2-1]+vals[vals.length/2])/2;
-  });
-  const insights=[];
-  if(team.margin<0)insights.push(['warning','La masse dépasse le plafond de '+radarFmt(Math.abs(team.margin))+' M$. Une correction est nécessaire.']);
-  else if(team.margin>=20)insights.push(['good','Marge salariale importante : '+radarFmt(team.margin)+' M$ disponibles sous le plafond.']);
-  else insights.push(['','Marge salariale : '+radarFmt(team.margin)+' M$. À mettre en relation avec les besoins de l’effectif.']);
-  if(team.top3Share>=.5)insights.push(['warning','Les trois salaires les plus élevés représentent '+(team.top3Share*100).toFixed(1)+' % de la masse active : forte concentration financière.']);
-  if(team.expiring>=3)insights.push(['warning',team.expiring+' joueurs ont une année de disponibilité indiquée à '+(radarOfficialSnapshot.season==='2627'?'2027 ou avant':'2028 ou avant')+'. Anticiper les décisions contractuelles.']);
-  ['F','D','G'].forEach(pos=>{
-    if(team.positions[pos]<median[pos])insights.push(['','Couverture '+(pos==='F'?'attaquants':pos==='D'?'défenseurs':'gardiens')+' sous la médiane des huit équipes ('+team.positions[pos]+' contre '+median[pos]+').']);
-  });
-  if(team.salaryUnknown>0)insights.push(['warning',team.salaryUnknown+' salaire(s) non numérique(s) pour cette saison : le calcul de masse les traite comme 0 $, comme le calculateur actuel. Interpréter l’indice avec prudence.']);
-  if(!insights.length)insights.push(['good','Aucun signal structurel majeur détecté selon les données disponibles.']);
-  const top=team.salaries.slice(0,3);
-  const expiring=team.active.filter(p=>typeof p.free==='number'&&p.free<=(radarOfficialSnapshot.season==='2627'?2027:2028)).sort((a,b)=>a.free-b.free);
-  let html='<div class="radar-metric-grid">';
-  html+='<div class="radar-metric"><div class="m-label">Indice structurel</div><div class="m-value">'+team.index.toFixed(1)+' / 100</div><div class="m-note">Comparatif de gestion · bêta</div></div>';
-  html+='<div class="radar-metric"><div class="m-label">Masse / plafond</div><div class="m-value">'+radarFmt(team.mass)+' / '+radarFmt(radarOfficialSnapshot.cap)+' M$</div><div class="m-note">'+(team.margin>=0?'Marge : ':'Dépassement : ')+radarFmt(Math.abs(team.margin))+' M$</div></div>';
-  html+='<div class="radar-metric"><div class="m-label">Effectif actif</div><div class="m-value">'+team.active.length+' joueurs</div><div class="m-note">'+team.positions.F+' A · '+team.positions.D+' D · '+team.positions.G+' G</div></div>';
-  html+='<div class="radar-metric"><div class="m-label">Espoirs RFA</div><div class="m-value">'+team.prospectCount+'</div><div class="m-note">Hors masse salariale</div></div>';
-  html+='<div class="radar-metric"><div class="m-label">Part des 3 plus gros salaires</div><div class="m-value">'+(team.top3Share*100).toFixed(1)+' %</div><div class="m-note">Sur la masse active</div></div>';
-  html+='<div class="radar-metric"><div class="m-label">Disponibilités à surveiller</div><div class="m-value">'+team.expiring+'</div><div class="m-note">Année indiquée ≤ '+(radarOfficialSnapshot.season==='2627'?'2027':'2028')+'</div></div>';
-  html+='</div><div class="radar-insights">'+insights.map(x=>'<div class="radar-insight '+x[0]+'">'+radarEsc(x[1])+'</div>').join('')+'</div>';
-  html+='<div style="margin-top:16px"><strong style="font-size:.8rem;color:var(--navy2)">Trois plus gros salaires actifs</strong><div class="radar-player-list">';
-  html+=top.length?top.map(p=>'<div class="radar-player-row"><span>'+radarEsc(p.name)+' <span style="color:#71818d">('+radarEsc(p.pos)+')</span></span><strong>'+radarFmt(p.salary)+' M$</strong></div>').join(''):'<div class="radar-note">Aucun salaire numérique disponible.</div>';
-  html+='</div></div><div style="margin-top:14px"><strong style="font-size:.8rem;color:var(--navy2)">Joueurs à échéance rapprochée</strong><div class="radar-player-list">';
-  html+=expiring.length?expiring.map(p=>'<div class="radar-player-row"><span>'+radarEsc(p.name)+'</span><strong>'+radarEsc(p.free)+'</strong></div>').join(''):'<div class="radar-note">Aucune échéance rapprochée selon les années enregistrées.</div>';
-  html+='</div></div>';
-  root.innerHTML=html;
+ const root=document.getElementById('radarTeamDetail');if(!root||!team)return;
+ const rank=teams.findIndex(t=>t.dg===team.dg)+1,performance=teams.slice().sort((a,b)=>b.actualPoints-a.actualPoints),perfRank=performance.findIndex(t=>t.dg===team.dg)+1;
+ const top=team.top12,bargains=team.longTerm.slice().sort((a,b)=>(b.pointsPerMillion||0)-(a.pointsPerMillion||0)).slice(0,8),depth=team.depth.slice().sort((a,b)=>b.final-a.final).slice(0,8),unknown=team.players.filter(p=>p.final===null);
+ let h='<div class="radar-score-grid">';
+ h+='<div class="radar-score-card"><div class="label">Indice structurel</div><div class="value">'+team.index.toFixed(1)+'/100</div><div class="hint">Rang '+rank+' · pondération 50/25/10/15</div></div>';
+ h+='<div class="radar-score-card"><div class="label">Points accumulés</div><div class="value">'+radarFmt(team.actualPoints)+'</div><div class="hint">Rang réel '+perfRank+'</div></div>';
+ h+='<div class="radar-score-card"><div class="label">Projection restante</div><div class="value">'+radarFmt(team.remainingPoints)+'</div><div class="hint">Joueurs avec projection reconnue</div></div>';
+ h+='<div class="radar-score-card"><div class="label">Total final projeté</div><div class="value">'+radarFmt(team.projectedFinal)+'</div><div class="hint">'+team.known.length+'/'+team.active.length+' joueurs avec stats réelles</div></div></div>';
+ h+='<div class="radar-metric-grid"><div class="radar-metric"><div class="m-label">Top 12 potentiel</div><div class="m-value">'+radarFmt(team.top12Points)+' pts</div><div class="m-note">'+top.length+' joueurs projetés · '+depth.length+' hors Top 12</div></div>';
+ h+='<div class="radar-metric"><div class="m-label">Contrats avantageux à long terme</div><div class="m-value">'+radarFmt(team.longTermEfficiency,2)+' pts/M$</div><div class="m-note">'+team.longTerm.length+' joueurs avec au moins 3 saisons restantes</div></div>';
+ h+='<div class="radar-metric"><div class="m-label">Masse / plafond</div><div class="m-value">'+radarFmt(team.mass,3)+' / '+radarFmt(radarOfficialSnapshot.cap,3)+' M$</div><div class="m-note">Marge : '+radarFmt(team.margin,3)+' M$</div></div>';
+ h+='<div class="radar-metric"><div class="m-label">Couverture des projections</div><div class="m-value">'+Math.round(team.coverage*100)+' %</div><div class="m-note">'+team.projected.length+'/'+team.active.length+' joueurs projetés</div></div></div>';
+ h+='<div class="radar-insights">';
+ if(team.coverage<1)h+='<div class="radar-insight warning">Données incomplètes : '+unknown.length+' joueur(s) sans projection. Le classement est provisoire.</div>';
+ if(team.margin<0)h+='<div class="radar-insight warning">La masse dépasse le plafond de '+radarFmt(Math.abs(team.margin),3)+' M$.</div>';
+ if(team.longTerm.length)h+='<div class="radar-insight good">Les contrats à long terme sélectionnés produisent '+radarFmt(team.longTermEfficiency,2)+' points projetés par million.</div>';
+ if(!radarPlayerData.size)h+='<div class="radar-insight warning">Importe les statistiques et projections NHL pour obtenir une analyse hockey. Aucun point n’est estimé à partir des salaires.</div>';
+ h+='</div><div class="radar-subsection"><strong>Top 12 potentiel — analyse détaillée</strong>'+radarPlayerRows(top)+'</div>';
+ h+='<div class="radar-subsection"><strong>Meilleurs contrats à long terme</strong>'+radarPlayerRows(bargains)+'</div><div class="radar-subsection"><strong>Profondeur au-delà du Top 12</strong>'+radarPlayerRows(depth)+'</div>';
+ if(unknown.length)h+='<div class="radar-subsection"><strong>Joueurs sans projection reconnue</strong><div class="radar-note">'+unknown.map(p=>radarEsc(p.name)).join(' · ')+'</div></div>';
+ root.innerHTML=h;
 }
 function radarRender(){
-  const content=document.getElementById('radarContent');
-  if(!content)return;
-  if(!radarOfficialSnapshot?.state?.roster){
-    content.innerHTML='<div class="panel radar-empty">Aucune donnée officielle disponible pour cette saison. Choisis l’autre saison ou actualise après une publication officielle.</div>';
-    return;
-  }
-  const snap=radarOfficialSnapshot.state;
-  const teams=radarMetrics(snap,radarOfficialSnapshot.season);
-  radarMetricsCache=teams;
-  const averageMass=teams.length?teams.reduce((s,t)=>s+t.mass,0)/teams.length:0;
-  const averageMargin=teams.length?teams.reduce((s,t)=>s+t.margin,0)/teams.length:0;
-  const totalPlayers=teams.reduce((s,t)=>s+t.active.length,0);
-  const selected=teams.find(t=>t.dg===radarSelectedDg)||teams.find(t=>t.dg===sbMember?.dg_name)||teams[0];
-  radarSelectedDg=selected?.dg||null;
-  let html='<div class="radar-summary">';
-  html+='<div class="radar-stat"><div class="label">DG analysés</div><div class="value">'+teams.length+'</div><div class="hint">Effectifs officiels</div></div>';
-  html+='<div class="radar-stat"><div class="label">Joueurs actifs</div><div class="value">'+totalPlayers+'</div><div class="hint">Toutes les équipes</div></div>';
-  html+='<div class="radar-stat"><div class="label">Masse moyenne</div><div class="value">'+radarFmt(averageMass)+' M$</div><div class="hint">Par DG</div></div>';
-  html+='<div class="radar-stat"><div class="label">Marge moyenne</div><div class="value">'+radarFmt(averageMargin)+' M$</div><div class="hint">Plafond : '+radarFmt(snap.cap||160)+' M$</div></div></div>';
-  html+='<div class="radar-grid"><section class="panel radar-panel"><h3>Indice structurel des huit DG</h3><p class="radar-subtitle">Classement comparatif basé sur les données officielles de masse et de composition. Ce n’est pas un classement de talent.</p><div class="radar-rank-list" id="radarRanking">';
-  html+=teams.map((t,i)=>'<button type="button" class="radar-rank-row '+(t.dg===selected?.dg?'selected':'')+'" data-radar-dg="'+radarEsc(t.dg)+'"><span class="radar-rank-number">#'+(i+1)+'</span><span class="radar-rank-name">'+radarEsc(t.dg)+'</span><span class="radar-rank-track"><span class="radar-rank-fill" style="display:block;width:'+radarClamp(t.index,0,100)+'%"></span></span><span class="radar-rank-score">'+t.index.toFixed(0)+'</span></button>').join('');
-  html+='</div></section><section class="panel radar-panel"><div class="radar-select-wrap"><div><h3>Diagnostic du DG</h3><p class="radar-subtitle" style="margin:3px 0 0">Sélectionne une équipe pour voir ses leviers.</p></div><select id="radarDgSelect" aria-label="Sélectionner un DG">';
-  html+=teams.map(t=>'<option value="'+radarEsc(t.dg)+'" '+(t.dg===selected?.dg?'selected':'')+'>'+radarEsc(t.dg)+'</option>').join('');
-  html+='</select></div><div id="radarTeamDetail"></div></section></div>';
-  html+='<details class="radar-method"><summary>Comment l’indice est-il calculé?</summary><p>L’indice structurel bêta est une mesure de gestion, calculée à partir de la dernière publication officielle. Pondération : flexibilité salariale (30 %), couverture des positions par rapport à la médiane du pool (25 %), faible concentration des trois plus gros salaires (25 %) et stabilité des contrats selon les années de disponibilité inscrites (20 %).</p><p>Les salaires sont calculés avec la même logique que l’application, y compris les retenues exactes de 1/3. Les obligations de retenue conservées comptent dans la masse, mais pas dans le nombre de joueurs actifs.</p><p><strong>Limite importante :</strong> cette première version ne contient pas encore les points NHL, les projections, l’âge ni les AAV comparés à la production. Elle ne peut donc pas identifier les aubaines hockey ni prédire le classement sportif. Elle sert à faire ressortir les enjeux structurels à discuter.</p></details>';
-  content.innerHTML=html;
-  radarRenderDetail(selected,teams);
-  const select=document.getElementById('radarDgSelect');
-  select?.addEventListener('change',()=>{
-    radarSelectedDg=select.value;
-    const team=radarMetricsCache.find(t=>t.dg===radarSelectedDg);
-    document.querySelectorAll('#radarRanking .radar-rank-row').forEach(el=>el.classList.toggle('selected',el.dataset.radarDg===radarSelectedDg));
-    radarRenderDetail(team,radarMetricsCache);
-  });
-  document.querySelectorAll('#radarRanking .radar-rank-row').forEach(el=>el.addEventListener('click',()=>{
-    radarSelectedDg=el.dataset.radarDg;
-    const team=radarMetricsCache.find(t=>t.dg===radarSelectedDg);
-    const select=document.getElementById('radarDgSelect');
-    if(select)select.value=radarSelectedDg;
-    document.querySelectorAll('#radarRanking .radar-rank-row').forEach(row=>row.classList.toggle('selected',row===el));
-    radarRenderDetail(team,radarMetricsCache);
-  }));
+ const content=document.getElementById('radarContent');if(!content)return;
+ if(!radarOfficialSnapshot?.state?.roster){content.innerHTML='<div class="panel radar-empty">Aucune donnée officielle disponible pour cette saison. Choisis l’autre saison ou actualise.</div>';return;}
+ const teams=radarMetrics(radarOfficialSnapshot.state,radarOfficialSnapshot.season);radarMetricsCache=teams;
+ const total=teams.reduce((s,t)=>s+t.active.length,0),covered=teams.reduce((s,t)=>s+t.known.length,0);
+ const selected=teams.find(t=>t.dg===radarSelectedDg)||teams.find(t=>t.dg===sbMember?.dg_name)||teams[0];radarSelectedDg=selected?.dg||null;
+ const performance=teams.slice().sort((a,b)=>b.actualPoints-a.actualPoints);
+ let h='<div class="radar-summary"><div class="radar-stat"><div class="label">DG analysés</div><div class="value">'+teams.length+'</div><div class="hint">Effectifs officiels</div></div>';
+ h+='<div class="radar-stat"><div class="label">Joueurs actifs</div><div class="value">'+total+'</div><div class="hint">Toutes les équipes</div></div>';
+ h+='<div class="radar-stat"><div class="label">Joueurs avec données</div><div class="value">'+covered+'</div><div class="hint">Sur '+total+' joueurs</div></div>';
+ h+='<div class="radar-stat"><div class="label">Joueurs importés</div><div class="value">'+radarPlayerData.size+'</div><div class="hint">'+(radarDataFileLabel?radarEsc(radarDataFileLabel):'Aucun fichier')+'</div></div></div>';
+ h+='<div class="radar-grid"><section class="panel radar-panel"><h3>Indice structurel des huit DG</h3><p class="radar-subtitle">Effectif complet 50 % · Top 12 25 % · contrats à long terme 10 % · profondeur 15 %. Classement provisoire si couverture incomplète.</p><div class="radar-rank-list" id="radarRanking">';
+ h+=teams.map((t,i)=>'<button type="button" class="radar-rank-row '+(t.dg===selected?.dg?'selected':'')+'" data-radar-dg="'+radarEsc(t.dg)+'"><span class="radar-rank-number">#'+(i+1)+'</span><span class="radar-rank-name">'+radarEsc(t.dg)+'</span><span class="radar-rank-track"><span class="radar-rank-fill" style="display:block;width:'+radarClamp(t.index,0,100)+'%"></span></span><span class="radar-rank-score">'+t.index.toFixed(0)+'</span></button>').join('');
+ h+='</div><div class="radar-subsection"><h3>Classement de production réelle</h3><div class="radar-data-table"><table><thead><tr><th>Rang</th><th>DG</th><th>Pts accumulés</th><th>Projection restante</th><th>Total final</th><th>Couverture</th></tr></thead><tbody>';
+ h+=performance.map((t,i)=>'<tr><td>'+(i+1)+'</td><td><strong>'+radarEsc(t.dg)+'</strong></td><td>'+radarFmt(t.actualPoints)+'</td><td>'+radarFmt(t.remainingPoints)+'</td><td><strong>'+radarFmt(t.projectedFinal)+'</strong></td><td>'+t.known.length+'/'+t.active.length+'</td></tr>').join('');
+ h+='</tbody></table></div></div></section><section class="panel radar-panel"><div class="radar-select-wrap"><div><h3>Diagnostic du DG</h3><p class="radar-subtitle">Sélectionne une équipe pour voir son effectif complet et son Top 12.</p></div><select id="radarDgSelect" aria-label="Sélectionner un DG">';
+ h+=teams.map(t=>'<option value="'+radarEsc(t.dg)+'" '+(t.dg===selected?.dg?'selected':'')+'>'+radarEsc(t.dg)+'</option>').join('');
+ h+='</select></div><div id="radarTeamDetail"></div></section></div>';
+ h+='<details class="radar-method"><summary>Sources, calculs et limites</summary><p><strong>Effectifs et salaires :</strong> dernière publication officielle du pool. Les simulations et négociations privées sont exclues.</p><p><strong>Points accumulés :</strong> attaquants = buts + passes + 3 par tour du chapeau; défenseurs = 2 × buts + passes + 3 par tour du chapeau; gardiens = 2 × victoires + 2 × blanchissages.</p><p><strong>Projection restante :</strong> projection de saison par match projeté multipliée par les matchs restants importés (ou 82 moins les matchs joués). Le total final additionne les points réels et la projection restante.</p><p><strong>Indice structurel :</strong> effectif complet 50 %, Top 12 25 %, contrats d’au moins trois saisons restantes 10 %, profondeur hors Top 12 et équilibre F/D/G 15 %. Chaque volet est normalisé par rapport au meilleur DG.</p><p><strong>Limite :</strong> le fichier hockey est importé localement dans le navigateur; il n’est ni partagé ni enregistré dans Supabase. Les joueurs sans correspondance sont exclus des totaux et signalés.</p></details>';
+ content.innerHTML=h;radarRenderDetail(selected,teams);
+ const select=document.getElementById('radarDgSelect');
+ select?.addEventListener('change',()=>{radarSelectedDg=select.value;const t=radarMetricsCache.find(x=>x.dg===radarSelectedDg);document.querySelectorAll('#radarRanking .radar-rank-row').forEach(el=>el.classList.toggle('selected',el.dataset.radarDg===radarSelectedDg));radarRenderDetail(t,radarMetricsCache);});
+ document.querySelectorAll('#radarRanking .radar-rank-row').forEach(el=>el.addEventListener('click',()=>{radarSelectedDg=el.dataset.radarDg;const t=radarMetricsCache.find(x=>x.dg===radarSelectedDg);if(select)select.value=radarSelectedDg;document.querySelectorAll('#radarRanking .radar-rank-row').forEach(row=>row.classList.toggle('selected',row===el));radarRenderDetail(t,radarMetricsCache);}));
 }
+function radarDownloadTemplate(){
+ const headers=['name','pos','gp','g','a','hatTricks','wins','shutouts','projGP','projG','projA','projHatTricks','projWins','projShutouts','remainingGames'];
+ const example=['Exemple Joueur','F',20,8,12,1,'','','82',30,45,2,'','',62];
+ const blob=new Blob([[headers.join(','),example.join(',')].join('\n')],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='modele-radar-pool-des-champions.csv';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+document.getElementById('radarTemplateBtn')?.addEventListener('click',radarDownloadTemplate);
+document.getElementById('radarDataFile')?.addEventListener('change',event=>{
+ const file=event.target.files?.[0];if(!file)return;const reader=new FileReader();
+ reader.onload=()=>{try{const raw=String(reader.result||''),rows=file.name.toLowerCase().endsWith('.json')?(()=>{const j=JSON.parse(raw);return Array.isArray(j)?j:(j.players||j.data||[]);})():radarParseCsv(raw);radarImportRows(rows,file.name);toast('Données hockey importées dans le Radar.');}
+ catch(err){const st=document.getElementById('radarDataStatus');if(st)st.textContent='Import impossible : '+(err.message||err);toast('Fichier de données invalide.');}event.target.value='';};
+ reader.onerror=()=>{const st=document.getElementById('radarDataStatus');if(st)st.textContent='Impossible de lire ce fichier.';};reader.readAsText(file);
+});
 async function radarLoadOfficialState(){
-  const season=document.getElementById('radarSeason')?.value||'2627';
-  const button=document.getElementById('radarRefreshBtn');
-  if(!sbUser){radarSetStatus('Connexion requise pour consulter les données officielles.',true);return;}
-  if(button){button.disabled=true;button.textContent='Chargement…';}
-  radarSetStatus('Lecture de la dernière publication officielle…');
-  try{
-    const {data,error}=await sb.from('pool_states').select('id,season,version,state,updated_at').eq('season',season).order('version',{ascending:false}).limit(1).maybeSingle();
-    if(error)throw error;
-    if(!data||!data.state?.roster){
-      radarOfficialSnapshot=null;
-      radarRender();
-      radarSetStatus('Aucune publication officielle trouvée pour '+(season==='2627'?'2026-2027':'2027-2028')+'.',true);
-      return;
-    }
-    // Copie indépendante : aucune mutation locale ou simulation ne peut contaminer ce tableau.
-    radarOfficialSnapshot={season,version:data.version,updated_at:data.updated_at,cap:data.state.cap||160,state:JSON.parse(JSON.stringify(data.state))};
-    radarRender();
-    radarSetStatus('Source : publication officielle v'+data.version+' · '+new Date(data.updated_at).toLocaleString('fr-CA')+' · lecture seule. Les simulations privées sont exclues.');
-  }catch(err){
-    radarOfficialSnapshot=null;
-    radarRender();
-    radarSetStatus('Impossible de charger les données officielles : '+(err.message||err),true);
-  }finally{
-    if(button){button.disabled=false;button.textContent='↻ Actualiser';}
-  }
+ const season=document.getElementById('radarSeason')?.value||'2627',button=document.getElementById('radarRefreshBtn');
+ if(!sbUser){radarSetStatus('Connexion requise pour consulter les données officielles.',true);return;}
+ if(button){button.disabled=true;button.textContent='Chargement…';}radarSetStatus('Lecture de la dernière publication officielle…');
+ try{const {data,error}=await sb.from('pool_states').select('id,season,version,state,updated_at').eq('season',season).order('version',{ascending:false}).limit(1).maybeSingle();if(error)throw error;
+  if(!data||!data.state?.roster){radarOfficialSnapshot=null;radarRender();radarSetStatus('Aucune publication officielle trouvée pour '+(season==='2627'?'2026-2027':'2027-2028')+'.',true);return;}
+  radarOfficialSnapshot={season,version:data.version,updated_at:data.updated_at,cap:data.state.cap||160,state:JSON.parse(JSON.stringify(data.state))};radarRender();
+  radarSetStatus('Effectifs : publication officielle v'+data.version+' · '+new Date(data.updated_at).toLocaleString('fr-CA')+' · lecture seule. Les simulations privées sont exclues.');
+ }catch(err){radarOfficialSnapshot=null;radarRender();radarSetStatus('Impossible de charger les données officielles : '+(err.message||err),true);}
+ finally{if(button){button.disabled=false;button.textContent='↻ Actualiser';}}
 }
 document.getElementById('radarRefreshBtn')?.addEventListener('click',radarLoadOfficialState);
 document.getElementById('radarSeason')?.addEventListener('change',radarLoadOfficialState);
