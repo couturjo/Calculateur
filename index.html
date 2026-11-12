@@ -999,6 +999,58 @@ body.login-locked{height:100%;width:100%;}
   #tabEffectifs .pos-column .card{padding:7px 8px}
 }
 </style>
+
+<style id="radar-strategique-prototype">
+#tabRadar .radar-hero{background:linear-gradient(130deg,#0b2545,#173d63);color:#fff;border:0;overflow:hidden}
+#tabRadar .radar-hero h2{color:#fff;border-color:#d9a441;margin-bottom:6px}
+#tabRadar .radar-hero p{color:#d4e2ee;margin:0;max-width:720px;line-height:1.5}
+#tabRadar .radar-kicker{font-size:.68rem;letter-spacing:.14em;font-weight:800;color:#e4c47e;text-transform:uppercase}
+#tabRadar .radar-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap}
+#tabRadar .radar-controls{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+#tabRadar .radar-controls label{display:flex;flex-direction:column;gap:4px;color:#d4e2ee;font-size:.7rem;text-transform:uppercase;font-weight:700}
+#tabRadar .radar-controls select{min-width:125px}
+#tabRadar .radar-status{margin-top:13px;padding-top:10px;border-top:1px solid rgba(255,255,255,.18);font-size:.78rem;color:#d4e2ee}
+#tabRadar .radar-status.error{color:#ffd0d0}
+#tabRadar .radar-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+#tabRadar .radar-stat{background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px 15px;box-shadow:0 2px 8px rgba(11,37,69,.05)}
+#tabRadar .radar-stat .label{font-size:.67rem;color:var(--grey);font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+#tabRadar .radar-stat .value{font-size:1.35rem;font-weight:850;color:var(--navy);margin-top:3px}
+#tabRadar .radar-stat .hint{font-size:.7rem;color:var(--grey);margin-top:2px}
+#tabRadar .radar-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px;align-items:start}
+#tabRadar .radar-panel{min-width:0}
+#tabRadar .radar-panel h3{margin:0 0 5px;color:var(--navy2);font-size:1rem}
+#tabRadar .radar-subtitle{font-size:.76rem;color:var(--grey);margin:0 0 14px;line-height:1.45}
+#tabRadar .radar-rank-list{display:flex;flex-direction:column;gap:7px}
+#tabRadar .radar-rank-row{width:100%;display:grid;grid-template-columns:30px minmax(90px,1fr) minmax(75px,1.2fr) 48px;gap:9px;align-items:center;text-align:left;background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px 11px;color:var(--navy);cursor:pointer}
+#tabRadar .radar-rank-row:hover,#tabRadar .radar-rank-row.selected{border-color:#c49b4d;background:#fffaf0}
+#tabRadar .radar-rank-number{font-size:.78rem;font-weight:900;color:#8a6a2d}
+#tabRadar .radar-rank-name{font-size:.83rem;font-weight:800;overflow-wrap:anywhere}
+#tabRadar .radar-rank-track{height:9px;border-radius:9px;background:#e8eef3;overflow:hidden}
+#tabRadar .radar-rank-fill{height:100%;background:linear-gradient(90deg,#173d63,#d0a34e);border-radius:9px}
+#tabRadar .radar-rank-score{text-align:right;font-size:.9rem;font-weight:900;font-variant-numeric:tabular-nums}
+#tabRadar .radar-select-wrap{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+#tabRadar .radar-select-wrap select{min-width:150px}
+#tabRadar .radar-metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}
+#tabRadar .radar-metric{background:#f3f7fa;border:1px solid #dbe5ec;border-radius:9px;padding:10px}
+#tabRadar .radar-metric .m-label{font-size:.66rem;color:var(--grey);font-weight:800;text-transform:uppercase}
+#tabRadar .radar-metric .m-value{font-size:1.1rem;font-weight:850;color:var(--navy);margin-top:3px}
+#tabRadar .radar-metric .m-note{font-size:.68rem;color:var(--grey);margin-top:2px}
+#tabRadar .radar-insights{display:flex;flex-direction:column;gap:7px;margin-top:12px}
+#tabRadar .radar-insight{padding:9px 11px;border-radius:8px;background:#f4f7fa;border-left:3px solid #d0a34e;font-size:.78rem;line-height:1.45;color:#253f55}
+#tabRadar .radar-insight.warning{background:#fff4e8;border-color:#d98b35}
+#tabRadar .radar-insight.good{background:#edf7f0;border-color:#3c9b68}
+#tabRadar .radar-player-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+#tabRadar .radar-player-row{display:flex;justify-content:space-between;gap:10px;padding:7px 9px;background:#f7f9fb;border-radius:7px;font-size:.76rem}
+#tabRadar .radar-player-row strong{font-variant-numeric:tabular-nums;white-space:nowrap}
+#tabRadar .radar-note{font-size:.72rem;color:var(--grey);line-height:1.5}
+#tabRadar .radar-empty{padding:22px;text-align:center;color:var(--grey);font-size:.85rem}
+#tabRadar .radar-method{margin-top:16px;background:#f6f8fa;border:1px solid var(--line);border-radius:10px;padding:13px 15px}
+#tabRadar .radar-method summary{cursor:pointer;font-weight:800;color:var(--navy2);font-size:.82rem}
+#tabRadar .radar-method p,#tabRadar .radar-method li{font-size:.74rem;color:#526675;line-height:1.5}
+@media(max-width:850px){#tabRadar .radar-grid{grid-template-columns:1fr}#tabRadar .radar-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){#tabRadar .radar-summary{gap:7px}#tabRadar .radar-stat{padding:10px}#tabRadar .radar-stat .value{font-size:1.1rem}#tabRadar .radar-rank-row{grid-template-columns:23px minmax(75px,1fr) minmax(45px,.8fr) 38px;gap:6px;padding:9px 7px}#tabRadar .radar-rank-name{font-size:.75rem}#tabRadar .radar-rank-score{font-size:.8rem}#tabRadar .radar-metric-grid{gap:7px}}
+</style>
+
 </head>
 <body class="login-locked">
 
@@ -1021,6 +1073,7 @@ body.login-locked{height:100%;width:100%;}
 <div class="sticky-wrap">
 <div class="main-nav" id="mainNav">
   <button class="nav-btn active" data-tab="effectifs">📋 Effectifs</button>
+  <button class="nav-btn" data-tab="radar">📊 Radar des DG</button>
   <button class="nav-btn" data-tab="rfa">🌱 RFA</button>
   <button class="nav-btn" data-tab="repechage">🎯 Repêchage</button>
   <button class="nav-btn" data-tab="transactions">🔁 Transactions</button>
@@ -1378,6 +1431,30 @@ body.login-locked{height:100%;width:100%;}
   </div>
 
     </div><!-- /tabVersions -->
+
+
+  <div class="tab-page" id="tabRadar">
+    <section class="panel radar-hero">
+      <div class="radar-head">
+        <div>
+          <div class="radar-kicker">Bureau d'analyse · Le Pool des champions</div>
+          <h2>Radar stratégique des huit DG</h2>
+          <p>Compare la structure des effectifs officiels, la flexibilité salariale et les risques de gestion. Les simulations et négociations privées ne sont jamais utilisées.</p>
+        </div>
+        <div class="radar-controls">
+          <label for="radarSeason">Saison analysée
+            <select id="radarSeason">
+              <option value="2627">2026-2027</option>
+              <option value="2728">2027-2028</option>
+            </select>
+          </label>
+          <button class="ghost" id="radarRefreshBtn" type="button">↻ Actualiser</button>
+        </div>
+      </div>
+      <div class="radar-status" id="radarStatus" role="status">Les données seront chargées à l'ouverture de cet onglet.</div>
+    </section>
+    <div id="radarContent"><div class="radar-empty panel">Chargement des données officielles requis.</div></div>
+  </div>
 
   <div class="tab-page" id="tabJournal">
     <div class="panel">
@@ -2999,7 +3076,7 @@ function updateFab(tab){
   currentTab = tab;
   collapseFabMinis();
   const stack = document.getElementById('fabStack');
-  if(tab === 'kanban'){
+  if(tab === 'kanban' || tab === 'radar'){
     stack.style.display = 'none';
     return;
   }
@@ -3441,6 +3518,190 @@ function renderCharte(){
 document.getElementById('charteSearch').addEventListener('input', renderCharte);
 renderCharte();
 
+
+/* ===== Radar stratégique — prototype en lecture seule =====
+   Source exclusive : dernière publication officielle de pool_states.
+   N'utilise jamais state.roster (qui peut contenir des modifications locales
+   ou une simulation de transaction) et n'écrit aucune donnée.
+*/
+let radarOfficialSnapshot = null;
+let radarSelectedDg = null;
+let radarMetricsCache = [];
+
+function radarEsc(value){
+  return String(value ?? '').replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function radarClamp(value,min,max){return Math.max(min,Math.min(max,value));}
+function radarFmt(value,digits=3){
+  return Number(value||0).toLocaleString('fr-CA',{minimumFractionDigits:digits,maximumFractionDigits:digits});
+}
+function radarSalary(player,season){
+  let base;
+  if(player && player.overrides && Object.prototype.hasOwnProperty.call(player.overrides,season)) base=player.overrides[season];
+  else base=season==='2627'?player?.aav26:player?.aav27;
+  let value=typeof base==='number'&&Number.isFinite(base)?base:0;
+  if(player?.retainPct>0) value*=player.retainPct===33?(1/3):player.retainPct/100;
+  return value;
+}
+function radarMetrics(snapshot,season){
+  const rosterByDg=snapshot?.roster||{};
+  const names=Object.keys(RAW_DATA.rosters||{});
+  const cap=Number(snapshot?.cap)||160;
+  const year=season==='2627'?2026:2027;
+  const teams=names.map(dg=>{
+    const all=Array.isArray(rosterByDg[dg])?rosterByDg[dg]:[];
+    const active=all.filter(p=>p&&!p._retainedPlaceholder);
+    const retained=all.filter(p=>p&&p._retainedPlaceholder);
+    const mass=all.reduce((sum,p)=>sum+radarSalary(p,season),0);
+    const activeMass=active.reduce((sum,p)=>sum+radarSalary(p,season),0);
+    const positions={F:0,D:0,G:0};
+    active.forEach(p=>{const pos=['F','D','G'].includes(p.pos)?p.pos:'F';positions[pos]++;});
+    const salaries=active.map(p=>({name:p.name||'Joueur',salary:radarSalary(p,season),pos:p.pos||'F'})).filter(p=>p.salary>0).sort((a,b)=>b.salary-a.salary);
+    const top3=salaries.slice(0,3).reduce((sum,p)=>sum+p.salary,0);
+    const expiring=active.filter(p=>typeof p.free==='number'&&p.free<=year+1).length;
+    const salaryUnknown=active.filter(p=>{
+      const base=p?.overrides&&Object.prototype.hasOwnProperty.call(p.overrides,season)?p.overrides[season]:(season==='2627'?p?.aav26:p?.aav27);
+      return base!==undefined&&base!==null&&base!==''&&typeof base!=='number';
+    }).length;
+    const prospectCount=Array.isArray(snapshot?.prospects?.[dg])?snapshot.prospects[dg].length:0;
+    const margin=cap-mass;
+    const flexibility=radarClamp(((margin+5)/25)*100,0,100);
+    const concentration=activeMass>0?radarClamp(100-(top3/activeMass*100),0,100):100;
+    const stability=active.length?radarClamp(100-(expiring/active.length*100),0,100):0;
+    return {dg,all,active,retained,mass,activeMass,margin,positions,salaries,top3Share:activeMass>0?top3/activeMass:0,expiring,salaryUnknown,prospectCount,flexibility,concentration,stability,index:0,coverage:0};
+  });
+  const medians={};
+  ['F','D','G'].forEach(pos=>{
+    const sorted=teams.map(t=>t.positions[pos]).sort((a,b)=>a-b);
+    medians[pos]=sorted.length%2?sorted[(sorted.length-1)/2]:(sorted[sorted.length/2-1]+sorted[sorted.length/2])/2;
+  });
+  teams.forEach(t=>{
+    const coverage=['F','D','G'].reduce((sum,pos)=>{
+      const median=medians[pos];
+      return sum+(median>0?Math.min(1,t.positions[pos]/median)*100:100);
+    },0)/3;
+    t.coverage=coverage;
+    // Indice structurel, pas une cote de talent ni une projection de points.
+    t.index=0.30*t.flexibility+0.25*t.coverage+0.25*t.concentration+0.20*t.stability;
+  });
+  return teams.sort((a,b)=>b.index-a.index);
+}
+function radarSetStatus(message,error=false){
+  const el=document.getElementById('radarStatus');
+  if(!el)return;
+  el.textContent=message;
+  el.classList.toggle('error',!!error);
+}
+function radarRenderDetail(team,teams){
+  const root=document.getElementById('radarTeamDetail');
+  if(!root||!team)return;
+  const median={};
+  ['F','D','G'].forEach(pos=>{
+    const vals=teams.map(t=>t.positions[pos]).sort((a,b)=>a-b);
+    median[pos]=vals.length%2?vals[(vals.length-1)/2]:(vals[vals.length/2-1]+vals[vals.length/2])/2;
+  });
+  const insights=[];
+  if(team.margin<0)insights.push(['warning','La masse dépasse le plafond de '+radarFmt(Math.abs(team.margin))+' M$. Une correction est nécessaire.']);
+  else if(team.margin>=20)insights.push(['good','Marge salariale importante : '+radarFmt(team.margin)+' M$ disponibles sous le plafond.']);
+  else insights.push(['','Marge salariale : '+radarFmt(team.margin)+' M$. À mettre en relation avec les besoins de l’effectif.']);
+  if(team.top3Share>=.5)insights.push(['warning','Les trois salaires les plus élevés représentent '+(team.top3Share*100).toFixed(1)+' % de la masse active : forte concentration financière.']);
+  if(team.expiring>=3)insights.push(['warning',team.expiring+' joueurs ont une année de disponibilité indiquée à '+(radarOfficialSnapshot.season==='2627'?'2027 ou avant':'2028 ou avant')+'. Anticiper les décisions contractuelles.']);
+  ['F','D','G'].forEach(pos=>{
+    if(team.positions[pos]<median[pos])insights.push(['','Couverture '+(pos==='F'?'attaquants':pos==='D'?'défenseurs':'gardiens')+' sous la médiane des huit équipes ('+team.positions[pos]+' contre '+median[pos]+').']);
+  });
+  if(team.salaryUnknown>0)insights.push(['warning',team.salaryUnknown+' salaire(s) non numérique(s) pour cette saison : le calcul de masse les traite comme 0 $, comme le calculateur actuel. Interpréter l’indice avec prudence.']);
+  if(!insights.length)insights.push(['good','Aucun signal structurel majeur détecté selon les données disponibles.']);
+  const top=team.salaries.slice(0,3);
+  const expiring=team.active.filter(p=>typeof p.free==='number'&&p.free<=(radarOfficialSnapshot.season==='2627'?2027:2028)).sort((a,b)=>a.free-b.free);
+  let html='<div class="radar-metric-grid">';
+  html+='<div class="radar-metric"><div class="m-label">Indice structurel</div><div class="m-value">'+team.index.toFixed(1)+' / 100</div><div class="m-note">Comparatif de gestion · bêta</div></div>';
+  html+='<div class="radar-metric"><div class="m-label">Masse / plafond</div><div class="m-value">'+radarFmt(team.mass)+' / '+radarFmt(radarOfficialSnapshot.cap)+' M$</div><div class="m-note">'+(team.margin>=0?'Marge : ':'Dépassement : ')+radarFmt(Math.abs(team.margin))+' M$</div></div>';
+  html+='<div class="radar-metric"><div class="m-label">Effectif actif</div><div class="m-value">'+team.active.length+' joueurs</div><div class="m-note">'+team.positions.F+' A · '+team.positions.D+' D · '+team.positions.G+' G</div></div>';
+  html+='<div class="radar-metric"><div class="m-label">Espoirs RFA</div><div class="m-value">'+team.prospectCount+'</div><div class="m-note">Hors masse salariale</div></div>';
+  html+='<div class="radar-metric"><div class="m-label">Part des 3 plus gros salaires</div><div class="m-value">'+(team.top3Share*100).toFixed(1)+' %</div><div class="m-note">Sur la masse active</div></div>';
+  html+='<div class="radar-metric"><div class="m-label">Disponibilités à surveiller</div><div class="m-value">'+team.expiring+'</div><div class="m-note">Année indiquée ≤ '+(radarOfficialSnapshot.season==='2627'?'2027':'2028')+'</div></div>';
+  html+='</div><div class="radar-insights">'+insights.map(x=>'<div class="radar-insight '+x[0]+'">'+radarEsc(x[1])+'</div>').join('')+'</div>';
+  html+='<div style="margin-top:16px"><strong style="font-size:.8rem;color:var(--navy2)">Trois plus gros salaires actifs</strong><div class="radar-player-list">';
+  html+=top.length?top.map(p=>'<div class="radar-player-row"><span>'+radarEsc(p.name)+' <span style="color:#71818d">('+radarEsc(p.pos)+')</span></span><strong>'+radarFmt(p.salary)+' M$</strong></div>').join(''):'<div class="radar-note">Aucun salaire numérique disponible.</div>';
+  html+='</div></div><div style="margin-top:14px"><strong style="font-size:.8rem;color:var(--navy2)">Joueurs à échéance rapprochée</strong><div class="radar-player-list">';
+  html+=expiring.length?expiring.map(p=>'<div class="radar-player-row"><span>'+radarEsc(p.name)+'</span><strong>'+radarEsc(p.free)+'</strong></div>').join(''):'<div class="radar-note">Aucune échéance rapprochée selon les années enregistrées.</div>';
+  html+='</div></div>';
+  root.innerHTML=html;
+}
+function radarRender(){
+  const content=document.getElementById('radarContent');
+  if(!content)return;
+  if(!radarOfficialSnapshot?.state?.roster){
+    content.innerHTML='<div class="panel radar-empty">Aucune donnée officielle disponible pour cette saison. Choisis l’autre saison ou actualise après une publication officielle.</div>';
+    return;
+  }
+  const snap=radarOfficialSnapshot.state;
+  const teams=radarMetrics(snap,radarOfficialSnapshot.season);
+  radarMetricsCache=teams;
+  const averageMass=teams.length?teams.reduce((s,t)=>s+t.mass,0)/teams.length:0;
+  const averageMargin=teams.length?teams.reduce((s,t)=>s+t.margin,0)/teams.length:0;
+  const totalPlayers=teams.reduce((s,t)=>s+t.active.length,0);
+  const selected=teams.find(t=>t.dg===radarSelectedDg)||teams.find(t=>t.dg===sbMember?.dg_name)||teams[0];
+  radarSelectedDg=selected?.dg||null;
+  let html='<div class="radar-summary">';
+  html+='<div class="radar-stat"><div class="label">DG analysés</div><div class="value">'+teams.length+'</div><div class="hint">Effectifs officiels</div></div>';
+  html+='<div class="radar-stat"><div class="label">Joueurs actifs</div><div class="value">'+totalPlayers+'</div><div class="hint">Toutes les équipes</div></div>';
+  html+='<div class="radar-stat"><div class="label">Masse moyenne</div><div class="value">'+radarFmt(averageMass)+' M$</div><div class="hint">Par DG</div></div>';
+  html+='<div class="radar-stat"><div class="label">Marge moyenne</div><div class="value">'+radarFmt(averageMargin)+' M$</div><div class="hint">Plafond : '+radarFmt(snap.cap||160)+' M$</div></div></div>';
+  html+='<div class="radar-grid"><section class="panel radar-panel"><h3>Indice structurel des huit DG</h3><p class="radar-subtitle">Classement comparatif basé sur les données officielles de masse et de composition. Ce n’est pas un classement de talent.</p><div class="radar-rank-list" id="radarRanking">';
+  html+=teams.map((t,i)=>'<button type="button" class="radar-rank-row '+(t.dg===selected?.dg?'selected':'')+'" data-radar-dg="'+radarEsc(t.dg)+'"><span class="radar-rank-number">#'+(i+1)+'</span><span class="radar-rank-name">'+radarEsc(t.dg)+'</span><span class="radar-rank-track"><span class="radar-rank-fill" style="display:block;width:'+radarClamp(t.index,0,100)+'%"></span></span><span class="radar-rank-score">'+t.index.toFixed(0)+'</span></button>').join('');
+  html+='</div></section><section class="panel radar-panel"><div class="radar-select-wrap"><div><h3>Diagnostic du DG</h3><p class="radar-subtitle" style="margin:3px 0 0">Sélectionne une équipe pour voir ses leviers.</p></div><select id="radarDgSelect" aria-label="Sélectionner un DG">';
+  html+=teams.map(t=>'<option value="'+radarEsc(t.dg)+'" '+(t.dg===selected?.dg?'selected':'')+'>'+radarEsc(t.dg)+'</option>').join('');
+  html+='</select></div><div id="radarTeamDetail"></div></section></div>';
+  html+='<details class="radar-method"><summary>Comment l’indice est-il calculé?</summary><p>L’indice structurel bêta est une mesure de gestion, calculée à partir de la dernière publication officielle. Pondération : flexibilité salariale (30 %), couverture des positions par rapport à la médiane du pool (25 %), faible concentration des trois plus gros salaires (25 %) et stabilité des contrats selon les années de disponibilité inscrites (20 %).</p><p>Les salaires sont calculés avec la même logique que l’application, y compris les retenues exactes de 1/3. Les obligations de retenue conservées comptent dans la masse, mais pas dans le nombre de joueurs actifs.</p><p><strong>Limite importante :</strong> cette première version ne contient pas encore les points NHL, les projections, l’âge ni les AAV comparés à la production. Elle ne peut donc pas identifier les aubaines hockey ni prédire le classement sportif. Elle sert à faire ressortir les enjeux structurels à discuter.</p></details>';
+  content.innerHTML=html;
+  radarRenderDetail(selected,teams);
+  const select=document.getElementById('radarDgSelect');
+  select?.addEventListener('change',()=>{
+    radarSelectedDg=select.value;
+    const team=radarMetricsCache.find(t=>t.dg===radarSelectedDg);
+    document.querySelectorAll('#radarRanking .radar-rank-row').forEach(el=>el.classList.toggle('selected',el.dataset.radarDg===radarSelectedDg));
+    radarRenderDetail(team,radarMetricsCache);
+  });
+  document.querySelectorAll('#radarRanking .radar-rank-row').forEach(el=>el.addEventListener('click',()=>{
+    radarSelectedDg=el.dataset.radarDg;
+    const team=radarMetricsCache.find(t=>t.dg===radarSelectedDg);
+    const select=document.getElementById('radarDgSelect');
+    if(select)select.value=radarSelectedDg;
+    document.querySelectorAll('#radarRanking .radar-rank-row').forEach(row=>row.classList.toggle('selected',row===el));
+    radarRenderDetail(team,radarMetricsCache);
+  }));
+}
+async function radarLoadOfficialState(){
+  const season=document.getElementById('radarSeason')?.value||'2627';
+  const button=document.getElementById('radarRefreshBtn');
+  if(!sbUser){radarSetStatus('Connexion requise pour consulter les données officielles.',true);return;}
+  if(button){button.disabled=true;button.textContent='Chargement…';}
+  radarSetStatus('Lecture de la dernière publication officielle…');
+  try{
+    const {data,error}=await sb.from('pool_states').select('id,season,version,state,updated_at').eq('season',season).order('version',{ascending:false}).limit(1).maybeSingle();
+    if(error)throw error;
+    if(!data||!data.state?.roster){
+      radarOfficialSnapshot=null;
+      radarRender();
+      radarSetStatus('Aucune publication officielle trouvée pour '+(season==='2627'?'2026-2027':'2027-2028')+'.',true);
+      return;
+    }
+    // Copie indépendante : aucune mutation locale ou simulation ne peut contaminer ce tableau.
+    radarOfficialSnapshot={season,version:data.version,updated_at:data.updated_at,cap:data.state.cap||160,state:JSON.parse(JSON.stringify(data.state))};
+    radarRender();
+    radarSetStatus('Source : publication officielle v'+data.version+' · '+new Date(data.updated_at).toLocaleString('fr-CA')+' · lecture seule. Les simulations privées sont exclues.');
+  }catch(err){
+    radarOfficialSnapshot=null;
+    radarRender();
+    radarSetStatus('Impossible de charger les données officielles : '+(err.message||err),true);
+  }finally{
+    if(button){button.disabled=false;button.textContent='↻ Actualiser';}
+  }
+}
+document.getElementById('radarRefreshBtn')?.addEventListener('click',radarLoadOfficialState);
+document.getElementById('radarSeason')?.addEventListener('change',radarLoadOfficialState);
+
 // --- Main navigation (tabs) ---
 document.querySelectorAll('.nav-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
@@ -3448,6 +3709,7 @@ document.querySelectorAll('.nav-btn').forEach(btn=>{
     btn.classList.add('active');
     const tab = btn.dataset.tab;
     document.getElementById('tabEffectifs').classList.toggle('active', tab==='effectifs');
+    document.getElementById('tabRadar').classList.toggle('active', tab==='radar');
     document.getElementById('tabRfa').classList.toggle('active', tab==='rfa');
     document.getElementById('tabRepechage').classList.toggle('active', tab==='repechage');
     document.getElementById('tabTransactions').classList.toggle('active', tab==='transactions');
@@ -3457,6 +3719,7 @@ document.querySelectorAll('.nav-btn').forEach(btn=>{
     document.getElementById('tabVersions').classList.toggle('active', tab==='versions');
     document.getElementById('tabJournal').classList.toggle('active', tab==='journal');
     if(tab==='journal') loadAuditJournal();
+    if(tab==='radar') radarLoadOfficialState();
     if(tab==='transactions') renderTrade();
     if(tab==='versions') renderVersionsList();
     if(tab==='rfa') renderRfa();
@@ -3465,7 +3728,7 @@ document.querySelectorAll('.nav-btn').forEach(btn=>{
     if(tab==='charte') renderCharte();
     if(tab==='draftday') renderDraftDay();
     updateFab(tab);
-    document.getElementById('stickyBar').style.display = (tab === 'kanban' || tab === 'transactions') ? 'none' : 'flex';
+    document.getElementById('stickyBar').style.display = (tab === 'kanban' || tab === 'transactions' || tab === 'radar') ? 'none' : 'flex';
     document.getElementById('stickyTradeBar').style.display = (tab === 'transactions') ? 'flex' : 'none';
     window.scrollTo({top:0, behavior:'instant'});
   });
@@ -3899,7 +4162,9 @@ document.getElementById('sbLoginForm').addEventListener('submit',async e=>{
 
 document.getElementById('sbLogoutBtn').addEventListener('click',async()=>{
   await sb.auth.signOut();
-  sbUser=null; sbMember=null;
+  sbUser=null; sbMember=null; radarOfficialSnapshot=null; radarSelectedDg=null;
+  const radarStatus=document.getElementById('radarStatus'); if(radarStatus) radarStatus.textContent='Connecte-toi pour charger les données officielles.';
+  const radarContent=document.getElementById('radarContent'); if(radarContent) radarContent.innerHTML='<div class="radar-empty panel">Connexion requise.</div>';
   document.getElementById('journalNavBtn').style.display='none';
   document.getElementById('tabJournal').classList.remove('active');
   document.getElementById('sbUserBar').style.display='none';
