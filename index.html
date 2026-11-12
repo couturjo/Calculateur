@@ -3652,6 +3652,10 @@ function radarRender(){
  const total=teams.reduce((s,t)=>s+t.active.length,0),covered=teams.reduce((s,t)=>s+t.known.length,0);
  const selected=teams.find(t=>t.dg===radarSelectedDg)||teams.find(t=>t.dg===sbMember?.dg_name)||teams[0];radarSelectedDg=selected?.dg||null;
  const performance=teams.slice().sort((a,b)=>b.actualPoints-a.actualPoints);
+ if(!radarPlayerData.size){
+  content.innerHTML='<div class="panel radar-empty"><strong>Les données hockey ne sont pas encore importées.</strong><p>Utilise le bouton « Télécharger le modèle CSV », puis importe un fichier avec les statistiques de la saison et les projections pour activer les classements, le Top 12 et l’indice 50/25/10/15. Le Radar ne fabriquera aucun point à partir des salaires.</p><p>Les effectifs et salaires proviennent bien de la dernière publication officielle, mais l’analyse sportive attend le fichier hockey.</p></div>';
+  return;
+ }
  let h='<div class="radar-summary"><div class="radar-stat"><div class="label">DG analysés</div><div class="value">'+teams.length+'</div><div class="hint">Effectifs officiels</div></div>';
  h+='<div class="radar-stat"><div class="label">Joueurs actifs</div><div class="value">'+total+'</div><div class="hint">Toutes les équipes</div></div>';
  h+='<div class="radar-stat"><div class="label">Joueurs avec données</div><div class="value">'+covered+'</div><div class="hint">Sur '+total+' joueurs</div></div>';
