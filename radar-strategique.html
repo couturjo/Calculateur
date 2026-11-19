@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Radar stratégique — Le Pool des champions</title>
+<style>
+:root{--navy:#0b2545;--blue:#173e68;--gold:#d9a441;--ice:#eef4f8;--line:#cfdae3;--ink:#172b40;--muted:#657586;--white:#fff;--red:#bd4545;--green:#25835b}
+*{box-sizing:border-box}body{margin:0;background:var(--ice);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:linear-gradient(120deg,var(--navy),var(--blue));color:white;padding:24px max(20px,calc((100vw - 1120px)/2));border-bottom:5px solid var(--gold)}
+.kicker{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#e7c77e;font-weight:800}
+h1{font:800 clamp(25px,4vw,38px)/1.1 Georgia,serif;margin:7px 0}.sub{color:#d3deea}
+main{max-width:1120px;margin:22px auto;padding:0 16px 40px}
+.grid{display:grid;grid-template-columns:1.35fr .9fr;gap:16px}.panel{background:var(--white);border:1px solid var(--line);border-radius:13px;padding:18px;box-shadow:0 3px 12px #0b25450c}
+h2{font-size:17px;margin:0 0 13px;color:var(--navy)}.muted{color:var(--muted);font-size:12px}
+.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px}.pod{padding:13px;border-radius:10px;background:#f5f8fb;border:1px solid var(--line)}.pod small{display:block;color:var(--muted)}.pod strong{display:block;font-size:22px;color:var(--navy)}.pod.first{background:#fff8e8;border-color:#e7c77e}
+table{width:100%;border-collapse:collapse}th{text-align:left;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:8px 6px;border-bottom:1px solid var(--line)}td{padding:10px 6px;border-bottom:1px solid #edf1f4}tr:last-child td{border-bottom:0}.rank{font-weight:800;color:var(--navy);width:34px}.points{font-weight:800;text-align:right;font-variant-numeric:tabular-nums}.gap{text-align:right;color:var(--muted);font-size:12px}
+.bar{height:6px;background:#e9eff4;border-radius:20px;margin-top:5px;overflow:hidden}.bar i{display:block;height:100%;background:var(--blue);border-radius:20px}
+.status{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:20px;background:#eef6f1;color:#206a49;font-size:11px;font-weight:700}.dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.metric{padding:13px 0;border-bottom:1px solid #edf1f4}.metric:last-child{border:0}.metric b{display:block;color:var(--navy);font-size:21px}.metric span{font-size:12px;color:var(--muted)}
+.notice{background:#fff8e8;border:1px solid #ecd7a5;border-radius:10px;padding:12px;color:#614b20;font-size:12px;margin-top:14px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.mini{background:#f7f9fb;border:1px solid var(--line);border-radius:10px;padding:13px}.mini b{display:block;color:var(--navy);margin-bottom:4px}
+footer{margin-top:18px;color:var(--muted);font-size:11px;text-align:center}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.podium{gap:6px}.pod{padding:10px}.pod strong{font-size:19px}td,th{padding:9px 4px}.hide-mobile{display:none}}
+</style>
+</head>
+<body>
+<header><div class="kicker">Édition de travail · Saison 2026-2027</div><h1>Le Radar stratégique</h1><div class="sub">Le Pool des champions — les chiffres d'abord, les excuses ensuite.</div></header>
+<main>
+<div class="grid">
+<section class="panel">
+<h2>🏆 Classement Fantrax</h2><div class="muted">Instantané transmis le 18 novembre 2026 · Ligue : 36jwlqfymtje4t5h</div>
+<div class="podium" id="podium"></div>
+<table><thead><tr><th>Rang</th><th>Directeur général</th><th class="hide-mobile">Écart du meneur</th><th style="text-align:right">Points</th></tr></thead><tbody id="standings"></tbody></table>
+</section>
+<aside class="panel">
+<h2>📡 État des sources</h2>
+<div class="metric"><b><span class="dot"></span> Fantrax — classement</b><span>Lecture réussie · données fournies par le DG</span></div>
+<div class="metric"><b>Version 50 · effectifs</b><span>Supabase · saison 2026-2027 · 17 nov. 2026</span></div>
+<div class="metric"><b>8 / 8 DG</b><span>Effectifs officiels présents dans la base</span></div>
+<div class="metric"><b>À connecter</b><span>Statistiques NHL et contrats/AAV PuckPedia vérifiés</span></div>
+<div class="notice"><strong>Important :</strong> aucun ratio points/$ ni verdict de rendement n'est calculé tant que les statistiques NHL et les AAV ne sont pas rapprochés et validés joueur par joueur.</div>
+</aside>
+</div>
+<section class="panel" style="margin-top:16px">
+<h2>🔎 Les trois couches du Radar</h2>
+<div class="cards">
+<div class="mini"><b>1. Résultats</b><span class="muted">Classement, points, écarts et évolution hebdomadaire des huit DG.</span></div>
+<div class="mini"><b>2. Rendement</b><span class="muted">Points pool par million, valeur des contrats, production récente et joueurs sous-payés.</span></div>
+<div class="mini"><b>3. Décisions</b><span class="muted">Forces/faiblesses par DG, contrats à surveiller, aubaines et pistes stratégiques.</span></div>
+</div>
+</section>
+<footer>Prototype indépendant — aucune modification à l'application de production. Sources de travail : Fantrax (instantané transmis) et état officiel Supabase version 50.</footer>
+</main>
+<script>
+const teams=[
+{name:"Slowmo",points:433},{name:"Couturov",points:394},{name:"Raton",points:392},{name:"Pinson",points:389},
+{name:"Paym",points:373},{name:"Sportek",points:356},{name:"Grossi",points:305},{name:"Tony",points:296}
+];
+const podium=document.querySelector('#podium');
+[teams[1],teams[0],teams[2]].forEach((t,i)=>{const p=document.createElement('div');p.className='pod '+(i===1?'first':'');p.innerHTML='<small>'+(i===1?'🥇 Meneur':i===0?'🥈 2e place':'🥉 3e place')+'</small><strong>'+t.points+'</strong><span>'+t.name+'</span>';podium.append(p)});
+const body=document.querySelector('#standings');
+teams.forEach((t,i)=>{const tr=document.createElement('tr');const diff=teams[0].points-t.points;tr.innerHTML='<td class="rank">'+(i+1)+'</td><td><strong>'+t.name+'</strong><div class="bar"><i style="width:'+(t.points/teams[0].points*100)+'%"></i></div></td><td class="gap hide-mobile">'+(diff===0?'—':'-'+diff)+'</td><td class="points">'+t.points+'</td>';body.append(tr)});
+</script>
+</body></html>
