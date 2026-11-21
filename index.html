@@ -1652,7 +1652,7 @@ function tradeSumFor(dg, outMap){
       const pct = outMap[p.name] || 0;
       full += aav;
       retained += aav * (pct/100);
-      count++;
+      if(!p._retainedPlaceholder && p.statusTag !== 'retenu') count++;
     }
   });
   return { full, retained, net: full - retained, count };
@@ -1694,7 +1694,8 @@ function renderTradeList(containerEl, dg, outMap, otherOutMap){
   TRADE_POS_GROUPS.forEach(group=>{
     const players = roster.filter(p => (p.pos === group.key) || (group.key==='F' && p.pos !== 'D' && p.pos !== 'G'));
     if(players.length === 0) return;
-    appendCollapsibleGroup(containerEl, group.key, group.label + ' (' + players.length + ')', (body)=>{
+    const playerCount = players.filter(p => !p._retainedPlaceholder && p.statusTag !== 'retenu').length;
+    appendCollapsibleGroup(containerEl, group.key, group.label + ' (' + playerCount + ')', (body)=>{
       players.forEach(p=>{
         const checked = outMap.hasOwnProperty(p.name);
         const aav = currentAav(p);
@@ -2598,7 +2599,9 @@ function freeTagInfo(free){
 }
 
 function realPlayerCount(roster){
-  return (roster || []).filter(p => !p._retainedPlaceholder).length;
+  // Les joueurs tagués « Retenu – ballotage » représentent uniquement une retenue salariale.
+  // Ils comptent dans la masse, mais pas dans le nombre de joueurs de l'effectif.
+  return (roster || []).filter(p => !p._retainedPlaceholder && p.statusTag !== 'retenu').length;
 }
 
 function currentAav(p){
@@ -2630,7 +2633,7 @@ function render(){
     total += aav;
     const posKey = (p.pos === 'D' || p.pos === 'G') ? p.pos : 'F';
     sums[posKey] += aav;
-    if(!p._retainedPlaceholder){
+    if(!p._retainedPlaceholder && p.statusTag !== 'retenu'){
       counted++;
       counts[posKey] += 1;
     }
@@ -3273,7 +3276,7 @@ function renderDraftDay(){
       const posKey = (p.pos === 'D' || p.pos === 'G') ? p.pos : 'F';
       const counts = { F:0, D:0, G:0 };
       roster.forEach(pl=>{
-        if(pl._retainedPlaceholder) return;
+        if(pl._retainedPlaceholder || pl.statusTag === 'retenu') return;
         const k = (pl.pos === 'D' || pl.pos === 'G') ? pl.pos : 'F';
         counts[k]++;
       });
