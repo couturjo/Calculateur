@@ -2435,7 +2435,7 @@ function renderRfa(){
     const salaryValue = value => typeof value === 'number' ? String(value) : '';
     card.innerHTML = `
       <button class="rfa-remove" data-idx="${idx}" title="Retirer">✕</button>
-      <div class="card-name">${p.name}</div>
+      <div class="card-name">${displayPlayerName(p.name)}</div>
       <div class="card-free"><span class="free-tag ${tag.cls}">${tag.text}</span></div>
       <div class="prospect-aav-editor">
         <div class="prospect-aav-title">AAV estimé / contrat</div>
@@ -2620,6 +2620,8 @@ function currentAav(p){
   return val;
 }
 
+function displayPlayerName(name){ return name === 'Matvei Michkov' ? name + ' 🍟' : name; }
+
 function render(){
   const roster = state.roster[state.dg] || [];
   const boards = { F: document.getElementById('boardF'), D: document.getElementById('boardD'), G: document.getElementById('boardG') };
@@ -2781,7 +2783,7 @@ function render(){
     const card = document.createElement('div');
     card.className = 'prospect-card';
     const pos = p.pos || 'F';
-    card.innerHTML = '<div class="card-name">' + p.name + '</div><div class="prospect-meta"><span class="pos-tag">' + posLabel(pos) + '</span><span class="pos-tag">RFA · Hors masse</span><span class="pos-tag">' + (p.free || '—') + '</span></div><button type="button" class="promote-prospect" data-idx="' + idx + '">↑ Promouvoir</button>';
+    card.innerHTML = '<div class="card-name">' + displayPlayerName(p.name) + '</div><div class="prospect-meta"><span class="pos-tag">' + posLabel(pos) + '</span><span class="pos-tag">RFA · Hors masse</span><span class="pos-tag">' + (p.free || '—') + '</span></div><button type="button" class="promote-prospect" data-idx="' + idx + '">↑ Promouvoir</button>';
     prospectBoard.appendChild(card);
   });
   prospectBoard.querySelectorAll('.promote-prospect').forEach(btn=>{
