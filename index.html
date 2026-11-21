@@ -3913,6 +3913,7 @@ document.getElementById('sbLogoutBtn').addEventListener('click',async()=>{
 });
 
 document.getElementById('sbPublishBtn').addEventListener('click',async()=>{
+  if(!confirm('Voulez-vous vraiment procéder à la publication officielle?')) return;
   if(!sbUser || !sbMember || sbMember.role!=='admin') return;
   const btn=document.getElementById('sbPublishBtn');
   btn.disabled=true; btn.textContent='Publication…';
