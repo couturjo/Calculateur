@@ -297,8 +297,7 @@
     cursor:pointer; line-height:1; padding:2px 5px; border-radius:4px;
   }
   .rfa-remove:hover{background:#fdeceb; color:var(--red);}
-  .card-badges{display:flex; flex-wrap:wrap; align-items:center; gap:4px;}
-  .card-aav-row{display:flex; align-items:center; gap:6px; margin-top:2px;}
+  .card-badges{display:flex; flex-wrap:wrap; align-items:center; gap:4px;}  .card-aav-row{display:flex; align-items:center; gap:6px; margin-top:2px;}
   .card-aav-row input{
     width:100%; border:1px solid var(--line); border-radius:6px; padding:5px 7px;
     font-size:1.02rem; font-weight:800; color:var(--navy); background:var(--ice);
@@ -597,8 +596,7 @@
   }
   .qa-close:hover{background:var(--ice2);}
   @media (min-width:640px){
-    .quick-add-overlay{align-items:center;}
-    .quick-add-modal{border-radius:14px; max-height:80vh;}
+    .quick-add-overlay{align-items:center;}    .quick-add-modal{border-radius:14px; max-height:80vh;}
   }
 
   /* --- Trade module --- */
@@ -897,8 +895,7 @@ body.login-locked{height:100%;width:100%;}
   display:grid;
   grid-template-columns:minmax(0,1fr) auto;
   grid-template-areas:"name salary" "badges salary" "bottom salary";
-  align-items:center;
-  column-gap:8px;
+  align-items:center;  column-gap:8px;
   row-gap:2px;
   min-height:0;
   padding:7px 9px;
@@ -1197,8 +1194,7 @@ body.login-locked{height:100%;width:100%;}
       <div class="add-player" style="margin-top:8px;">
         <div class="field">
           <label for="rfaCustomName">Ou espoir personnalisé (non répertorié)</label>
-          <input type="text" id="rfaCustomName" placeholder="Nom">
-        </div>
+          <input type="text" id="rfaCustomName" placeholder="Nom">        </div>
         <div class="field" style="max-width:130px;">
           <label for="rfaCustomFree">Statut</label>
           <input type="text" id="rfaCustomFree" placeholder="Ex: RFA 2027">
@@ -1497,8 +1493,7 @@ function generatePickSet(year, dgList, rounds, prefix){
     for(let r=1; r<=rounds; r++){
       arr.push({ id: prefix+year+'_'+dg+'_R'+r+'_'+(seq++), round:r, originalOwner:dg, currentOwner:dg });
     }
-  });
-  return arr;
+  });  return arr;
 }
 function applyPickOwnershipOverride(arr, year, overridesSource){
   const overrides = (overridesSource && overridesSource[year]) || [];
@@ -1797,8 +1792,7 @@ function renderTradeExtra(containerEl, dg, outProspects, outPicks, outRfaPicks){
   // RFA draft picks
   state.rfaPickYears.forEach(year=>{
     const picks = (state.rfaPicks[year] || []).filter(p=>p.currentOwner===dg).sort((a,b)=>a.round-b.round);
-    if(!picks.length) return;
-    const locked = isPickYearLocked(year);
+    if(!picks.length) return;    const locked = isPickYearLocked(year);
     const label = '🌱 Choix RFA ' + pickYearLabel(year) + ' (' + picks.length + ')' + (locked ? ' 🔒' : '');
     appendCollapsibleGroup(containerEl, 'RFAPICKS_'+year, label, (body)=>{
       if(locked){
@@ -2097,8 +2091,7 @@ async function copyToClipboard(text){
 }
 
 document.getElementById('copyTradeBtn').addEventListener('click', async ()=>{
-  const text = generateTradeText('🔁 PROPOSITION DE TRANSACTION');
-  const ok = await copyToClipboard(text);
+  const text = generateTradeText('🔁 PROPOSITION DE TRANSACTION');  const ok = await copyToClipboard(text);
   toast(ok ? 'Texto de transaction copié — collez-le dans Messenger !' : "Impossible de copier automatiquement — sélectionnez le texte manuellement.");
 });
 
@@ -2398,7 +2391,6 @@ function promoteProspect(dg, index){
     'Confirmer l’ajout à l’alignement ?'
   ].join('\n');
   if(!window.confirm(preview)) return;
-
   roster.push({
     name: prospect.name,
     aav26: typeof aav26 === 'number' ? aav26 : undefined,
@@ -2697,7 +2689,6 @@ function render(){
   marginEl.textContent = margin.toFixed(3);
   marginEl.className = 'value ' + (margin >= 0 ? 'pos' : 'neg');
   document.getElementById('statCount').textContent = counted;
-
   const pct = state.cap > 0 ? Math.min(100, (total / state.cap) * 100) : (total > 0 ? 100 : 0);
   const fill = document.getElementById('barFill');
   fill.style.width = pct + '%';
@@ -2997,7 +2988,6 @@ document.addEventListener('click', (e)=>{
     collapseFabMinis();
   }
 });
-
 function updateFab(tab){
   currentTab = tab;
   collapseFabMinis();
@@ -3297,8 +3287,7 @@ function renderDraftDay(){
       `;
     }
 
-    createSearchWidget(searchInput, suggestBox, ()=> updateDraftPreview(), name => !isPlayerUnavailable(name));
-    searchInput.addEventListener('input', updateDraftPreview);
+    createSearchWidget(searchInput, suggestBox, ()=> updateDraftPreview(), name => !isPlayerUnavailable(name));    searchInput.addEventListener('input', updateDraftPreview);
     updateDraftPreview();
 
     document.getElementById('draftConfirmBtn').addEventListener('click', ()=>{
@@ -3597,8 +3586,7 @@ function exportVersion(v){
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  toast('Fichier de version téléchargé — prêt à partager');
-}
+  toast('Fichier de version téléchargé — prêt à partager');}
 
 document.getElementById('saveVersionBtn').addEventListener('click', ()=>{
   const nameInput = document.getElementById('versionNameInput');
@@ -3897,8 +3885,7 @@ document.getElementById('sbLoginForm').addEventListener('submit',async e=>{
     if(error) throw error;
     await sbStartSession(data.user);
   }catch(err){ sbMessage(err.message||'Connexion impossible.',true); }
-  finally{ btn.disabled=false; btn.textContent='Se connecter'; }
-});
+  finally{ btn.disabled=false; btn.textContent='Se connecter'; }});
 
 document.getElementById('sbLogoutBtn').addEventListener('click',async()=>{
   await sb.auth.signOut();
@@ -3913,6 +3900,7 @@ document.getElementById('sbLogoutBtn').addEventListener('click',async()=>{
 });
 
 document.getElementById('sbPublishBtn').addEventListener('click',async()=>{
+  if(!confirm('Voulez-vous vraiment procéder à la publication officielle?')) return;
   if(!sbUser || !sbMember || sbMember.role!=='admin') return;
   const btn=document.getElementById('sbPublishBtn');
   btn.disabled=true; btn.textContent='Publication…';
