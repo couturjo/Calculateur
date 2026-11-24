@@ -2699,7 +2699,7 @@ function render(){
 
   document.getElementById('statTotal').textContent = total.toFixed(3);
   document.getElementById('statCap').textContent = state.cap.toFixed(3);
-  const margin = Number((state.cap - total).toFixed(6));
+  const margin = state.cap - total;
   const marginEl = document.getElementById('statMargin');
   marginEl.textContent = margin.toFixed(3);
   marginEl.className = 'value ' + (margin >= 0 ? 'pos' : 'neg');
