@@ -2006,7 +2006,7 @@ function generateTradeText(title){
   function lineFor(roster, name, pct){
     const p = findP(roster, name);
     const aav = p ? currentAav(p) : 0;
-    return `  • ${name} — ${aav.toFixed(3)} $M${pct>0 ? ` (${pct}% retenu par l'expéditeur)` : ''}`;
+    return `  • ${name} — ${formatSalary(aav)} $M${pct>0 ? ` (${pct}% retenu par l'expéditeur)` : ''}`;
   }
   function prospectLines(names){
     return names.map(n=>`  • ${n} (espoir RFA)`);
@@ -2591,7 +2591,7 @@ function renderRfaPicks(){
 
 function formatSalary(value){
   if(typeof value !== 'number' || !Number.isFinite(value)) return '—';
-  return value.toFixed(6).replace(/\\.?0+$/, '');
+  return value.toFixed(6).replace(/\.?0+$/, '');
 }
 
 function freeTagInfo(free){
@@ -3129,7 +3129,7 @@ function renderKanban(){
         const aav = currentAav(p);
         const isSelected = !!(kanbanSelected && kanbanSelected.type==='player' && kanbanSelected.key===p.name && kanbanSelected.fromDg===dg);
         return makeCard(
-          `<span class="kc-name">${p.name}</span><span class="kc-meta"><span>${posLabel(p.pos)}</span><span>${aav.toFixed(3)} $M</span></span>`,
+          `<span class="kc-name">${p.name}</span><span class="kc-meta"><span>${posLabel(p.pos)}</span><span>${formatSalary(aav)} $M</span></span>`,
           isSelected,
           ()=>{ kanbanSelected = isSelected ? null : { type:'player', key: p.name, fromDg: dg }; }
         );
