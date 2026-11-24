@@ -1704,7 +1704,7 @@ function renderTradeList(containerEl, dg, outMap, otherOutMap){
         row.innerHTML = `
           <input type="checkbox" ${checked?'checked':''} data-name="${p.name}">
           <span class="tr-name">${p.name}</span>
-          <span class="tr-aav">${aav.toFixed(3)} $M</span>
+          <span class="tr-aav">${formatSalary(aav)} $M</span>
           <select class="tr-retain" ${checked?'':'disabled'}>
             <option value="0" ${(outMap[p.name]||0)===0?'selected':''}>0%</option>
             <option value="33.333333333333336" ${outMap[p.name]===33 || Math.abs((outMap[p.name]||0)-(100/3))<0.000001?'selected':''}>1/3</option>
@@ -2007,7 +2007,7 @@ function generateTradeText(title){
   function lineFor(roster, name, pct){
     const p = findP(roster, name);
     const aav = p ? currentAav(p) : 0;
-    return `  • ${name} — ${aav.toFixed(3)} $M${pct>0 ? ` (${pct}% retenu par l'expéditeur)` : ''}`;
+    return `  • ${name} — ${formatSalary(aav)} $M${pct>0 ? ` (${pct}% retenu par l'expéditeur)` : ''}`;
   }
   function prospectLines(names){
     return names.map(n=>`  • ${n} (espoir RFA)`);
@@ -2271,7 +2271,7 @@ function createSearchWidget(inputEl, boxEl, onSelect, filterFn){
       const aav = p.aav2627;
       return `<div class="suggest-item" data-idx="${i}">
         <span class="s-name">${name}</span>
-        <span class="s-meta">${posLabel(p.pos)} · ${typeof aav==='number' ? aav.toFixed(3)+' $M' : '—'}</span>
+        <span class="s-meta">${posLabel(p.pos)} · ${typeof aav==='number' ? formatSalary(aav)+' $M' : '—'}</span>
       </div>`;
     }).join('');
     boxEl.classList.add('show');
@@ -2432,7 +2432,7 @@ function renderRfa(){
     const source = RAW_DATA.players[p.name] || {};
     const aav26 = typeof p.aav26 === 'number' ? p.aav26 : source.aav2627;
     const aav27 = typeof p.aav27 === 'number' ? p.aav27 : source.aav2728;
-    const salaryValue = value => typeof value === 'number' ? String(value) : '';
+    const salaryValue = value => typeof value === 'number' ? formatSalary(value) : '';
     card.innerHTML = `
       <button class="rfa-remove" data-idx="${idx}" title="Retirer">✕</button>
       <div class="card-name">${displayPlayerName(p.name)}</div>
@@ -2484,7 +2484,7 @@ function renderRfa(){
         return;
       }
       state.prospects[dg][idx][key] = value;
-      e.currentTarget.value = value.toFixed(3);
+      e.currentTarget.value = formatSalary(value);
       toast('AAV de ' + state.prospects[dg][idx].name + ' mis à jour · hors masse salariale');
     });
   });
@@ -2604,6 +2604,11 @@ function realPlayerCount(roster){
   return (roster || []).filter(p => !p._retainedPlaceholder && p.statusTag !== 'retenu').length;
 }
 
+function formatSalary(value){
+  if(typeof value !== 'number' || !Number.isFinite(value)) return '—';
+  return value.toFixed(6).replace(/\.?0+$/, '');
+}
+
 function currentAav(p){
   // Le salaire corrigé est le salaire brut de référence : la retenue doit
   // s'appliquer aussi bien aux AAV d'origine qu'aux corrections manuelles.
@@ -2664,7 +2669,7 @@ function render(){
         ${hasOverride ? `<button data-idx="${idx}" class="card-revert" title="Revenir au AAV d'origine">↺</button>` : ''}
       </div>
       <div class="card-aav-row">
-        <input type="number" step="any" class="aav-edit-input ${noRealData?'no-data':''}" data-idx="${idx}" value="${String(aav)}">
+        <input type="number" step="any" class="aav-edit-input ${noRealData?'no-data':''}" data-idx="${idx}" value="${formatSalary(aav)}">
         <span class="unit">$M</span>
       </div>
       <div class="card-bottom-row">
@@ -3129,7 +3134,7 @@ function renderKanban(){
         const aav = currentAav(p);
         const isSelected = !!(kanbanSelected && kanbanSelected.type==='player' && kanbanSelected.key===p.name && kanbanSelected.fromDg===dg);
         return makeCard(
-          `<span class="kc-name">${p.name}</span><span class="kc-meta"><span>${posLabel(p.pos)}</span><span>${aav.toFixed(3)} $M</span></span>`,
+          `<span class="kc-name">${p.name}</span><span class="kc-meta"><span>${posLabel(p.pos)}</span><span>${formatSalary(aav)} $M</span></span>`,
           isSelected,
           ()=>{ kanbanSelected = isSelected ? null : { type:'player', key: p.name, fromDg: dg }; }
         );
@@ -3288,7 +3293,7 @@ function renderDraftDay(){
 
       previewBox.style.display = 'block';
       previewBox.innerHTML = `
-        <div class="dpb-row"><span>${name}</span><span class="dpb-aav">${aavVal.toFixed(3)} $M</span></div>
+        <div class="dpb-row"><span>${name}</span><span class="dpb-aav">${formatSalary(aavVal)} $M</span></div>
         <div class="dpb-row"><span>Marge projetée après sélection</span><span class="${projectedMargin<0?'dpb-neg':'dpb-pos'}">${projectedMargin.toFixed(3)} $M</span></div>
         <div class="dpb-lineup">
           <span>Att : <b>${counts.F}</b></span>
