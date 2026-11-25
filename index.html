@@ -999,6 +999,30 @@ body.login-locked{height:100%;width:100%;}
   #tabEffectifs .pos-column .card{padding:7px 8px}
 }
 </style>
+
+<style id="coach-photo-prototype">
+#tabEffectifs .coach-panel{padding:0;overflow:hidden}
+#tabEffectifs .coach-details>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;padding:18px 22px;font-size:1.12rem;font-weight:850;color:#102b46}
+#tabEffectifs .coach-details>summary::-webkit-details-marker{display:none}
+#tabEffectifs .coach-details>summary:after{content:'＋';font-size:1.25rem;color:#c8393a}
+#tabEffectifs .coach-details[open]>summary:after{content:'−'}
+#tabEffectifs .coach-details>summary:before{content:'';width:5px;align-self:stretch;min-height:34px;background:#c8393a;margin-right:2px}
+#tabEffectifs .coach-summary-title{display:flex;align-items:center;gap:12px;flex:1}
+#tabEffectifs .coach-summary-hint{font-size:.72rem;font-weight:600;color:#71808b}
+#tabEffectifs .coach-content{padding:0 22px 22px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(220px,1fr);gap:18px;align-items:stretch}
+#tabEffectifs .coach-photo-frame{position:relative;min-height:290px;border-radius:13px;overflow:hidden;background:linear-gradient(145deg,#102b46,#071a2b);display:flex;align-items:center;justify-content:center;color:#d9e5ef;border:1px solid #294761}
+#tabEffectifs .coach-photo-frame img{display:block;width:100%;height:100%;min-height:290px;max-height:430px;object-fit:cover}
+#tabEffectifs .coach-placeholder{text-align:center;padding:24px;color:#d9e5ef}
+#tabEffectifs .coach-placeholder strong{display:block;margin-top:10px;color:#f0d18c;font-size:1rem}
+#tabEffectifs .coach-controls{display:flex;flex-direction:column;justify-content:center;gap:12px}
+#tabEffectifs .coach-controls label{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--grey);font-weight:800}
+#tabEffectifs .coach-controls input[type=text]{width:100%;padding:11px 12px;font-size:.95rem}
+#tabEffectifs .coach-upload-actions{display:flex;flex-wrap:wrap;gap:8px}
+#tabEffectifs .coach-upload-actions button{flex:1;min-width:120px}
+#tabEffectifs #coachPhotoInput{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+#tabEffectifs .coach-local-note{font-size:.72rem;line-height:1.45;color:var(--grey)}
+@media(max-width:700px){#tabEffectifs .coach-content{grid-template-columns:1fr;padding:0 14px 16px;gap:12px}#tabEffectifs .coach-details>summary{padding:15px 14px;font-size:1rem}#tabEffectifs .coach-photo-frame,#tabEffectifs .coach-photo-frame img{min-height:235px;max-height:330px}#tabEffectifs .coach-controls{gap:9px}}
+</style>
 </head>
 <body class="login-locked">
 
@@ -1088,6 +1112,24 @@ body.login-locked{height:100%;width:100%;}
       <div class="bar-track"><div class="bar-fill" id="barFill" style="width:0%"></div></div>
       <div class="bar-caption"><span>0 $M</span><span id="barPct">0%</span><span id="barCapLabel">147.900 $M</span></div>
     </div>
+  </div>
+
+  <div class="panel coach-panel">
+    <details class="coach-details" id="coachDetails" open>
+      <summary><span class="coach-summary-title">🏒 Entraîneur-chef <span class="coach-summary-hint">Personnalisez votre franchise</span></span></summary>
+      <div class="coach-content">
+        <div class="coach-photo-frame">
+          <img id="coachPhotoPreview" alt="Photo de l’entraîneur-chef" hidden>
+          <div class="coach-placeholder" id="coachPhotoPlaceholder"><div style="font-size:3rem;">📸</div><strong>Votre entraîneur-chef</strong><div>Ajoutez une photo pour représenter votre équipe</div></div>
+        </div>
+        <div class="coach-controls">
+          <div><label for="coachNameInput">Nom de l’entraîneur (facultatif)</label><input type="text" id="coachNameInput" maxlength="70" placeholder="Nom de l’entraîneur"></div>
+          <input type="file" id="coachPhotoInput" accept="image/*">
+          <div class="coach-upload-actions"><button type="button" class="primary" id="coachPhotoChoose">＋ Ajouter une photo</button><button type="button" class="ghost" id="coachPhotoRemove">Retirer</button></div>
+          <div class="coach-local-note">La photo et le nom sont conservés dans le navigateur de cet appareil, séparément pour chaque DG. Le téléversement vers un espace partagé sera à prévoir avant une utilisation multiappareils.</div>
+        </div>
+      </div>
+    </details>
   </div>
 
   <div class="panel">
@@ -2622,7 +2664,75 @@ function currentAav(p){
 
 function displayPlayerName(name){ return name === 'Matvei Michkov' || name === 'Ivan Demidov' ? name + ' 🍟' : name; }
 
+const COACH_STORAGE_PREFIX = 'poolChampionsCoach_';
+function coachStorageKey(dg){ return COACH_STORAGE_PREFIX + encodeURIComponent(dg || ''); }
+function renderCoachPhoto(){
+  const img=document.getElementById('coachPhotoPreview');
+  const placeholder=document.getElementById('coachPhotoPlaceholder');
+  const nameInput=document.getElementById('coachNameInput');
+  if(!img||!placeholder||!nameInput) return;
+  let saved={};
+  try{ saved=JSON.parse(localStorage.getItem(coachStorageKey(state.dg))||'{}'); }catch(e){ saved={}; }
+  const photo=typeof saved.photo==='string'?saved.photo:'';
+  img.hidden=!photo;
+  placeholder.hidden=!!photo;
+  if(photo && img.src!==photo) img.src=photo;
+  if(!photo) img.removeAttribute('src');
+  if(document.activeElement!==nameInput) nameInput.value=saved.name||'';
+  const remove=document.getElementById('coachPhotoRemove');
+  if(remove) remove.disabled=!photo && !saved.name;
+}
+function saveCoachName(){
+  const key=coachStorageKey(state.dg);
+  let saved={};
+  try{ saved=JSON.parse(localStorage.getItem(key)||'{}'); }catch(e){ saved={}; }
+  saved.name=document.getElementById('coachNameInput').value.trim();
+  try{ localStorage.setItem(key,JSON.stringify(saved)); }catch(e){ toast('Impossible de sauvegarder le nom dans ce navigateur.'); }
+  renderCoachPhoto();
+}
+document.getElementById('coachPhotoChoose').addEventListener('click',()=>document.getElementById('coachPhotoInput').click());
+document.getElementById('coachPhotoInput').addEventListener('change',e=>{
+  const file=e.target.files&&e.target.files[0];
+  if(!file) return;
+  if(!file.type.startsWith('image/')){toast('Veuillez choisir un fichier image.');e.target.value='';return;}
+  const reader=new FileReader();
+  reader.onerror=()=>toast('Impossible de lire cette image.');
+  reader.onload=()=>{
+    const source=new Image();
+    source.onerror=()=>toast('Cette image ne peut pas être affichée.');
+    source.onload=()=>{
+      const max=1400, scale=Math.min(1,max/Math.max(source.naturalWidth,source.naturalHeight));
+      const canvas=document.createElement('canvas');
+      canvas.width=Math.max(1,Math.round(source.naturalWidth*scale));
+      canvas.height=Math.max(1,Math.round(source.naturalHeight*scale));
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(source,0,0,canvas.width,canvas.height);
+      const photo=canvas.toDataURL('image/jpeg',0.82);
+      const key=coachStorageKey(state.dg);
+      let saved={};
+      try{saved=JSON.parse(localStorage.getItem(key)||'{}');}catch(err){saved={};}
+      saved.photo=photo;
+      try{localStorage.setItem(key,JSON.stringify(saved));renderCoachPhoto();toast('Photo de l’entraîneur enregistrée pour '+state.dg+'.');}
+      catch(err){toast('Espace de stockage du navigateur insuffisant. Essayez une image plus petite.');}
+    };
+    source.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+  e.target.value='';
+});
+document.getElementById('coachNameInput').addEventListener('change',saveCoachName);
+document.getElementById('coachNameInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveCoachName();}});
+document.getElementById('coachPhotoRemove').addEventListener('click',()=>{
+  const key=coachStorageKey(state.dg);
+  let saved={};
+  try{saved=JSON.parse(localStorage.getItem(key)||'{}');}catch(e){saved={};}
+  delete saved.photo;delete saved.name;
+  try{localStorage.setItem(key,JSON.stringify(saved));document.getElementById('coachNameInput').value='';renderCoachPhoto();toast('Photo et nom retirés pour '+state.dg+'.');}
+  catch(e){toast('Impossible de modifier le stockage local.');}
+});
+
 function render(){
+  renderCoachPhoto();
   const roster = state.roster[state.dg] || [];
   const boards = { F: document.getElementById('boardF'), D: document.getElementById('boardD'), G: document.getElementById('boardG') };
   boards.F.innerHTML = ''; boards.D.innerHTML = ''; boards.G.innerHTML = '';
